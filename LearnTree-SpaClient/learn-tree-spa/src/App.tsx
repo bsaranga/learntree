@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {MouseEvent, useEffect, useState} from 'react';
 import ReactDOM from 'react-dom';
 import G6, { Graph } from '@antv/g6';
 import './App.css';
@@ -27,9 +27,9 @@ function App() {
   };
 
   const ref = React.useRef<HTMLDivElement>(null);
+  let graph: Graph | null = null;
 
   useEffect(() => {
-    let graph: Graph | null = null;
     if (!graph) {
       graph = (new G6.Graph({
         container: ReactDOM.findDOMNode(ref.current) as HTMLElement,
@@ -46,11 +46,37 @@ function App() {
 
     graph.data(data); // data here
     graph.render();
-    (ReactDOM.findDOMNode(ref.current)?.childNodes.item(0) as HTMLElement).classList.add('border');
+
+    // manual reconciliation
+    const refChildCount = ReactDOM.findDOMNode(ref.current)?.childNodes.length;
+    (ReactDOM.findDOMNode(ref.current)?.childNodes.item(refChildCount! - 1) as HTMLElement).classList.add('border');
+    if (refChildCount! > 1) {
+      ReactDOM.findDOMNode(ref.current)?.removeChild(ReactDOM.findDOMNode(ref.current)?.childNodes.item(refChildCount! - 2) as Node);
+    }
   });
 
+  function clicked(event: MouseEvent) {
+    console.log(event);
+
+    data.nodes.push({
+      id: `node${data.nodes.length+1}`,
+      x: event.clientX,
+      y: event.clientY
+    })
+
+    data.edges.push({
+      source:`node${data.nodes.length - 1}`,
+      target: `node${data.nodes.length}`
+    })
+    
+    graph?.data(data);
+    graph?.render();
+  }
+
   return (
-    <div ref={ref}></div>
+    <>
+      <div className='outerBorder' onClick={clicked} ref={ref}></div>
+    </>
   );
 }
 
