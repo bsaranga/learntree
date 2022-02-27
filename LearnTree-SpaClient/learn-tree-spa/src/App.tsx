@@ -1,9 +1,25 @@
-import React, {MouseEvent, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import ReactDOM from 'react-dom';
 import G6, { Graph } from '@antv/g6';
 import './App.css';
 
 function App() {
+
+  G6.registerNode('custom-rect',
+  {
+    options: {
+      style: {
+        radius: 2,
+        width: 100,
+        height: 25,
+        stroke: '#3580db'
+      },
+      anchorPoints: [
+        [0, 1],
+        [0.5, 1]
+      ],
+    }
+  }, 'rect')
 
   const data = {
     nodes: [
@@ -16,6 +32,11 @@ function App() {
         id: 'node2',
         x: 300,
         y: 180
+      },
+      {
+        id: 'node3',
+        x: 400,
+        y: 250
       }
     ],
     edges: [
@@ -27,22 +48,46 @@ function App() {
   };
 
   const ref = React.useRef<HTMLDivElement>(null);
-  let graph: Graph | null = null;
 
   useEffect(() => {
+    let graph: Graph | null = null;
+
     if (!graph) {
       graph = (new G6.Graph({
         container: ReactDOM.findDOMNode(ref.current) as HTMLElement,
         width: 1200,
         height: 800,
         modes: {
-          default: ['drag-canvas', 'drag-node', 'zoom-canvas']
+          default: ['drag-canvas', 'zoom-canvas', {
+            type: 'create-edge',
+            trigger: 'drag',
+            edgeConfig: {
+              type: 'cubic-vertical',
+              style: {
+                stroke: '#f00',
+                lineWidth: 2,
+                // ... // other edge style configurations
+              }}
+          },
+          {
+            type: 'drag-node',
+            shouldBegin: e => {
+              console.log(e);
+              return true;
+            }
+          }
+        ]
+        },
+        defaultNode: {
+          type: 'rect',
         },
         defaultEdge: {
           type: 'cubic-vertical'
         }
       }))
     }
+
+    console.log('Use effect called')
 
     graph.data(data); // data here
     graph.render();
@@ -55,27 +100,9 @@ function App() {
     }
   });
 
-  function clicked(event: MouseEvent) {
-    console.log(event);
-
-    data.nodes.push({
-      id: `node${data.nodes.length+1}`,
-      x: event.clientX,
-      y: event.clientY
-    })
-
-    data.edges.push({
-      source:`node${data.nodes.length - 1}`,
-      target: `node${data.nodes.length}`
-    })
-    
-    graph?.data(data);
-    graph?.render();
-  }
-
   return (
     <>
-      <div className='outerBorder' onClick={clicked} ref={ref}></div>
+      <div className='outerBorder' ref={ref}></div>
     </>
   );
 }
