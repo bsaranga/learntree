@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\learntree-graph.infrastructure\learntree-graph.infrastructure.csproj" />
+    <ProjectReference Include="..\learntree_graph.infrastructure\learntree_graph.infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

@@ -2,10 +2,17 @@ using learntree_graph.infrastructure;
 using learntree_graph.infrastructure.Repositories;
 
 if (args.Any() && args[0] == "test") {
-    Console.WriteLine("DETOUR...");
+    
+    var dict = new Dictionary<string, object>() {
+        {"Key1", DateTime.Now},
+        {"Key2", 3.14159m},
+        {"Key3", "foobar"},
+    };
 
-    var foo = "foo, ";
-    Console.WriteLine(foo.Substring(0, foo.Length - 2));
+    foreach (var d in dict)
+    {
+        Console.WriteLine(d.Value.GetType());
+    }
 
     return;
 }

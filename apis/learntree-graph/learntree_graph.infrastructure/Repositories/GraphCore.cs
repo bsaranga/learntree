@@ -40,14 +40,34 @@ namespace learntree_graph.infrastructure.Repositories
             }
         }
 
+        public Task CreateNode<T>(string label, Dictionary<string, T> properties)
+        {
+            throw new NotImplementedException();
+        }
+
         // Utils
 
-        private string GetPropertyString(Dictionary<string, string> props) 
+        private string GetPropertyString<T>(Dictionary<string, T> props)
         {
             string properties = "";
-            
-            foreach(var kvp in props) {
-                properties += $"{kvp.Key}: \"{kvp.Value}\", ";
+
+            switch (Type.GetTypeCode(typeof(T)))
+            {
+                case TypeCode.DateTime:
+                    foreach (var kvp in props) {
+                        properties += $"{kvp.Key}: datetime({((DateTime)(object)kvp.Value!).ToString("yyyy-mm-ddThh:mm:ss")})";
+                    }
+                    break;
+                case TypeCode.Int32 or TypeCode.Decimal or TypeCode.Boolean:
+                    foreach (var kvp in props) {
+                        properties += $"{kvp.Key}: {kvp.Value}";
+                    }
+                    break;
+                default:
+                    foreach(var kvp in props) {
+                        properties += $"{kvp.Key}: \"{kvp.Value}\", ";
+                    }
+                    break;
             }
 
             return properties.Substring(0, properties.Length - 2);
