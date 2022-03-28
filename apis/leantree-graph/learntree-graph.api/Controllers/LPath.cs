@@ -2,10 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using learntree_graph.infrastructure;
 using learntree_graph.infrastructure.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using Neo4j.Driver;
 
 namespace leantree_graph.Controllers
 {
