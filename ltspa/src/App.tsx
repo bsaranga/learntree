@@ -1,28 +1,22 @@
-import { Button, Layout, Menu } from 'antd';
-import { Content, Footer, Header } from 'antd/lib/layout/layout';
-import { Link, Outlet } from 'react-router-dom';
-import './App.css';
+import { Button, Card, H5 } from '@blueprintjs/core';
+import './App.scss';
 
-function App(props: any) {
+function App() {
 
 	return (
-		<Layout>
-			<Header style={{ position: 'fixed', zIndex: 1, width: '100%' }}>
-				<Menu theme="dark" mode="horizontal" defaultSelectedKeys={['1']}>
-					<Menu.Item key="1"><Link to='/route1'>Route 1</Link></Menu.Item>
-					<Menu.Item key="2"><Link to='/route2'>Route 2</Link></Menu.Item>
-					<Menu.Item key="3"><Link to='/protected'>Protected</Link></Menu.Item>
-				</Menu>
-			</Header>
-			<Content className="site-layout" style={{ padding: '0 50px', marginTop: 64 }}>
-				<Button type='primary'>Login</Button>
-				<Button type='ghost'>Logout</Button>
-				<div className="site-layout-background" style={{ padding: 24, minHeight: 900 }}>
-					<Outlet/>
-				</div>
-			</Content>
-			<Footer style={{ textAlign: 'center' }}>Ant Design ©2018 Created by Ant UED</Footer>
-		</Layout>
+		<>
+			<div className='p-5 shadow-md'>Hello</div>
+			<Card className='max-w-md'>
+				<H5>
+					<a href='#'>Analytical applications</a>
+				</H5>
+				<p>
+				User interfaces that enable people to interact smoothly with data, ask better questions, and
+				make better decisions.
+				</p>
+				<Button text='Explore products' />
+			</Card>
+		</>
 	);
 }
 
