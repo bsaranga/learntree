@@ -1,5 +1,5 @@
 {
     "realm": "LearnTree",
-    "url": "http://localhost:8080/",
-    "clientId": "learntree-spa-client"
+    "url": "https://localhost:8443/",
+    "clientId": "learntree-spa"
 }

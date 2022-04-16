@@ -180,6 +180,49 @@ dist
 .history
 .ionide
 
+# Compiled source #
+###################
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+
+# Packages #
+############
+# it's better to unpack these files and commit the raw source
+# git has its own built in compression methods
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+# Logs and databases #
+######################
+*.log
+.attach_pid*
+
+# Maven #
+#########
+target
+
+# Maven shade
+#############
+*dependency-reduced-pom.xml
+
+# testsuite #
+#############
+*offline-token.txt
+
+# Quarkus ephemeral data #
+##########################
+quarkus/data/*.db
+
 # Support for Project snippet scope
 
 # End of https://www.toptal.com/developers/gitignore/api/dotnetcore,visualstudiocode,node,monodevelop
