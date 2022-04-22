@@ -24,6 +24,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options => {
                     options.Authority = "https://localhost:8443/realms/LearnTree";
                     options.Audience = "graph-backend";
+                    options.SaveToken = false;
                 });
 
 // Add services to the container.

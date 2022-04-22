@@ -34,13 +34,25 @@ function getUsername(): string | undefined {
 	return kc.tokenParsed?.preferred_username;
 }
 
+function updateToken(successCallback: any) {
+	return kc.updateToken(5)
+		.then(successCallback)
+		.catch(doLogin);
+}
+
+function isAuthenticated(): boolean | undefined {
+	return kc.authenticated;
+}
+
 const UserService = {
 	initKeyCloak,
 	doLogin,
 	doLogout,
 	getToken,
 	getUsername,
-	getParsedToken
+	getParsedToken,
+	updateToken,
+	isAuthenticated
 };
 
 export default UserService;

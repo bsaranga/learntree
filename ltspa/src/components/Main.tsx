@@ -1,12 +1,14 @@
+import { Button } from '@blueprintjs/core';
 import UserService from '../services/UserService';
+import HttpService from '../services/HttpService';
+
 export function Main() {
+
+	const httpClient = HttpService.client();
 	
-	function callApi() {
-		fetch('https://localhost:4155/api/LPath/secured',{
-			method: 'GET'
-		}).then(data => data.json())
-			.then(data => console.log(data))
-			.catch((err: TypeError) => console.error(err.message));
+	async function callApi() {
+		const result = await httpClient.get('https://localhost:4155/api/LPath/secured');
+		console.log(result.data);
 	}
 
 	return(
@@ -26,7 +28,7 @@ export function Main() {
 					<h2 className='text-lg'>Audience</h2>
 					<h2>{UserService.getParsedToken()?.aud}</h2>
 				</div>
-				<button onClick={callApi} className='mt-2 mb-2 bg-zinc-400 px-2 py-1 rounded-sm text-white hover:bg-slate-300 hover:text-purple-800 transition-all duration-75'>Call API</button>
+				<Button onClick={callApi}>Call API</Button>
 			</div>
 		</div>
 	);
