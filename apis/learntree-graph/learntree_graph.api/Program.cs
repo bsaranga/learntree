@@ -1,5 +1,6 @@
 using learntree_graph.infrastructure;
 using learntree_graph.infrastructure.Repositories;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 if (args.Any() && args[0] == "test") {
     
@@ -18,6 +19,12 @@ if (args.Any() && args[0] == "test") {
 }
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options => {
+                    options.Authority = "https://localhost:8443/realms/LearnTree";
+                    options.Audience = "graph-backend";
+                });
 
 // Add services to the container.
 builder.Services.AddScoped<IAuraDbConnection, AuraDbConnection>();
@@ -39,6 +46,11 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseCors(p => p.AllowAnyHeader()
+                  .AllowAnyMethod()
+                  .AllowAnyOrigin());
+
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

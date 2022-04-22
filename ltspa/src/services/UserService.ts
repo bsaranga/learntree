@@ -26,6 +26,10 @@ function getToken(): string | undefined {
 	return kc.token;
 }
 
+function getParsedToken(): Keycloak.KeycloakTokenParsed | undefined {
+	return kc.tokenParsed;
+}
+
 function getUsername(): string | undefined {
 	return kc.tokenParsed?.preferred_username;
 }
@@ -35,7 +39,8 @@ const UserService = {
 	doLogin,
 	doLogout,
 	getToken,
-	getUsername
+	getUsername,
+	getParsedToken
 };
 
 export default UserService;

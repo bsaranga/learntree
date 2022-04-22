@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using learntree_graph.infrastructure.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace leantree_graph.Controllers
@@ -21,7 +22,17 @@ namespace leantree_graph.Controllers
 
         [HttpGet]
         public IActionResult Root() {
-            return Ok("Root endpoint");
+            return Ok(new {
+                Result = "Success"
+            });
+        }
+
+        [Authorize]
+        [HttpGet("secured")]
+        public IActionResult Secured() {
+            return Ok(new {
+                Result = "Secured end-point accessed"
+            });
         }
 
         [HttpPost]
