@@ -1,4 +1,4 @@
-import { ChevronDown, DoubleChevronDown, ThumbsDown, ThumbsUp } from '../assets/Icons';
+import { ChevronDown, ThumbsDown, ThumbsUp } from '../assets/Icons';
 import ICardProps from '../interfaces/ICardProps';
 import './_debug.scss';
 
@@ -33,14 +33,10 @@ export default function Card(props: ICardPropWrapper) {
 				</div>
 			</div>
 			{/*Social actions*/}
-			<div className='mt-3 py-2 px-4 flex flex-col'>
-				<div className='flex justify-between mt-2'>
-					<div className='grow mr-2'>
-						<form action='none' className='border-2 rounded-sm flex py-1 px-2'>
-							<input className='w-full text-xxs2' type="text" name='comment' id='comment' placeholder='Comment'></input>
-							<button type='button' className='text-xxs2 font-semibold text-blue-900'>Post</button>
-						</form>
-						<DoubleChevronDown className='text-gray-300 hover:text-green-400 self-center' scale='h-4 w-4'/>
+			<div className='mt-3 py-4 px-4 flex flex-col'>
+				<div className='flex justify-between'>
+					<div className='mr-2'>
+						<button className='text-xs bg-slate-200 px-2 py-0.5 rounded-sm flex items-center hover:bg-slate-300'>Comments<ChevronDown className="text-gray-800 ml-1 mt-1" scale='h-4 w-4'/></button>
 					</div>
 					<div className='flex items-center space-x-2'>
 						<div className='flex'>
