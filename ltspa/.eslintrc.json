@@ -12,7 +12,13 @@
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
         "ecmaFeatures": {
-            "jsx": true
+            "jsx": true,
+            "templateStrings": true,
+            "arrowFunctions": true,
+            "destructuring": true,
+            "experimentalObjectRestSpread": true,
+            "restParams": true,
+            "spread": true
         },
         "ecmaVersion": "latest",
         "sourceType": "module"
