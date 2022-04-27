@@ -4,5 +4,5 @@ import IGenericProp from './IGenericProp';
 export default interface IProfileImage extends IGenericProp {
     imageUrl: string | undefined,
     isMentor?: boolean | undefined
-    size: number | undefined
+    size?: 'small' | 'normal' | 'large'
 }
