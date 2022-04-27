@@ -2,6 +2,7 @@ import { InputGroup, Icon, Button } from '@blueprintjs/core';
 import UserService from '../services/UserService';
 
 export function Header () {
+	console.log('Header Rendered');
 	return (
 		<div className='sticky py-2 px-12 top-0 shadow-lg flex space-x-4 justify-between bg-white'>
 			<div className='text-xl font-semibold text-rose-600'>LearnTree<span className='text-xxs align-super'>TM</span></div>

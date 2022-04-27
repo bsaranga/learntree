@@ -89,6 +89,8 @@ export function Main() {
 		</div>;
 	});
 
+	console.log('Main Rendered');
+
 	return(
 		<div className="bg-slate-200 h-full">
 			<Button onClick={callApi}>Call API</Button>
