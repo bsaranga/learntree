@@ -13,6 +13,11 @@ module.exports = {
     name   : "Learn Tree Graph API",
     script : "dotnet run --project apis/learntree-graph/learntree_graph.api/leantree_graph.csproj",
     max_memory_restart : "2G"
+  },
+  {
+    name : "Learn Tree MessageHub",
+    script: "dotnet run --project apis/lt-message-hub/message-hub.api/message-hub.api.csproj",
+    max_memory_restart: "2G"
   }
  ]
 }
