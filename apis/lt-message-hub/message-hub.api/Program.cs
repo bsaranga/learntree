@@ -1,8 +1,12 @@
+using message_hub.api;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllers();
+builder.Services.AddSignalR();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -18,8 +22,15 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseCors(p => p.AllowAnyHeader()
+                  .AllowAnyMethod()
+                  .AllowAnyOrigin()
+                  .AllowCredentials());
+
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapHub<MessageHub>("/messagehub");
 
 app.Run();
