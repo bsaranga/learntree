@@ -11,12 +11,16 @@ module.exports = {
   },
   {
     name   : "Learn Tree Graph API",
-    script : "dotnet run --project apis/learntree-graph/learntree_graph.api/leantree_graph.csproj",
+    script : "dotnet leantree_graph.dll --urls \"https://localhost:4155\"",
+    cwd: "./apis/learntree-graph/learntree_graph.api/bin/Debug/net6.0/",
+    watch: true,
     max_memory_restart : "2G"
   },
   {
     name : "Learn Tree MessageHub",
-    script: "dotnet run --project apis/lt-message-hub/message-hub.api/message-hub.api.csproj",
+    script: "dotnet message-hub.api.dll --urls \"https://localhost:4156\"",
+    cwd: "./apis/lt-message-hub/message-hub.api/bin/Debug/net6.0/",
+    watch: true,
     max_memory_restart: "2G"
   }
  ]

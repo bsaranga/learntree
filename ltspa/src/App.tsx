@@ -1,23 +1,22 @@
 import './App.scss';
 import { Header } from './components/Header';
 import { Main } from './components/Main';
-import { HubConnection } from './services/MessageHub';
+import MessageHubContext from './contexts/MessageHubContext';
+import { GetHubConnection, StartHub } from './services/MessageHub';
 
 function App() {
-	console.log('App Rendered');
 
-	HubConnection.on('AcceptMessage', (data) => {
-		console.log(data);
-	});
-
-	HubConnection.start().then(x => console.log(x)).catch(err => console.error(err));
+	const messageHub = GetHubConnection();
+	StartHub(messageHub);
 
 	return (
 		<>
-			<Header/>
-			<Main/>
+			<MessageHubContext.Provider value={messageHub}>
+				<Header/>
+				<Main/>
+			</MessageHubContext.Provider>
 		</>
 	);
 }
 
-export default App;
+export default App; 

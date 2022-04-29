@@ -1,4 +1,6 @@
 import { Button } from '@blueprintjs/core';
+import { useContext } from 'react';
+import MessageHubContext from '../contexts/MessageHubContext';
 import ICardProps from '../interfaces/ICardProps';
 import HttpService from '../services/HttpService';
 import Card from './Card';
@@ -77,12 +79,25 @@ const tempData: ICardProps[] = [
 export function Main() {
 
 	const httpClient = HttpService.client();
+	const hub = useContext(MessageHubContext);
 	
 	async function callApi() {
 		const result = await httpClient.get('https://localhost:4155/api/LPath/secured');
 		console.log(result.data);
 	}
 
+	async function sendMessage() {
+		await hub.invoke('SendMessage', 'Hello World')
+			.catch(err => console.error(err));
+	}
+
+	async function closeConenction() {
+		await hub.stop().then(x => console.log(x)).catch(err => console.error(err));
+	}
+
+	hub.off('AcceptMessage');
+	hub.on('AcceptMessage', (data) => console.log(data));
+ 
 	const cardList = tempData.map(c => {
 		return <div key={c.id}>
 			<Card data={c}/>
@@ -94,6 +109,8 @@ export function Main() {
 	return(
 		<div className="bg-slate-200 h-full">
 			<Button onClick={callApi}>Call API</Button>
+			<Button onClick={sendMessage}>Send Message</Button>
+			<Button onClick={closeConenction}>Stop Connection</Button>
 			<div className='container mx-auto w-4/5'>
 				<div className='flex flex-col space-y-12'>
 					{ cardList }

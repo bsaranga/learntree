@@ -1,3 +1,4 @@
+using System.Text.Json;
 using message_hub.api;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -5,7 +6,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
-builder.Services.AddSignalR();
+builder.Services.AddSignalR()
+    .AddJsonProtocol(conf => conf.PayloadSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase );
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -24,8 +26,8 @@ app.UseHttpsRedirection();
 
 app.UseCors(p => p.AllowAnyHeader()
                   .AllowAnyMethod()
-                  .AllowAnyOrigin()
-                  .AllowCredentials());
+                  .AllowCredentials()
+                  .WithOrigins("https://localhost:3000"));
 
 app.UseAuthorization();
 
