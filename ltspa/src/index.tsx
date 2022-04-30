@@ -4,10 +4,15 @@ import UserService from './services/UserService';
 import './index.scss';
 
 import App from './App';
+import { BrowserRouter } from 'react-router-dom';
 
 const container = document.getElementById('root') as Element;
 const root = createRoot(container);
-const appRenderCb = () => root.render(<App/>);
+const appRenderCb = () => root.render(
+	<BrowserRouter>
+		<App/>
+	</BrowserRouter>
+);
 
 UserService.initKeyCloak(appRenderCb);
 

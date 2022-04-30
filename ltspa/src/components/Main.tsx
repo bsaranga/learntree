@@ -107,7 +107,7 @@ export function Main() {
 	console.log('Main Rendered');
 
 	return(
-		<div className="bg-slate-200 h-full">
+		<div className="bg-slate-200 h-[95vh] overflow-y-auto">
 			<Button onClick={callApi}>Call API</Button>
 			<Button onClick={sendMessage}>Send Message</Button>
 			<Button onClick={closeConenction}>Stop Connection</Button>

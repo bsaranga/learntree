@@ -1,21 +1,17 @@
+import { Route, Routes } from 'react-router-dom';
 import './App.scss';
-import { Header } from './components/Header';
+import Layout from './components/Layout';
 import { Main } from './components/Main';
-import MessageHubContext from './contexts/MessageHubContext';
-import { GetHubConnection, StartHub } from './services/MessageHub';
+import Profile from './pages/Profile';
 
 function App() {
-
-	const messageHub = GetHubConnection();
-	StartHub(messageHub);
-
 	return (
-		<>
-			<MessageHubContext.Provider value={messageHub}>
-				<Header/>
-				<Main/>
-			</MessageHubContext.Provider>
-		</>
+		<Routes>
+			<Route path='/' element={<Layout/>}>
+				<Route index element={<Main/>}/>
+				<Route path='profile' element={<Profile/>} />
+			</Route>
+		</Routes>
 	);
 }
 

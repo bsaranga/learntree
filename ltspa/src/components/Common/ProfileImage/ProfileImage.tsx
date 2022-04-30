@@ -3,16 +3,17 @@ import IProfileImage from '../../../interfaces/IProfileImage';
 export default function ProfileImage(props: IProfileImage) {
 	const data = {...props};
 	return(
-		<div>
+		<div className={data.className}>
 			<img className={'rounded-full'.concat((() => {
-				const space = ' ';
 				switch (data.size) {
+				case 'smaller':
+					return ' '.concat('w-6');	
 				case 'small':
-					return space.concat('w-8');
+					return ' '.concat('w-8');
 				case 'normal':
-					return space.concat('w-12');
+					return ' '.concat('w-10');
 				case 'large':
-					return space.concat('w-16');
+					return ' '.concat('w-12');
 				}
 				return '';
 			})())} src={data.imageUrl} />
