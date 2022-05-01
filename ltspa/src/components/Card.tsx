@@ -8,7 +8,7 @@ import './_debug.scss';
 export default function Card(props: ICardPropWrapper) {
 	const dProps = {...props.data as ICardProps};
 	return(
-		<div className='bg-white w-1/2 mx-auto rounded-md flex flex-col divide-y shadow-lg'>
+		<div className='bg-white w-[50rem] rounded-md flex flex-col divide-y shadow-lg'>
 			<CardHeader data={dProps} />
 			<CardBody data={dProps} />
 			<CardSocialActions data={dProps} />

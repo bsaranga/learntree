@@ -3,7 +3,7 @@ import { useContext } from 'react';
 import MessageHubContext from '../contexts/MessageHubContext';
 import ICardProps from '../interfaces/ICardProps';
 import HttpService from '../services/HttpService';
-import Card from './Card';
+import Card from '../components/Card';
 
 const tempData: ICardProps[] = [
 	{
@@ -76,7 +76,7 @@ const tempData: ICardProps[] = [
 	}
 ];
 
-export function Main() {
+export function NewsFeed() {
 
 	const httpClient = HttpService.client();
 	const hub = useContext(MessageHubContext);
@@ -107,15 +107,13 @@ export function Main() {
 	console.log('Main Rendered');
 
 	return(
-		<div className="bg-slate-200 h-[95vh] overflow-y-auto">
-			<Button onClick={callApi}>Call API</Button>
-			<Button onClick={sendMessage}>Send Message</Button>
-			<Button onClick={closeConenction}>Stop Connection</Button>
-			<div className='container mx-auto w-4/5'>
-				<div className='flex flex-col space-y-12'>
-					{ cardList }
-				</div>
+		<div className='flex flex-col space-y-12 w-min'>
+			<div className='absolute left-0'>
+				<Button onClick={callApi}>Call API</Button>
+				<Button onClick={sendMessage}>Send Message</Button>
+				<Button onClick={closeConenction}>Stop Connection</Button>
 			</div>
+			{ cardList }
 		</div>
 	);
 }

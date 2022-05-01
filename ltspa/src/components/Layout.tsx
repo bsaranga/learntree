@@ -10,7 +10,11 @@ export default function Layout() {
 		<>
 			<Header/>
 			<MessageHubContext.Provider value={messageHub}>
-				<Outlet/>
+				<div className="bg-slate-200 h-[95vh] overflow-y-auto">
+					<div className='flex justify-center'>
+						<Outlet/>
+					</div>
+				</div>
 			</MessageHubContext.Provider>
 		</>
 	);

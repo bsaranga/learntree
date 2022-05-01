@@ -10,7 +10,9 @@ export function Header () {
 	
 	return (
 		<div className='sticky py-[0.36rem] px-10 top-0 shadow-lg flex space-x-4 justify-between items-center bg-white'>
-			<div className='text-2xl font-semibold text-rose-600'>LearnTree<span className='text-xxs align-super'>TM</span></div>
+			<Link to='/' className='hover:no-underline'>
+				<div className='text-2xl font-semibold text-rose-600'>LearnTree<span className='text-xxs align-super'>TM</span></div>
+			</Link>
 			<InputGroup className='w-2/6' type='search' placeholder='Search...' leftElement={<Icon icon='search'/>}/>
 			<div className='flex space-x-2 items-center'>
 				<div className='flex items-center border-[2px] rounded-full'>
