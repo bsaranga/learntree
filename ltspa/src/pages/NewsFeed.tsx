@@ -3,7 +3,7 @@ import { useContext } from 'react';
 import MessageHubContext from '../contexts/MessageHubContext';
 import ICardProps from '../interfaces/ICardProps';
 import HttpService from '../services/HttpService';
-import Card from '../components/Card';
+import Card from '../components/Newsfeed/Card/Card';
 
 const tempData: ICardProps[] = [
 	{

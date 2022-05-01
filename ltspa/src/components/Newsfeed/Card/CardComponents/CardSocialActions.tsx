@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { ChevronDown, ChevronUp, ThumbsDown, ThumbsUp } from '../../../assets/icons/Icons-Solid';
-import ICardProps from '../../../interfaces/ICardProps';
-import ICardPropWrapper from '../../../interfaces/ICardPropWrapper';
-import ResponsesSection from './ResponsesSection/ResponsesSection';
+import { ChevronDown, ChevronUp, ThumbsDown, ThumbsUp } from '../../../../assets/icons/Icons-Solid';
+import ICardProps from '../../../../interfaces/ICardProps';
+import ICardPropWrapper from '../../../../interfaces/ICardPropWrapper';
+import ResponsesSection from '../ResponsesSection/ResponsesSection';
+
 
 export default function CardSocialActions(props: ICardPropWrapper) {
 	const dProps = {...props.data as ICardProps};

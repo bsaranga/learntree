@@ -1,9 +1,8 @@
-import ICardProps from '../interfaces/ICardProps';
-import ICardPropWrapper from '../interfaces/ICardPropWrapper';
-import CardBody from './Newsfeed/Card/CardBody';
-import CardHeader from './Newsfeed/Card/CardHeader';
-import CardSocialActions from './Newsfeed/Card/CardSocialActions';
-import './_debug.scss';
+import ICardProps from '../../../interfaces/ICardProps';
+import ICardPropWrapper from '../../../interfaces/ICardPropWrapper';
+import CardBody from './CardComponents/CardBody';
+import CardHeader from './CardComponents/CardHeader';
+import CardSocialActions from './CardComponents/CardSocialActions';
 
 export default function Card(props: ICardPropWrapper) {
 	const dProps = {...props.data as ICardProps};

@@ -1,6 +1,6 @@
-import ICardProps from '../../../interfaces/ICardProps';
-import ICardPropWrapper from '../../../interfaces/ICardPropWrapper';
-import ProfileImage from '../../Common/ProfileImage/ProfileImage';
+import ICardProps from '../../../../interfaces/ICardProps';
+import ICardPropWrapper from '../../../../interfaces/ICardPropWrapper';
+import ProfileImage from '../../../Common/ProfileImage/ProfileImage';
 
 export default function CardHeader(props: ICardPropWrapper) {
 	const dProps = {...props.data as ICardProps};
