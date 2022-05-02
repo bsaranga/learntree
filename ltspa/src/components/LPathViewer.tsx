@@ -1,14 +1,17 @@
 import { useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import G6, { NodeConfig, TreeGraph } from '@antv/g6';
+import ILearningPathGraph from '../interfaces/lpath-interfaces/ILearningPathGraph';
 
 
 export default function LPathViewer() {
-	const dendoGramData = {
+	const mindMapData: ILearningPathGraph = {
 		'id': 'Modeling Methods',
+		nodeType: 'root',
 		'children': [
 			{
 				'id': 'Classification',
+				rootType: 'prerequisite',
 				'children': [
 					{
 						'id': 'Logistic regression'
@@ -146,6 +149,7 @@ export default function LPathViewer() {
 					return 60;
 				},
 				getSide: (node: NodeConfig) => {
+					console.log(node.data);
 					if (node.id === 'Classification') {
 						return 'left';
 					}
@@ -170,7 +174,6 @@ export default function LPathViewer() {
 				label: node?.id,
 				labelCfg: {
 					style: {
-						fontFamily: 'ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
 						fontWeight: 400,
 						fontSize: 12
 					},
@@ -179,7 +182,7 @@ export default function LPathViewer() {
 			};
 		});
 
-		graph.data(dendoGramData);
+		graph.data(mindMapData);
 		graph.render();
 
 		return () => graph.destroy();
