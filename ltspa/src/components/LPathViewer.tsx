@@ -1,7 +1,7 @@
-import { useEffect, useRef } from 'react';
-import { useParams } from 'react-router-dom';
+import { useEffect, useRef, useState } from 'react';
 import G6, { NodeConfig, TreeGraph } from '@antv/g6';
 import ILearningPathGraph from '../interfaces/lpath-interfaces/ILearningPathGraph';
+import ILPathNodeConfig from '../interfaces/lpath-interfaces/ILPathNodeConfig';
 
 
 export default function LPathViewer() {
@@ -11,7 +11,7 @@ export default function LPathViewer() {
 		'children': [
 			{
 				'id': 'Classification',
-				rootType: 'prerequisite',
+				nodeType: 'prerequisite',
 				'children': [
 					{
 						'id': 'Logistic regression'
@@ -46,7 +46,7 @@ export default function LPathViewer() {
 						'id': 'Models diversity',
 						'children': [
 							{
-								'id': 'Different initializations'
+								'id': 'Different initializations',
 							},
 							{
 								'id': 'Different parameter choices'
@@ -115,7 +115,7 @@ export default function LPathViewer() {
 		]
 	};
 
-	const params = useParams();
+	const [mainNodes, setMainNodes] = useState({rootNodeId: '', prerequisiteNodeId: ''});
 
 	const ref = useRef<HTMLDivElement>(null);
 
@@ -148,9 +148,8 @@ export default function LPathViewer() {
 				getHGap: () => {
 					return 60;
 				},
-				getSide: (node: NodeConfig) => {
-					console.log(node.data);
-					if (node.id === 'Classification') {
+				getSide: (node: ILPathNodeConfig) => {
+					if (node.data.nodeType === 'prerequisite') {
 						return 'left';
 					}
 					return 'right';
@@ -166,9 +165,13 @@ export default function LPathViewer() {
 
 		graph.node((node: NodeConfig) => {
 			let centerNode = 0;
-			if (node?.id === 'Modeling Methods') {
+
+			if (node?.nodeType === 'root') {
+				setMainNodes({...mainNodes, rootNodeId: node.id});
 				centerNode = node?.x as number;
 			}
+
+			if (node?.nodeType === 'prerequisite') setMainNodes({...mainNodes, prerequisiteNodeId: node.id});
 
 			return {
 				label: node?.id,
@@ -178,6 +181,21 @@ export default function LPathViewer() {
 						fontSize: 12
 					},
 					position: (!node.children) ? ((node.x as number) > centerNode ? 'right' : 'left') : 'top'
+				}
+			};
+		});
+
+		graph.edge((edge) => {
+			return (edge.source == mainNodes.rootNodeId && edge.target == mainNodes.prerequisiteNodeId) ? {
+				style: {
+					lineDash: [4,2],
+					stroke: 'rgb(200,200,200)',
+					lineWidth: 1.5
+				}
+			} : {
+				style: {
+					stroke: 'rgb(200,200,200)',
+					lineWidth: 1.5
 				}
 			};
 		});
