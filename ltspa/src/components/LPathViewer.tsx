@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useLayoutEffect, useRef } from 'react';
 import G6, { NodeConfig, TreeGraph } from '@antv/g6';
 import ILearningPathGraph from '../interfaces/lpath-interfaces/ILearningPathGraph';
 import ILPathNodeConfig from '../interfaces/lpath-interfaces/ILPathNodeConfig';
@@ -115,13 +115,14 @@ export default function LPathViewer() {
 		]
 	};
 
-	const [mainNodes, setMainNodes] = useState({rootNodeId: '', prerequisiteNodeId: ''});
+	const rootNode = mindMapData.id;
+	const prerequisiteNode = mindMapData.children?.filter(c => c.nodeType === 'prerequisite')[0].id;
 
 	const ref = useRef<HTMLDivElement>(null);
 
-	useEffect(() => {
+	useLayoutEffect(() => {
 		console.log('Graph render');
-		
+
 		const grid = new G6.Grid();
 		const graph: TreeGraph = new G6.TreeGraph({
 			container: ref.current as HTMLDivElement,
@@ -157,7 +158,7 @@ export default function LPathViewer() {
 			},
 			animate: true,
 			animateCfg: {
-				duration: 500,
+				duration: 450,
 				easing: 'easeCubic'
 			},
 			plugins: [grid]
@@ -167,11 +168,8 @@ export default function LPathViewer() {
 			let centerNode = 0;
 
 			if (node?.nodeType === 'root') {
-				setMainNodes({...mainNodes, rootNodeId: node.id});
 				centerNode = node?.x as number;
 			}
-
-			if (node?.nodeType === 'prerequisite') setMainNodes({...mainNodes, prerequisiteNodeId: node.id});
 
 			return {
 				label: node?.id,
@@ -186,7 +184,7 @@ export default function LPathViewer() {
 		});
 
 		graph.edge((edge) => {
-			return (edge.source == mainNodes.rootNodeId && edge.target == mainNodes.prerequisiteNodeId) ? {
+			return (edge.source == rootNode && edge.target == prerequisiteNode) ? {
 				style: {
 					lineDash: [4,2],
 					stroke: 'rgb(200,200,200)',
