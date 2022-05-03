@@ -7,7 +7,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/learntree-graph.api/leantree-graph.csproj",
+                "${workspaceFolder}/learntree_graph.api/leantree_graph.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -19,7 +19,7 @@
             "type": "process",
             "args": [
                 "publish",
-                "${workspaceFolder}/learntree-graph.api/leantree-graph.csproj",
+                "${workspaceFolder}/learntree_graph.api/leantree_graph.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -33,7 +33,7 @@
                 "watch",
                 "run",
                 "--project",
-                "${workspaceFolder}/learntree-graph.api/leantree-graph.csproj"
+                "${workspaceFolder}/learntree_graph.api/leantree_graph.csproj"
             ],
             "problemMatcher": "$msCompile"
         }

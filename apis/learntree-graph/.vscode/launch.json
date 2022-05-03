@@ -9,18 +9,39 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/learntree-graph.api/bin/Debug/net6.0/leantree-graph.dll",
+            "program": "${workspaceFolder}/learntree_graph.api/bin/Debug/net6.0/leantree_graph.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/learntree-graph.api",
+            "cwd": "${workspaceFolder}/learntree_graph.api",
             "stopAtEntry": false,
+            "justMyCode": false,
+            "sourceLinkOptions": {
+                "*": {
+                    "enabled": true
+                }
+            },
+            "symbolOptions": {
+                "searchMicrosoftSymbolServer": true,
+                "searchNuGetOrgSymbolServer": true
+            },
+            "suppressJITOptimizations": true,
             "env": {
-                "ASPNETCORE_ENVIRONMENT": "Development"
+                "ASPNETCORE_ENVIRONMENT": "Development",
+                "COMPlus_ReadyToRun": "0"
             },
         },
         {
             "name": "Attach",
             "type": "coreclr",
             "request": "attach",
+            "justMyCode": false,
+            "symbolOptions": {
+                "searchMicrosoftSymbolServer": true,
+                "searchNuGetOrgSymbolServer": true
+            },
+            "suppressJITOptimizations": true,
+            "env": {
+                "COMPlus_ReadyToRun": "0"
+            }
         }
     ]
 }

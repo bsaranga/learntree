@@ -10,33 +10,38 @@ export default function LPathViewer() {
 		nodeType: 'root',
 		'children': [
 			{
-				'id': 'Classification',
+				id: 'Prerequisites',
 				nodeType: 'prerequisite',
-				'children': [
+				children: [
 					{
-						'id': 'Logistic regression'
+						'id': 'Classification',
+						'children': [
+							{
+								'id': 'Logistic regression'
+							},
+							{
+								'id': 'Linear discriminant analysis'
+							},
+							{
+								'id': 'Rules'
+							},
+							{
+								'id': 'Decision trees'
+							},
+							{
+								'id': 'Naive Bayes'
+							},
+							{
+								'id': 'K nearest neighbor'
+							},
+							{
+								'id': 'Probabilistic neural network'
+							},
+							{
+								'id': 'Support vector machine'
+							}
+						]
 					},
-					{
-						'id': 'Linear discriminant analysis'
-					},
-					{
-						'id': 'Rules'
-					},
-					{
-						'id': 'Decision trees'
-					},
-					{
-						'id': 'Naive Bayes'
-					},
-					{
-						'id': 'K nearest neighbor'
-					},
-					{
-						'id': 'Probabilistic neural network'
-					},
-					{
-						'id': 'Support vector machine'
-					}
 				]
 			},
 			{
@@ -129,7 +134,7 @@ export default function LPathViewer() {
 			fitView: true,
 			fitViewPadding: 50,
 			modes: {
-				default: ['drag-canvas', 'zoom-canvas', 'drag-node'],
+				default: ['drag-canvas', 'zoom-canvas', 'drag-node', 'brush-select'],
 			},
 			defaultEdge: {
 				type: 'cubic-horizontal',

@@ -1,6 +1,10 @@
+using System.Security.Claims;
+using System.Text.Json;
 using learntree_graph.infrastructure;
 using learntree_graph.infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json.Linq;
 
 if (args.Any() && args[0] == "test") {
     
@@ -23,8 +27,28 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options => {
                     options.Authority = "https://localhost:8443/realms/LearnTree";
-                    options.Audience = "graph-backend";
+                    options.Audience = "graph-api";
                     options.SaveToken = false;
+                    options.Events = new JwtBearerEvents
+                    {
+                        OnTokenValidated = context => 
+                        {
+                            var resources = JObject.Parse(context!.Principal!.FindFirst("resource_access")!.Value);
+                            var clientResource = resources[context!.Principal!.FindFirst("aud")!.Value];
+                            var clientRoles = clientResource!["roles"];
+                            var claimsIdentity = context.Principal.Identity as ClaimsIdentity;
+                            
+                            if (claimsIdentity == null) {
+                                throw new Exception("Unauthenticated...");
+                            }
+
+                            foreach (var role in clientRoles!)
+                            {
+                                claimsIdentity.AddClaim(new Claim(ClaimTypes.Role, role.ToString()));
+                            }
+                            return Task.CompletedTask;
+                        }
+                    };
                 });
 
 // Add services to the container.

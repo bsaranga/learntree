@@ -27,7 +27,7 @@ namespace leantree_graph.Controllers
             });
         }
 
-        [Authorize]
+        [Authorize(Roles="lt-graph-root")]
         [HttpGet("secured")]
         public IActionResult Secured() {
             return Ok(new {
