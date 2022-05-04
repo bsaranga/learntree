@@ -1,9 +1,9 @@
-import { Button } from '@blueprintjs/core';
 import { useContext } from 'react';
 import MessageHubContext from '../contexts/MessageHubContext';
 import ICardProps from '../interfaces/ICardProps';
 import HttpService from '../services/HttpService';
 import Card from '../components/Newsfeed/Card/Card';
+import { DatePicker, Button } from 'antd';
 
 const tempData: ICardProps[] = [
 	{
@@ -109,7 +109,7 @@ export function NewsFeed() {
 	return(
 		<div className='flex flex-col space-y-12 w-min'>
 			<div className='absolute left-0'>
-				<Button onClick={callApi}>Call API</Button>
+				<Button type='primary' onClick={callApi}>Call API</Button>
 				<Button onClick={sendMessage}>Send Message</Button>
 				<Button onClick={closeConenction}>Stop Connection</Button>
 			</div>
