@@ -3,7 +3,7 @@ import MessageHubContext from '../contexts/MessageHubContext';
 import ICardProps from '../interfaces/ICardProps';
 import HttpService from '../services/HttpService';
 import Card from '../components/Newsfeed/Card/Card';
-import { DatePicker, Button } from 'antd';
+import { Button } from 'antd';
 
 const tempData: ICardProps[] = [
 	{
