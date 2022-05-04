@@ -45,6 +45,20 @@ namespace learntree_graph.infrastructure.Repositories
             throw new NotImplementedException();
         }
 
+        public async Task DetachDeleteAllNodes()
+        {
+            var query = "MATCH (n) DETACH DELETE n";
+            try
+            {
+                var detachDeleteResult = await neo4jSession.RunAsync(query);
+            }
+            catch (Neo4jException ex)
+            {
+                logger.LogError(ex.Message);
+                throw;
+            }
+        }
+
         // Utils
 
         private string GetPropertyString<T>(Dictionary<string, T> props)

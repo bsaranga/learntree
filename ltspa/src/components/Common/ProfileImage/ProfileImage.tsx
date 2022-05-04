@@ -24,7 +24,7 @@ export default function ProfileImage(props: IProfileImage) {
 					return ' '.concat('w-32');
 				}
 				return '';
-			})())} src={data.imageUrl} />
+			})())} src={data.imageUrl} referrerPolicy="no-referrer" />
 		</div>
 	);
 }
