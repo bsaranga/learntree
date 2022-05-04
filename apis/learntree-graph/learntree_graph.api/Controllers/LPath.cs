@@ -35,10 +35,16 @@ namespace leantree_graph.Controllers
             });
         }
 
-        [HttpPost]
+        [HttpPost("create")]
         public async Task<IActionResult> CreateNode(string label, [FromBody] Dictionary<string,string> props)
         {
             await _graph.CreateNode(label, props);
+            return Ok();
+        }
+
+        [HttpDelete("all")]
+        public async Task<IActionResult> DeleteAndDetachAll() {
+            await _graph.DetachDeleteAllNodes();
             return Ok();
         }
     }
