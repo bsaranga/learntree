@@ -1,9 +1,9 @@
 /* eslint-disable semi */
-import { TreeGraphData } from '@antv/g6';
+export type LPNode = 'prerequisite' | 'root' | 'topic' | 'milestone';
 
-type LPNode = 'prerequisite' | 'root' | 'topic' | 'milestone'; 
-
-export default interface ILearningPathGraph extends Omit<TreeGraphData, 'children'> {
+export default interface ILearningPathGraph {
+    id?: string,
+    name?: string,
     nodeType?: LPNode,
     children?: ILearningPathGraph[]
 }

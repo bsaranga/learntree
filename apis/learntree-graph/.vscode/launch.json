@@ -13,15 +13,15 @@
             "args": [],
             "cwd": "${workspaceFolder}/learntree_graph.api",
             "stopAtEntry": false,
-            "justMyCode": false,
+            "justMyCode": true,
             "sourceLinkOptions": {
                 "*": {
                     "enabled": true
                 }
             },
             "symbolOptions": {
-                "searchMicrosoftSymbolServer": true,
-                "searchNuGetOrgSymbolServer": true
+                "searchMicrosoftSymbolServer": false,
+                "searchNuGetOrgSymbolServer": false
             },
             "suppressJITOptimizations": true,
             "env": {
@@ -33,10 +33,10 @@
             "name": "Attach",
             "type": "coreclr",
             "request": "attach",
-            "justMyCode": false,
+            "justMyCode": true,
             "symbolOptions": {
-                "searchMicrosoftSymbolServer": true,
-                "searchNuGetOrgSymbolServer": true
+                "searchMicrosoftSymbolServer": false,
+                "searchNuGetOrgSymbolServer": false
             },
             "suppressJITOptimizations": true,
             "env": {

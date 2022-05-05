@@ -1,7 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+
+using learntree_graph.domain.DTOs;
 using learntree_graph.infrastructure.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +8,7 @@ namespace leantree_graph.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize(Roles="lt-graph-root")]
     public class LPath : ControllerBase
     {
         private readonly ILogger<LPath> _logger;
@@ -21,13 +20,13 @@ namespace leantree_graph.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult Root() {
             return Ok(new {
                 Result = "Success"
             });
         }
 
-        [Authorize(Roles="lt-graph-root")]
         [HttpGet("secured")]
         public IActionResult Secured() {
             return Ok(new {
@@ -36,10 +35,9 @@ namespace leantree_graph.Controllers
         }
 
         [HttpPost("create")]
-        public async Task<IActionResult> CreateNode(string label, [FromBody] Dictionary<string,string> props)
-        {
-            await _graph.CreateNode(label, props);
-            return Ok();
+        [AllowAnonymous]
+        public IActionResult CreateLearningPath([FromBody] LearningPath lPath) {
+            return Ok("Received");
         }
 
         [HttpDelete("all")]

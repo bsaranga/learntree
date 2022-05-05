@@ -1,124 +1,199 @@
-import { useLayoutEffect, useRef } from 'react';
+import { useContext, useLayoutEffect, useRef } from 'react';
 import G6, { NodeConfig, TreeGraph } from '@antv/g6';
-import ILearningPathGraph from '../interfaces/lpath-interfaces/ILearningPathGraph';
+import ILearningPathGraph, { LPNode } from '../interfaces/lpath-interfaces/ILearningPathGraph';
 import ILPathNodeConfig from '../interfaces/lpath-interfaces/ILPathNodeConfig';
+import { randomIdGenerator } from '../utilities/generators';
+import { Button } from 'antd';
+import HttpService from '../services/HttpService';
+import { APIContext } from '../contexts/APIContext';
 
 
 export default function LPathViewer() {
 	const mindMapData: ILearningPathGraph = {
-		'id': 'Modeling Methods',
+		id: randomIdGenerator(),
+		name: 'Modeling Methods',
 		nodeType: 'root',
-		'children': [
+		children: [
 			{
-				id: 'Prerequisites',
+				id: randomIdGenerator(),
+				name: 'Prerequisites',
 				nodeType: 'prerequisite',
 				children: [
 					{
-						'id': 'Classification',
-						'children': [
+						id: randomIdGenerator(),
+						name: 'Classification',
+						nodeType: 'topic',
+						children: [
 							{
-								'id': 'Logistic regression'
+								id: randomIdGenerator(),
+								name: 'Logistic regression',
+								nodeType: 'topic',
 							},
 							{
-								'id': 'Linear discriminant analysis'
+								id: randomIdGenerator(),
+								name: 'Linear discriminant analysis',
+								nodeType: 'topic',
 							},
 							{
-								'id': 'Rules'
+								id: randomIdGenerator(),
+								name: 'Rules',
+								nodeType: 'topic',
 							},
 							{
-								'id': 'Decision trees'
+								id: randomIdGenerator(),
+								name: 'Decision trees',
+								nodeType: 'topic',
 							},
 							{
-								'id': 'Naive Bayes'
+								id: randomIdGenerator(),
+								name: 'Naive Bayes',
+								nodeType: 'topic',
 							},
 							{
-								'id': 'K nearest neighbor'
+								id: randomIdGenerator(),
+								name: 'K nearest neighbor',
+								nodeType: 'topic',
 							},
 							{
-								'id': 'Probabilistic neural network'
+								id: randomIdGenerator(),
+								name: 'Probabilistic neural network',
+								nodeType: 'topic',
 							},
 							{
-								'id': 'Support vector machine'
+								id: randomIdGenerator(),
+								name: 'Support vector machine',
+								nodeType: 'topic',
 							}
 						]
 					},
 				]
 			},
 			{
-				'id': 'Consensus',
-				'children': [
+				id: randomIdGenerator(),
+				name: 'Consensus',
+				nodeType: 'topic',
+				children: [
 					{
-						'id': 'Models diversity',
-						'children': [
+						id: randomIdGenerator(),
+						name: 'Models diversity',
+						nodeType: 'topic',
+						children: [
 							{
-								'id': 'Different initializations',
+								id: randomIdGenerator(),
+								name: 'Different initializations',
+								nodeType: 'topic',
 							},
 							{
-								'id': 'Different parameter choices'
+								id: randomIdGenerator(),
+								name: 'Different parameter choices',
+								nodeType: 'topic',
 							},
 							{
-								'id': 'Different architectures'
+								id: randomIdGenerator(),
+								name: 'Different architectures',
+								nodeType: 'topic',
 							},
 							{
-								'id': 'Different modeling methods'
+								id: randomIdGenerator(),
+								name: 'Different modeling methods',
+								nodeType: 'topic',
 							},
 							{
-								'id': 'Different training sets'
+								id: randomIdGenerator(),
+								name: 'Different training sets',
+								nodeType: 'topic',
 							},
 							{
-								'id': 'Different feature sets'
+								id: randomIdGenerator(),
+								name: 'Different feature sets',
+								nodeType: 'topic',
 							}
 						]
 					},
 					{
-						'id': 'Methods',
-						'children': [
+						id: randomIdGenerator(),
+						name: 'Methods',
+						nodeType: 'topic',
+						children: [
 							{
-								'id': 'Classifier selection'
+								id: randomIdGenerator(),
+								name: 'Classifier selection',
+								nodeType: 'topic',
 							},
 							{
-								'id': 'Classifier fusion'
+								id: randomIdGenerator(),
+								name: 'Classifier fusion',
+								nodeType: 'topic',
 							}
 						]
 					},
 					{
-						'id': 'Common',
-						'children': [
+						id: randomIdGenerator(),
+						name: 'Common',
+						nodeType: 'topic',
+						children: [
 							{
-								'id': 'Bagging'
+								id: randomIdGenerator(),
+								name: 'Bagging',
+								nodeType: 'topic',
 							},
 							{
-								'id': 'Boosting'
+								id: randomIdGenerator(),
+								name: 'Boosting',
+								nodeType: 'topic',
 							},
 							{
-								'id': 'AdaBoost'
+								id: randomIdGenerator(),
+								name: 'AdaBoost',
+								nodeType: 'topic',
 							}
 						]
 					}
 				]
 			},
 			{
-				'id': 'Regression',
-				'children': [
+				id: randomIdGenerator(),
+				name: 'Regression',
+				nodeType: 'topic',
+				children: [
 					{
-						'id': 'Multiple linear regression'
+						id: randomIdGenerator(),
+						name: 'Multiple linear regression',
+						nodeType: 'topic',
 					},
 					{
-						'id': 'Partial least squares'
+						id: randomIdGenerator(),
+						name: 'Partial least squares',
+						nodeType: 'topic',
 					},
 					{
-						'id': 'Multi-layer feedforward neural network'
+						id: randomIdGenerator(),
+						name: 'Multi-layer feedforward neural network',
+						nodeType: 'topic',
 					},
 					{
-						'id': 'General regression neural network'
+						id: randomIdGenerator(),
+						name: 'General regression neural network',
+						nodeType: 'topic',
 					},
 					{
-						'id': 'Support vector regression'
+						id: randomIdGenerator(),
+						name: 'Support vector regression',
+						nodeType: 'topic',
 					}
 				]
 			}
 		]
 	};
+
+	const httpClient = HttpService.client();
+	const api = useContext(APIContext);
+
+	const dataCopy = JSON.parse(JSON.stringify(mindMapData));
+
+	function postData() {
+		httpClient.post<ILearningPathGraph>(`${api.protocol}://${api.host}:${api.port}/${api.subRoute}/lpath/create`, dataCopy);
+	}
 
 	const rootNode = mindMapData.id;
 	const prerequisiteNode = mindMapData.children?.filter(c => c.nodeType === 'prerequisite')[0].id;
@@ -155,7 +230,7 @@ export default function LPathViewer() {
 					return 60;
 				},
 				getSide: (node: ILPathNodeConfig) => {
-					if (node.data.nodeType === 'prerequisite') {
+					if (node.data?.nodeType === 'prerequisite') {
 						return 'left';
 					}
 					return 'right';
@@ -177,7 +252,7 @@ export default function LPathViewer() {
 			}
 
 			return {
-				label: node?.id,
+				label: node?.name as string,
 				labelCfg: {
 					style: {
 						fontWeight: 400,
@@ -211,7 +286,9 @@ export default function LPathViewer() {
 
 	return (
 		<div ref={ref} className="w-[100vw] h-[90vh]">
-			
+			<div className='p-2 absolute'>
+				<Button onClick={postData} type='primary' size='small'>Post</Button>
+			</div>
 		</div>
 	);
 }
