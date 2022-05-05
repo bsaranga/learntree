@@ -1,10 +1,10 @@
 
-using learntree_graph.domain.DTOs;
-using learntree_graph.infrastructure.Repositories;
+using ltgraph.domain.DTOs;
+using ltgraph.infrastructure.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace leantree_graph.Controllers
+namespace ltgraph.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]

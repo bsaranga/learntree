@@ -1,6 +1,6 @@
-using learntree_graph.domain.DTOs;
+using ltgraph.domain.DTOs;
 
-namespace learntree_graph.domain.Interfaces
+namespace ltgraph.domain.Interfaces
 {
     public interface ILPathRepository
     {

@@ -2,7 +2,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Neo4j.Driver;
 
-namespace learntree_graph.infrastructure
+namespace ltgraph.infrastructure
 {
     public class AuraDbConnection : IAuraDbConnection, IDisposable
     {

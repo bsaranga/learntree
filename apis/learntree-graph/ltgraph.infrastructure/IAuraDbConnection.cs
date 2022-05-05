@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Neo4j.Driver;
 
-namespace learntree_graph.infrastructure
+namespace ltgraph.infrastructure
 {
     public interface IAuraDbConnection
     {

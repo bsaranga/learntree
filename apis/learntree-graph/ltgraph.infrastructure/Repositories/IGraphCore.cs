@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace learntree_graph.infrastructure.Repositories
+namespace ltgraph.infrastructure.Repositories
 {
     public interface IGraphCore
     {

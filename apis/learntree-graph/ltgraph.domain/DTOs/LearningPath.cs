@@ -1,7 +1,7 @@
 using System.Text.Json.Serialization;
-using learntree_graph.domain.Models.Enums;
+using ltgraph.domain.Models.Enums;
 
-namespace learntree_graph.domain.DTOs
+namespace ltgraph.domain.DTOs
 {
     public class LearningPath
     {

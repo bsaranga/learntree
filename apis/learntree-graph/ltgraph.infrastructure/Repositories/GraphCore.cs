@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Neo4j.Driver;
 using Microsoft.Extensions.Logging;
 
-namespace learntree_graph.infrastructure.Repositories
+namespace ltgraph.infrastructure.Repositories
 {
     public class GraphCore : IGraphCore
     {

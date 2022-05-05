@@ -1,6 +1,6 @@
 using System.Runtime.Serialization;
 
-namespace learntree_graph.domain.Models.Enums
+namespace ltgraph.domain.Models.Enums
 {
     public enum NodeType
     {

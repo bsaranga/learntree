@@ -1,9 +1,7 @@
 using System.Security.Claims;
-using System.Text.Json;
-using learntree_graph.infrastructure;
-using learntree_graph.infrastructure.Repositories;
+using ltgraph.infrastructure;
+using ltgraph.infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Linq;
 
 if (args.Any() && args[0] == "test") {

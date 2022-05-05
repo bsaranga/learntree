@@ -1,7 +1,7 @@
-using learntree_graph.domain.DTOs;
-using learntree_graph.domain.Interfaces;
+using ltgraph.domain.DTOs;
+using ltgraph.domain.Interfaces;
 
-namespace learntree_graph.infrastructure.Repositories
+namespace ltgraph.infrastructure.Repositories
 {
     public class LPathRepository : ILPathRepository
     {

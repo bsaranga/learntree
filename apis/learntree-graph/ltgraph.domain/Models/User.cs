@@ -1,4 +1,4 @@
-namespace learntree_graph.domain.Models
+namespace ltgraph.domain.Models
 {
     public class User
     {
