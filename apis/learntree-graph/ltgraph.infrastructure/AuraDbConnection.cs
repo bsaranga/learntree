@@ -25,6 +25,8 @@ namespace ltgraph.infrastructure
             _driver = GraphDatabase.Driver(uri, AuthTokens.Basic(user, password), options => {
                 options.WithMaxIdleConnectionPoolSize(500);
             });
+
+            _logger.LogInformation("<< NEO4J Instantiated >>");
         }
 
         public void Dispose()

@@ -1,5 +1,6 @@
 
 using ltgraph.domain.DTOs;
+using ltgraph.domain.Interfaces;
 using ltgraph.infrastructure.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -12,11 +13,11 @@ namespace ltgraph.Controllers
     public class LPath : ControllerBase
     {
         private readonly ILogger<LPath> _logger;
-        private readonly IGraphCore _graph;
-        public LPath(ILogger<LPath> logger, IGraphCore graph)
+        private readonly ILPathRepository _lpathRepo;
+        public LPath(ILogger<LPath> logger, ILPathRepository lpathRepo)
         {
             _logger = logger;
-            _graph = graph;
+            _lpathRepo = lpathRepo;
         }
 
         [HttpGet]
@@ -37,13 +38,8 @@ namespace ltgraph.Controllers
         [HttpPost("create")]
         [AllowAnonymous]
         public IActionResult CreateLearningPath([FromBody] LearningPath lPath) {
+            _lpathRepo.CreateLearningPath(lPath);
             return Ok("Received");
-        }
-
-        [HttpDelete("all")]
-        public async Task<IActionResult> DeleteAndDetachAll() {
-            await _graph.DetachDeleteAllNodes();
-            return Ok();
         }
     }
 }

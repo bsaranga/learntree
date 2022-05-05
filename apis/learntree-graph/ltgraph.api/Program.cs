@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using ltgraph.domain.Interfaces;
 using ltgraph.infrastructure;
 using ltgraph.infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -52,6 +53,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 // Add services to the container.
 builder.Services.AddSingleton<IAuraDbConnection, AuraDbConnection>();
 builder.Services.AddScoped<IGraphCore, GraphCore>();
+builder.Services.AddScoped<ILPathRepository, LPathRepository>();
 
 builder.Services.AddControllers();
 builder.Services.AddHealthChecks();
