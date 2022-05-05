@@ -11,8 +11,8 @@ module.exports = {
   },
   {
     name   : "Learn Tree Graph API",
-    script : "dotnet leantree_graph.dll --urls \"https://localhost:4155\"",
-    cwd: "./apis/learntree-graph/learntree_graph.api/bin/Debug/net6.0/",
+    script : "dotnet ltgraph.api.dll --urls \"https://localhost:4155\"",
+    cwd: "./apis/learntree-graph/ltgraph.api/bin/Debug/net6.0/",
     watch: true,
     max_memory_restart : "2G"
   },
