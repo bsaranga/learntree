@@ -22,7 +22,7 @@ export default function LPathViewer() {
 					{
 						id: randomIdGenerator(),
 						name: 'Classification',
-						nodeType: 'topic',
+						nodeType: 'aggregate',
 						children: [
 							{
 								id: randomIdGenerator(),
@@ -71,12 +71,12 @@ export default function LPathViewer() {
 			{
 				id: randomIdGenerator(),
 				name: 'Consensus',
-				nodeType: 'topic',
+				nodeType: 'aggregate',
 				children: [
 					{
 						id: randomIdGenerator(),
 						name: 'Models diversity',
-						nodeType: 'topic',
+						nodeType: 'aggregate',
 						children: [
 							{
 								id: randomIdGenerator(),
@@ -113,7 +113,7 @@ export default function LPathViewer() {
 					{
 						id: randomIdGenerator(),
 						name: 'Methods',
-						nodeType: 'topic',
+						nodeType: 'aggregate',
 						children: [
 							{
 								id: randomIdGenerator(),
@@ -130,7 +130,7 @@ export default function LPathViewer() {
 					{
 						id: randomIdGenerator(),
 						name: 'Common',
-						nodeType: 'topic',
+						nodeType: 'aggregate',
 						children: [
 							{
 								id: randomIdGenerator(),
@@ -154,7 +154,7 @@ export default function LPathViewer() {
 			{
 				id: randomIdGenerator(),
 				name: 'Regression',
-				nodeType: 'topic',
+				nodeType: 'aggregate',
 				children: [
 					{
 						id: randomIdGenerator(),
