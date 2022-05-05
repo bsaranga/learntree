@@ -40,11 +40,6 @@ namespace learntree_graph.infrastructure.Repositories
             }
         }
 
-        public Task CreateNode<T>(string label, Dictionary<string, T> properties)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task DetachDeleteAllNodes()
         {
             var query = "MATCH (n) DETACH DELETE n";
