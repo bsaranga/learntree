@@ -52,7 +52,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 });
 
 // Add services to the container.
-builder.Services.AddScoped<IAuraDbConnection, AuraDbConnection>();
+builder.Services.AddSingleton<IAuraDbConnection, AuraDbConnection>();
 builder.Services.AddScoped<IGraphCore, GraphCore>();
 
 builder.Services.AddControllers();

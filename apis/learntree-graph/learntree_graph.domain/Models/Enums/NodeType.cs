@@ -8,6 +8,8 @@ namespace learntree_graph.domain.Models.Enums
         Prerequisite,
         [EnumMember(Value = "root")]
         Root,
+        [EnumMember(Value = "aggregate")]
+        Aggregate,
         [EnumMember(Value = "topic")]
         Topic,
         [EnumMember(Value = "milestone")]

@@ -9,7 +9,7 @@ namespace learntree_graph.infrastructure.Repositories
 {
     public class GraphCore : IGraphCore
     {
-        private IAsyncSession neo4jSession;
+        private IDriver _dbDriver;
         private IAuraDbConnection? connection;
         private ILogger<GraphCore> logger;
 
@@ -17,7 +17,7 @@ namespace learntree_graph.infrastructure.Repositories
         {
             this.logger = logger;
             this.connection = connection;
-            this.neo4jSession = this.connection.EstablishConnection().GetAsyncSession();
+            this._dbDriver = this.connection.GetDriverInstance();
         }
         
         public async Task CreateNode(string label, Dictionary<string, string> properties)
@@ -25,13 +25,15 @@ namespace learntree_graph.infrastructure.Repositories
             var query = $"MERGE(x:{label} {{{GetPropertyString(properties)}}}) RETURN x";
             try
             {
-                var writeResult = await neo4jSession.WriteTransactionAsync(async tx => {
-                    var result = await tx.RunAsync(query);
-                    return await result.SingleAsync();
-                });
+                using (var session = _dbDriver.AsyncSession()){
+                    var writeResult = await session.WriteTransactionAsync(async tx => {
+                        var result = await tx.RunAsync(query);
+                        return await result.SingleAsync();
+                    });
 
-                var createdNode = writeResult["x"].As<INode>();
-                logger.LogInformation($"Created node with id: {createdNode.Id}, label: {createdNode.Labels[0]}, properties: {string.Join(",", createdNode.Properties)}");
+                    var createdNode = writeResult["x"].As<INode>();
+                    logger.LogInformation($"Created node with id: {createdNode.Id}, label: {createdNode.Labels[0]}, properties: {string.Join(",", createdNode.Properties)}");
+                }
             }
             catch (Neo4jException ex)
             {
@@ -45,7 +47,9 @@ namespace learntree_graph.infrastructure.Repositories
             var query = "MATCH (n) DETACH DELETE n";
             try
             {
-                var detachDeleteResult = await neo4jSession.RunAsync(query);
+                using (var session = _dbDriver.AsyncSession()){
+                    var detachDeleteResult = await session.RunAsync(query);
+                }
             }
             catch (Neo4jException ex)
             {

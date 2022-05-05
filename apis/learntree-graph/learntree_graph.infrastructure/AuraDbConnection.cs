@@ -13,7 +13,6 @@ namespace learntree_graph.infrastructure
         private readonly string user;
         private readonly string password;
         private IDriver? _driver;
-        private IAsyncSession? _session;
         public AuraDbConnection(ILogger<AuraDbConnection> logger, IConfiguration configuration)
         {
             _logger = logger;
@@ -22,6 +21,10 @@ namespace learntree_graph.infrastructure
             uri = _configuration.GetSection("Neo4jConnection:Uri").Value;
             user = _configuration.GetSection("Neo4jConnection:User").Value;
             password = _configuration.GetSection("Neo4jConnection:Password").Value;
+
+            _driver = GraphDatabase.Driver(uri, AuthTokens.Basic(user, password), options => {
+                options.WithMaxIdleConnectionPoolSize(500);
+            });
         }
 
         public void Dispose()
@@ -37,7 +40,6 @@ namespace learntree_graph.infrastructure
             if (disposing) 
             {
                 _logger.LogInformation("Disposing neo4j driver...");
-                _session!.CloseAsync();
                 _driver!.Dispose();
             }
 
@@ -48,16 +50,9 @@ namespace learntree_graph.infrastructure
 
         ~AuraDbConnection() => Dispose(false);
 
-        public IAuraDbConnection EstablishConnection()
+        public IDriver GetDriverInstance()
         {
-            _driver = GraphDatabase.Driver(uri, AuthTokens.Basic(user, password));
-            _session = _driver.AsyncSession();
-            return this;
-        }
-
-        public IAsyncSession GetAsyncSession() 
-        {
-            return this._session!;
+            return _driver!;
         }
     }
 }

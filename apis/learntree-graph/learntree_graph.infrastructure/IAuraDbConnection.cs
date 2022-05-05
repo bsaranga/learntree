@@ -8,7 +8,6 @@ namespace learntree_graph.infrastructure
 {
     public interface IAuraDbConnection
     {
-        IAuraDbConnection EstablishConnection();
-        IAsyncSession GetAsyncSession();
+        IDriver GetDriverInstance();
     }
 }
