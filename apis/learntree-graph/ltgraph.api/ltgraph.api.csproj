@@ -15,8 +15,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\learntree_graph.infrastructure\learntree_graph.infrastructure.csproj" />
-    <ProjectReference Include="..\learntree_graph.domain\learntree_graph.domain.csproj"/>
+    <ProjectReference Include="..\ltgraph.domain\ltgraph.domain.csproj"/>
+    <ProjectReference Include="..\ltgraph.infrastructure\ltgraph.infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
