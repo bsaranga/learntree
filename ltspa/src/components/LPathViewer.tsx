@@ -1,6 +1,6 @@
 import { useContext, useLayoutEffect, useRef } from 'react';
 import G6, { NodeConfig, TreeGraph } from '@antv/g6';
-import ILearningPathGraph, { LPNode } from '../interfaces/lpath-interfaces/ILearningPathGraph';
+import INode from '../interfaces/lpath-interfaces/INode';
 import ILPathNodeConfig from '../interfaces/lpath-interfaces/ILPathNodeConfig';
 import { randomIdGenerator } from '../utilities/generators';
 import { Button } from 'antd';
@@ -9,7 +9,7 @@ import { APIContext } from '../contexts/APIContext';
 
 
 export default function LPathViewer() {
-	const mindMapData: ILearningPathGraph = {
+	const mindMapData: INode = {
 		id: randomIdGenerator(),
 		name: 'Modeling Methods',
 		nodeType: 'root',
@@ -134,6 +134,45 @@ export default function LPathViewer() {
 						children: [
 							{
 								id: randomIdGenerator(),
+								name: 'Curve Fitting',
+								nodeType: 'aggregate',
+								children: [
+									{
+										id: randomIdGenerator(),
+										name: 'Linear fitting',
+										nodeType: 'topic'
+									},
+									{
+										id: randomIdGenerator(),
+										name: 'Quadratic fitting',
+										nodeType: 'topic'
+									},
+									{
+										id: randomIdGenerator(),
+										name: 'Cubic fitting',
+										nodeType: 'topic'
+									},
+									{
+										id: randomIdGenerator(),
+										name: 'Automating curve fitting',
+										nodeType: 'aggregate',
+										children: [
+											{
+												id: randomIdGenerator(),
+												name: 'Basic Automation',
+												nodeType: 'topic'
+											},
+											{
+												id: randomIdGenerator(),
+												name: 'Automation with ML',
+												nodeType: 'topic'
+											}
+										]
+									}
+								]
+							},
+							{
+								id: randomIdGenerator(),
 								name: 'Bagging',
 								nodeType: 'topic',
 							},
@@ -156,6 +195,11 @@ export default function LPathViewer() {
 				name: 'Regression',
 				nodeType: 'aggregate',
 				children: [
+					{
+						id: randomIdGenerator(),
+						name: 'Linear Graphs',
+						nodeType: 'prerequisite'
+					},
 					{
 						id: randomIdGenerator(),
 						name: 'Multiple linear regression',
@@ -192,7 +236,7 @@ export default function LPathViewer() {
 	const dataCopy = JSON.parse(JSON.stringify(mindMapData));
 
 	function postData() {
-		httpClient.post<ILearningPathGraph>(`${api.protocol}://${api.host}:${api.port}/${api.subRoute}/lpath/create`, dataCopy);
+		httpClient.post<INode>(`${api.protocol}://${api.host}:${api.port}/${api.subRoute}/lpath/create`, dataCopy);
 	}
 
 	const rootNode = mindMapData.id;
@@ -224,7 +268,7 @@ export default function LPathViewer() {
 					return 12;
 				},
 				getVGap: () => {
-					return 8;
+					return 10;
 				},
 				getHGap: () => {
 					return 60;
@@ -252,6 +296,10 @@ export default function LPathViewer() {
 			}
 
 			return {
+				style: {
+					r: 10,
+					fill: 'rgb(100,200,255)',
+				},
 				label: node?.name as string,
 				labelCfg: {
 					style: {

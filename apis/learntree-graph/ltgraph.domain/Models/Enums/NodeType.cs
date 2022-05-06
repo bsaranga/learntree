@@ -12,7 +12,5 @@ namespace ltgraph.domain.Models.Enums
         Aggregate,
         [EnumMember(Value = "topic")]
         Topic,
-        [EnumMember(Value = "milestone")]
-        Milestone
     }
 }

@@ -1,8 +1,8 @@
 /* eslint-disable semi */
 
 import { NodeConfig } from '@antv/g6';
-import ILearningPathGraph from './ILearningPathGraph';
+import INode from './INode';
 
 export default interface ILPathNodeConfig extends NodeConfig {
-    data?: ILearningPathGraph
+    data?: INode
 }

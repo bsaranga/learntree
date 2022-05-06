@@ -5,5 +5,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Neo4j.Driver" Version="4.4.0" />
+  </ItemGroup>
 
 </Project>

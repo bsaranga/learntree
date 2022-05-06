@@ -37,8 +37,8 @@ namespace ltgraph.Controllers
 
         [HttpPost("create")]
         [AllowAnonymous]
-        public IActionResult CreateLearningPath([FromBody] LearningPath lPath) {
-            _lpathRepo.CreateLearningPath(lPath);
+        public IActionResult CreateLearningPath([FromBody] Node lPathNode) {
+            _lpathRepo.CreateLearningPath(lPathNode);
             return Ok("Received");
         }
     }
