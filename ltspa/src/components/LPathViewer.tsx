@@ -6,6 +6,7 @@ import { randomIdGenerator } from '../utilities/generators';
 import { Button } from 'antd';
 import HttpService from '../services/HttpService';
 import { APIContext } from '../contexts/APIContext';
+import './Layout.scss';
 
 
 export default function LPathViewer() {
@@ -245,9 +246,9 @@ export default function LPathViewer() {
 	const ref = useRef<HTMLDivElement>(null);
 
 	useLayoutEffect(() => {
-		console.log('Graph render');
 
 		const grid = new G6.Grid();
+
 		const graph: TreeGraph = new G6.TreeGraph({
 			container: ref.current as HTMLDivElement,
 			fitView: true,
@@ -327,13 +328,24 @@ export default function LPathViewer() {
 		});
 
 		graph.data(mindMapData);
+		
 		graph.render();
 
-		return () => graph.destroy();
+		function handleResize() {
+			graph.changeSize(ref.current?.clientWidth as number, ref.current?.clientHeight as number);
+		}
+
+		// DOM Event Listeners
+		window.addEventListener('resize', handleResize);
+
+		return () => {
+			graph.destroy();
+			window.removeEventListener('resize', handleResize);
+		};
 	}, []);
 
 	return (
-		<div ref={ref} className="w-[100vw] h-[90vh]">
+		<div ref={ref} className="w-[100vw] dynamicHeight">
 			<div className='p-2 absolute'>
 				<Button onClick={postData} type='primary' size='small'>Post</Button>
 			</div>

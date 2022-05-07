@@ -4,6 +4,7 @@ import ICardProps from '../interfaces/ICardProps';
 import HttpService from '../services/HttpService';
 import Card from '../components/Newsfeed/Card/Card';
 import { Button } from 'antd';
+import { useNavigate } from 'react-router-dom';
 
 const tempData: ICardProps[] = [
 	{
@@ -77,7 +78,8 @@ const tempData: ICardProps[] = [
 ];
 
 export function NewsFeed() {
-
+	
+	const navigate = useNavigate();
 	const httpClient = HttpService.client();
 	const hub = useContext(MessageHubContext);
 	
@@ -104,6 +106,10 @@ export function NewsFeed() {
 		</div>;
 	});
 
+	function navigateToCreate() {
+		navigate('/create');
+	}
+
 	console.log('Main Rendered');
 
 	return(
@@ -112,6 +118,7 @@ export function NewsFeed() {
 				<Button type='primary' onClick={callApi}>Call API</Button>
 				<Button onClick={sendMessage}>Send Message</Button>
 				<Button onClick={closeConenction}>Stop Connection</Button>
+				<Button onClick={navigateToCreate}>Create Learning Path</Button>
 			</div>
 			{ cardList }
 		</div>

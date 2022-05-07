@@ -1,0 +1,220 @@
+{
+    "id": "fYomYocZygZniZs",
+    "name": "Modeling Methods",
+    "nodeType": "root",
+    "children": [
+        {
+            "id": "iYooZtgYyqYfcYi",
+            "name": "Prerequisites",
+            "nodeType": "prerequisite",
+            "children": [
+                {
+                    "id": "eZicYsuZtmZitZf",
+                    "name": "Classification",
+                    "nodeType": "aggregate",
+                    "children": [
+                        {
+                            "id": "uYcoYmlYjdYxoZe",
+                            "name": "Logistic regression",
+                            "nodeType": "topic"
+                        },
+                        {
+                            "id": "uZshYudYixYixYo",
+                            "name": "Linear discriminant analysis",
+                            "nodeType": "topic"
+                        },
+                        {
+                            "id": "kYvnZytYnrYfsYo",
+                            "name": "Rules",
+                            "nodeType": "topic"
+                        },
+                        {
+                            "id": "oYcdZrcYwiYgeYn",
+                            "name": "Decision trees",
+                            "nodeType": "topic"
+                        },
+                        {
+                            "id": "rZjqZdxZkjYipYx",
+                            "name": "Naive Bayes",
+                            "nodeType": "topic"
+                        },
+                        {
+                            "id": "sZisYtlZxfZblYg",
+                            "name": "K nearest neighbor",
+                            "nodeType": "topic"
+                        },
+                        {
+                            "id": "rZhqYjdZutYhcYo",
+                            "name": "Probabilistic neural network",
+                            "nodeType": "topic"
+                        },
+                        {
+                            "id": "cYhxYcuZspZupZu",
+                            "name": "Support vector machine",
+                            "nodeType": "topic"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "jZbpZifZleYbgYd",
+            "name": "Consensus",
+            "nodeType": "aggregate",
+            "children": [
+                {
+                    "id": "kZbpYfkZumYacYu",
+                    "name": "Models diversity",
+                    "nodeType": "aggregate",
+                    "children": [
+                        {
+                            "id": "oZspZpeYvlZqdYn",
+                            "name": "Different initializations",
+                            "nodeType": "topic"
+                        },
+                        {
+                            "id": "bYwiZbpYkkYxmYu",
+                            "name": "Different parameter choices",
+                            "nodeType": "topic"
+                        },
+                        {
+                            "id": "nZhoZprYjlYeqYh",
+                            "name": "Different architectures",
+                            "nodeType": "topic"
+                        },
+                        {
+                            "id": "vZbbZldYajZwyZl",
+                            "name": "Different modeling methods",
+                            "nodeType": "topic"
+                        },
+                        {
+                            "id": "rZlhYqmYteZvyZt",
+                            "name": "Different training sets",
+                            "nodeType": "topic"
+                        },
+                        {
+                            "id": "uYkkYchYawZtqYl",
+                            "name": "Different feature sets",
+                            "nodeType": "topic"
+                        }
+                    ]
+                },
+                {
+                    "id": "mYlfZkmYcfYwhYa",
+                    "name": "Methods",
+                    "nodeType": "aggregate",
+                    "children": [
+                        {
+                            "id": "uYiiYndZsqYicZk",
+                            "name": "Classifier selection",
+                            "nodeType": "topic"
+                        },
+                        {
+                            "id": "mYehYbkZqoZhqZt",
+                            "name": "Classifier fusion",
+                            "nodeType": "topic"
+                        }
+                    ]
+                },
+                {
+                    "id": "jZqcYpeZgdYbgZg",
+                    "name": "Common",
+                    "nodeType": "aggregate",
+                    "children": [
+                        {
+                            "id": "uZrhYspZcaZgwYj",
+                            "name": "Curve Fitting",
+                            "nodeType": "aggregate",
+                            "children": [
+                                {
+                                    "id": "lZjoZirYmtZjaZf",
+                                    "name": "Linear fitting",
+                                    "nodeType": "topic"
+                                },
+                                {
+                                    "id": "wZmjYglYgoYdlYf",
+                                    "name": "Quadratic fitting",
+                                    "nodeType": "topic"
+                                },
+                                {
+                                    "id": "yYtaZiaZhhYjnZs",
+                                    "name": "Cubic fitting",
+                                    "nodeType": "topic"
+                                },
+                                {
+                                    "id": "kZwlZhuZevZbdZr",
+                                    "name": "Automating curve fitting",
+                                    "nodeType": "aggregate",
+                                    "children": [
+                                        {
+                                            "id": "rZjhZtiYwwZmvYw",
+                                            "name": "Basic Automation",
+                                            "nodeType": "topic"
+                                        },
+                                        {
+                                            "id": "iYkqYcvYcfZixZo",
+                                            "name": "Automation with ML",
+                                            "nodeType": "topic"
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "id": "dYtcYvoYgqYhfZo",
+                            "name": "Bagging",
+                            "nodeType": "topic"
+                        },
+                        {
+                            "id": "mYwbZyuZlxYpcZn",
+                            "name": "Boosting",
+                            "nodeType": "topic"
+                        },
+                        {
+                            "id": "fZriZehYjmZwcZp",
+                            "name": "AdaBoost",
+                            "nodeType": "topic"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "bZfqZcaYgoYruYw",
+            "name": "Regression",
+            "nodeType": "aggregate",
+            "children": [
+                {
+                    "id": "aZawZuxYjpYfsYd",
+                    "name": "Linear Graphs",
+                    "nodeType": "prerequisite"
+                },
+                {
+                    "id": "pZicYxgYmiZpwZn",
+                    "name": "Multiple linear regression",
+                    "nodeType": "topic"
+                },
+                {
+                    "id": "mZgwYtaZbmYumZg",
+                    "name": "Partial least squares",
+                    "nodeType": "topic"
+                },
+                {
+                    "id": "xYabYxxZmkZosYm",
+                    "name": "Multi-layer feedforward neural network",
+                    "nodeType": "topic"
+                },
+                {
+                    "id": "hZirYjpYhpZxaYv",
+                    "name": "General regression neural network",
+                    "nodeType": "topic"
+                },
+                {
+                    "id": "rZjoYycZvxYmvZd",
+                    "name": "Support vector regression",
+                    "nodeType": "topic"
+                }
+            ]
+        }
+    ]
+}
