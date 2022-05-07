@@ -26,7 +26,7 @@ namespace ltgraph.infrastructure.Repositories
         public async Task CreateLearningPath(Node lpath)
         {
             var session = _dbDriver.AsyncSession();
-            var allChildren = lpath.Children!.Descendants(p => p.Children!);
+            var allChildren = lpath.Children!.SelectMany(c => c.Children!);
 
             try
             {

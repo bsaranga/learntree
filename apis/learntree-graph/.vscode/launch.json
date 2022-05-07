@@ -31,6 +31,7 @@
         },
         {
             "name": "Attach",
+            "preLaunchTask": "startpm2",
             "type": "coreclr",
             "request": "attach",
             "justMyCode": true,
@@ -38,10 +39,7 @@
                 "searchMicrosoftSymbolServer": false,
                 "searchNuGetOrgSymbolServer": false
             },
-            "suppressJITOptimizations": true,
-            "env": {
-                "COMPlus_ReadyToRun": "0"
-            }
+            "suppressJITOptimizations": true
         }
     ]
 }
