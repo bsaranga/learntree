@@ -38,13 +38,14 @@ export default function LPathCreator() {
 	useLayoutEffect(() => {
 		const grid = new G6.Grid();
 		const contextPos = {} as ICoordinate;
+		const canvasPoint = {} as ICoordinate;
 		let nodeLabel: string;
 		setFloatingInputVisibility(false);
 
 		//#region Graph Updates
 		function createNode(label: string) {
 			if (label) {
-				graph.addItem('node', getModelConfig(contextPos.x, contextPos.y, label));
+				graph.addItem('node', getModelConfig(canvasPoint.x, canvasPoint.y, label));
 				resetFloatingInputValue();
 			}
 		}
@@ -103,6 +104,9 @@ export default function LPathCreator() {
 
 		const contextMenu = new G6.Menu({
 			getContent(ev) {
+				const gPoint = graph.getPointByCanvas(ev?.canvasX as number, ev?.canvasY as number);
+				canvasPoint.x = gPoint.x;
+				canvasPoint.y = gPoint.y;
 				contextPos.x = ev?.canvasX as number;
 				contextPos.y = ev?.canvasY as number;
 				return `<div id='root' class='contextMenuItem'>Add Root</div>
