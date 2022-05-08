@@ -6,7 +6,7 @@ import { randomIdGenerator } from '../utilities/generators';
 import './Layout.scss';
 
 const FloatingInput = forwardRef((props, ref: LegacyRef<HTMLDivElement>) => (
-	<div ref={ref} className='bg-white rounded-sm shadow-sm border-2 border-slate-400 absolute'>
+	<div ref={ref} className='bg-white rounded-sm shadow-sm border-2 border-slate-400 absolute w-auto'>
 		<input className='focus:outline-none p-1 text-xs w-auto' type="text" />
 	</div>
 ));
@@ -41,6 +41,15 @@ export default function LPathCreator() {
 		let nodeLabel: string;
 		setFloatingInputVisibility(false);
 
+		//#region Graph Updates
+		function createNode(label: string) {
+			if (label) {
+				graph.addItem('node', getModelConfig(contextPos.x, contextPos.y, label));
+				resetFloatingInputValue();
+			}
+		}
+		//#endregion Graph Updates
+
 		//#region Floating Input
 		function setFloatingInputVisibility(value: boolean) {
 			if (floatingInput.current != null) {
@@ -61,16 +70,17 @@ export default function LPathCreator() {
 			}
 		}
 
+		function handleFloatingInputKeyDownEvent(ev: KeyboardEvent) {
+			ev.stopPropagation();
+			if (ev.key == 'Escape') {
+				setFloatingInputVisibility(false);
+				resetFloatingInputValue();
+			}
+		}
+
 		function resetFloatingInputValue() {
 			nodeLabel = '';
 			(floatingInput?.current?.children[0] as HTMLInputElement).value = '';
-		}
-
-		function createNode(label: string) {
-			if (label) {
-				graph.addItem('node', getModelConfig(contextPos.x, contextPos.y, label));
-				resetFloatingInputValue();
-			}
 		}
 
 		function moveFloatingInput(x: number, y: number) {
@@ -88,6 +98,7 @@ export default function LPathCreator() {
 
 		floatingInput.current?.addEventListener('input', handleFloatingInputChange);
 		floatingInput.current?.addEventListener('keypress', handleFloatingInputEnterPress);
+		floatingInput.current?.addEventListener('keydown', handleFloatingInputKeyDownEvent);
 		//#endregion Floating Input
 
 		const contextMenu = new G6.Menu({
@@ -147,6 +158,7 @@ export default function LPathCreator() {
 			window.removeEventListener('resize', handleResize);
 			floatingInput.current?.removeEventListener('input', handleFloatingInputChange);
 			floatingInput.current?.removeEventListener('keypress', handleFloatingInputEnterPress);
+			floatingInput.current?.removeEventListener('keydown', handleFloatingInputKeyDownEvent);
 		};
 	}, []);
 
