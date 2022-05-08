@@ -1,42 +1,52 @@
-import G6, { Graph, GraphData } from '@antv/g6';
-import { useLayoutEffect, useRef } from 'react';
+import G6, { Graph, GraphData, ModelConfig } from '@antv/g6';
+import { useLayoutEffect, useRef, useState } from 'react';
+import ICoordinate from '../interfaces/common/ICoordinate';
 import { randomIdGenerator } from '../utilities/generators';
 import './Layout.scss';
-import './Context.scss';
 
 export default function LPathCreator() {
 	const ref = useRef<HTMLDivElement>(null);
+
+	function getModelConfig(cX: number, cY: number): ModelConfig {
+		return {
+			x: cX,
+			y: cY
+		};
+	}
+
 	const data: GraphData = {
 		nodes: [
 			{
 				id: randomIdGenerator(),
 				label: 'Node 1',
-				x: 500,
-				y: 500
+				x: 798,
+				y: 241
 			}
 		]
 	};
 
 	useLayoutEffect(() => {
 		const grid = new G6.Grid();
+		const contextPos = {} as ICoordinate;
+
 		const contextMenu = new G6.Menu({
-			getContent(evt) {
-				console.log(evt);
-				return `<h3>My Context</h3>
-                <ul>
-                    <li title='1'>li 1</li>
-                    <li title='2'>li 2</li>
-                    <li>li 3</li>
-                    <li>li 4</li>
-                    <li>li 5</li>
-                </ul>`;
+			getContent(ev) {
+				contextPos.x = ev?.canvasX as number;
+				contextPos.y = ev?.canvasY as number;
+				return `<div id='root' class='contextMenuItem'>Add Root</div>
+						<div id='aggr' class='contextMenuItem'>Add Aggregate</div>
+						<div id='topic' class='contextMenuItem'>Add Topic</div>
+						<div id='quiz' class='contextMenuItem'>Add Quiz</div>
+						`;
 			},
-			handleMenuClick: (target, item) => {
-				console.log(target, item);
+			handleMenuClick: (target) => {
+				console.log(target.id);
+				graph.addItem('node', getModelConfig(contextPos.x, contextPos.y));
+				console.log(graph.save());
 			},
 			offsetX: 0,
 			offsetY: 0,
-			className: 'myContextClass',
+			className: 'createContextMenu',
 			itemTypes: ['canvas'],
 		});
 
