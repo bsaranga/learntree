@@ -1,16 +1,26 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import G6, { Graph, GraphData, ModelConfig } from '@antv/g6';
-import { useLayoutEffect, useRef, useState } from 'react';
+import { forwardRef, useLayoutEffect, useRef, LegacyRef } from 'react';
 import ICoordinate from '../interfaces/common/ICoordinate';
 import { randomIdGenerator } from '../utilities/generators';
 import './Layout.scss';
 
+const FloatingInput = forwardRef((props, ref: LegacyRef<HTMLDivElement>) => (
+	<div ref={ref} className='bg-white rounded-sm shadow-sm border-2 border-slate-400 absolute'>
+		<input className='focus:outline-none p-1 text-xs w-auto' type="text" />
+	</div>
+));
+FloatingInput.displayName = 'FloatingInput';
+
 export default function LPathCreator() {
 	const ref = useRef<HTMLDivElement>(null);
+	const floatingInput = useRef<HTMLDivElement>(null);
 
-	function getModelConfig(cX: number, cY: number): ModelConfig {
+	function getModelConfig(cX: number, cY: number, nodeLabel: string): ModelConfig {
 		return {
 			x: cX,
-			y: cY
+			y: cY,
+			label: nodeLabel
 		};
 	}
 
@@ -28,6 +38,57 @@ export default function LPathCreator() {
 	useLayoutEffect(() => {
 		const grid = new G6.Grid();
 		const contextPos = {} as ICoordinate;
+		let nodeLabel: string;
+		setFloatingInputVisibility(false);
+
+		//#region Floating Input
+		function setFloatingInputVisibility(value: boolean) {
+			if (floatingInput.current != null) {
+				floatingInput.current.style.visibility = (value) ? 'visible' : 'hidden';
+			}
+		}
+
+		function handleFloatingInputChange(ev: any) {
+			ev.stopPropagation();
+			nodeLabel = ev.target.value;
+		}
+
+		function handleFloatingInputEnterPress(ev: KeyboardEvent) {
+			ev.stopPropagation();
+			if (ev.key == 'Enter') {
+				setFloatingInputVisibility(false);
+				createNode(nodeLabel);
+			}
+		}
+
+		function resetFloatingInputValue() {
+			nodeLabel = '';
+			(floatingInput?.current?.children[0] as HTMLInputElement).value = '';
+		}
+
+		function createNode(label: string) {
+			if (label) {
+				graph.addItem('node', getModelConfig(contextPos.x, contextPos.y, label));
+				resetFloatingInputValue();
+			}
+		}
+
+		function moveFloatingInput(x: number, y: number) {
+			if (floatingInput.current != null) {
+				floatingInput.current.style.top = `${y}px`;
+				floatingInput.current.style.left = `${x}px`;
+			}
+		}
+
+		function focusFloatingInput() {
+			if (floatingInput.current != null) {
+				(floatingInput.current.children[0] as HTMLElement).focus();
+			}
+		}
+
+		floatingInput.current?.addEventListener('input', handleFloatingInputChange);
+		floatingInput.current?.addEventListener('keypress', handleFloatingInputEnterPress);
+		//#endregion Floating Input
 
 		const contextMenu = new G6.Menu({
 			getContent(ev) {
@@ -41,7 +102,9 @@ export default function LPathCreator() {
 			},
 			handleMenuClick: (target) => {
 				console.log(target.id);
-				graph.addItem('node', getModelConfig(contextPos.x, contextPos.y));
+				setFloatingInputVisibility(true);
+				moveFloatingInput(contextPos.x, contextPos.y);
+				focusFloatingInput();
 				console.log(graph.save());
 			},
 			offsetX: 0,
@@ -82,6 +145,8 @@ export default function LPathCreator() {
 		return () => {
 			graph.destroy();
 			window.removeEventListener('resize', handleResize);
+			floatingInput.current?.removeEventListener('input', handleFloatingInputChange);
+			floatingInput.current?.removeEventListener('keypress', handleFloatingInputEnterPress);
 		};
 	}, []);
 
@@ -89,6 +154,7 @@ export default function LPathCreator() {
 		<div ref={ref} className="w-[100vw] dynamicHeight">
 			<div className='p-2 absolute'>
 				<div className='text-sm font-medium text-slate-700'>Create Mode</div>
+				<FloatingInput ref={floatingInput}/>
 			</div>
 		</div>
 	);
