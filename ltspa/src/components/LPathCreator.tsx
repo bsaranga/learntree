@@ -37,6 +37,7 @@ export default function LPathCreator() {
 
 	useLayoutEffect(() => {
 		const grid = new G6.Grid();
+		const floatingInputRef = floatingInput.current;
 		const contextPos = {} as ICoordinate;
 		const canvasPoint = {} as ICoordinate;
 		let nodeLabel: string;
@@ -53,8 +54,8 @@ export default function LPathCreator() {
 
 		//#region Floating Input
 		function setFloatingInputVisibility(value: boolean) {
-			if (floatingInput.current != null) {
-				floatingInput.current.style.visibility = (value) ? 'visible' : 'hidden';
+			if (floatingInputRef != null) {
+				floatingInputRef.style.visibility = (value) ? 'visible' : 'hidden';
 			}
 		}
 
@@ -85,21 +86,21 @@ export default function LPathCreator() {
 		}
 
 		function moveFloatingInput(x: number, y: number) {
-			if (floatingInput.current != null) {
-				floatingInput.current.style.top = `${y}px`;
-				floatingInput.current.style.left = `${x}px`;
+			if (floatingInputRef != null) {
+				floatingInputRef.style.top = `${y}px`;
+				floatingInputRef.style.left = `${x}px`;
 			}
 		}
 
 		function focusFloatingInput() {
-			if (floatingInput.current != null) {
-				(floatingInput.current.children[0] as HTMLElement).focus();
+			if (floatingInputRef != null) {
+				(floatingInputRef.children[0] as HTMLElement).focus();
 			}
 		}
 
-		floatingInput.current?.addEventListener('input', handleFloatingInputChange);
-		floatingInput.current?.addEventListener('keypress', handleFloatingInputEnterPress);
-		floatingInput.current?.addEventListener('keydown', handleFloatingInputKeyDownEvent);
+		floatingInputRef?.addEventListener('input', handleFloatingInputChange);
+		floatingInputRef?.addEventListener('keypress', handleFloatingInputEnterPress);
+		floatingInputRef?.addEventListener('keydown', handleFloatingInputKeyDownEvent);
 		//#endregion Floating Input
 
 		const contextMenu = new G6.Menu({
@@ -160,11 +161,11 @@ export default function LPathCreator() {
 		return () => {
 			graph.destroy();
 			window.removeEventListener('resize', handleResize);
-			floatingInput.current?.removeEventListener('input', handleFloatingInputChange);
-			floatingInput.current?.removeEventListener('keypress', handleFloatingInputEnterPress);
-			floatingInput.current?.removeEventListener('keydown', handleFloatingInputKeyDownEvent);
+			floatingInputRef?.removeEventListener('input', handleFloatingInputChange);
+			floatingInputRef?.removeEventListener('keypress', handleFloatingInputEnterPress);
+			floatingInputRef?.removeEventListener('keydown', handleFloatingInputKeyDownEvent);
 		};
-	}, []);
+	});
 
 	return (
 		<div ref={ref} className="w-[100vw] dynamicHeight">
