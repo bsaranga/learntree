@@ -5,6 +5,7 @@ import HttpService from '../services/HttpService';
 import Card from '../components/Newsfeed/Card/Card';
 import { Button } from 'antd';
 import { useNavigate } from 'react-router-dom';
+import { Plus } from '../assets/icons/Icons-Outline';
 
 const tempData: ICardProps[] = [
 	{
@@ -120,6 +121,9 @@ export function NewsFeed() {
 				<Button onClick={closeConenction}>Stop Connection</Button>
 				<Button onClick={navigateToCreate}>Create Learning Path</Button>
 			</div>
+			<button className='absolute bg-red-500 w-9 h-9 left-6 bottom-6 rounded-full flex items-center justify-center shadow-md hover:border-2 hover:border-red-300 hover:scale-[120%] hover:shadow-lg transition-all focus:outline-none active:outline-none active:scale-[110%]' title='Create learning path'>
+				<Plus className='text-white inline-block' scale='h-6 w-6'/>
+			</button>
 			{ cardList }
 		</div>
 	);
