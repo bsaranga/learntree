@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import G6, { Graph, GraphData, ModelConfig } from '@antv/g6';
-import { forwardRef, useLayoutEffect, useRef, LegacyRef } from 'react';
+import G6, { Graph, GraphData, IGroup, IShape, ModelConfig } from '@antv/g6';
+import { Modal } from 'antd';
+import { forwardRef, useLayoutEffect, useRef, LegacyRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import ICoordinate from '../interfaces/common/ICoordinate';
 import { randomIdGenerator } from '../utilities/generators';
 import './Layout.scss';
@@ -13,25 +15,40 @@ const FloatingInput = forwardRef((props, ref: LegacyRef<HTMLDivElement>) => (
 FloatingInput.displayName = 'FloatingInput';
 
 export default function LPathCreator() {
+
+	const navigate = useNavigate();
 	const ref = useRef<HTMLDivElement>(null);
 	const floatingInput = useRef<HTMLDivElement>(null);
+	const [createModalVisible, setCreateModalVisibility] = useState(true);
 
 	function getModelConfig(cX: number, cY: number, nodeLabel: string): ModelConfig {
 		return {
 			x: cX,
 			y: cY,
-			label: nodeLabel
+			label: nodeLabel,
+			type: 'customNode'
 		};
 	}
 
 	const data: GraphData = {
 		nodes: [
 			{
-				id: randomIdGenerator(),
-				label: 'Node 1',
-				x: 798,
-				y: 241
+				id: '1',
+				label: 'If this component has been mounted into the DOM, this returns the corresponding native browser DOM element. This method is useful for reading values out of the DOM, such as form field values and performing DOM measurements. In most cases, you can attach a ref to the DOM node and avoid using findDOMNode at all.',
+				x: 450,
+				y: 250,
+				type: 'customNode'
+			},
+			{
+				id: '2',
+				label: 'CSS Object Model',
+				x: 350,
+				y: 150,
+				type: 'customNode'
 			}
+		],
+		edges: [
+			{source: '1', target: '2'}
 		]
 	};
 
@@ -41,6 +58,7 @@ export default function LPathCreator() {
 		const contextPos = {} as ICoordinate;
 		const canvasPoint = {} as ICoordinate;
 		let nodeLabel: string;
+
 		setFloatingInputVisibility(false);
 
 		//#region Graph Updates
@@ -121,7 +139,6 @@ export default function LPathCreator() {
 				setFloatingInputVisibility(true);
 				moveFloatingInput(contextPos.x, contextPos.y);
 				focusFloatingInput();
-				console.log(graph.save());
 			},
 			offsetX: 0,
 			offsetY: 0,
@@ -137,7 +154,10 @@ export default function LPathCreator() {
 				default: ['drag-canvas', 'zoom-canvas', 'drag-node', 'brush-select']
 			},
 			defaultNode: {
-				size: 50
+				type: 'customNode'
+			},
+			defaultEdge: {
+				size: 2
 			},
 			animate: true,
 			animateCfg: {
@@ -146,6 +166,65 @@ export default function LPathCreator() {
 			},
 			plugins: [grid, contextMenu]
 		});
+
+		const canvasCtx: CanvasRenderingContext2D = graph.get('canvas').cfg.context;
+
+		function getLines(text: string, ctx: CanvasRenderingContext2D, maxWidth: number, scaleFactor: number): string[] {
+			const wordArray = text.split(' ');
+			const lineArray: string[] = [];
+			let line = '';
+
+			wordArray.forEach(w => {
+				if (ctx.measureText(''.concat(...[line, ' ', w])).width * scaleFactor < maxWidth) {
+					line += `${w} `;
+				} else {
+					lineArray.push(line.trimEnd());
+					line = `${w} `;
+				}
+			});
+
+			lineArray.push(line);
+			return lineArray;
+		}
+
+		//#region Register custom nodes
+		G6.registerNode('customNode', {
+			drawShape: (cfg, group) => {
+				const padding = 10;
+				const maxWidth = 200;
+				const scalingFactor = 1.2;
+				const lines = getLines(cfg?.label?.toString() as string, canvasCtx, maxWidth, scalingFactor);
+				const textWidth = canvasCtx.measureText(cfg?.label?.toString() as string).width;
+
+				const rect: IShape = group?.addShape('rect', {
+					attrs: {
+						cursor: 'pointer',
+						fill: 'rgb(240, 246, 255)',
+						stroke: 'rgb(59, 126, 241)',
+						lineWidth: 1.5,
+						radius: 4,
+						x: 0,
+						y: 0,
+						width: textWidth < maxWidth ? textWidth * scalingFactor + padding * 2.4 : 200 + padding * 1.5,
+						height: lines.length == 1 ? 24 : 16.5 * lines.length,
+					},
+				}) as IShape;
+
+				group?.addShape('text', {
+					draggable: true,
+					attrs: {
+						text: lines.join('\n'),
+						x: padding,
+						y: rect.attr().height / 2,
+						textAlign: 'left',
+						textBaseline: 'middle',
+						fill: '#666',
+					},
+				}) as IShape;
+				return rect as IShape;
+			}
+		});
+		//#endregion
 
 		graph.data(data);
 		graph.render();
@@ -167,12 +246,32 @@ export default function LPathCreator() {
 		};
 	});
 
+	function navigateHome() {
+		navigate('/');
+	}
+
+	//#region Modal Popup
+	function handleOk() {
+		console.log('Created');
+		setCreateModalVisibility(false);
+	}
+
+	function handleCancel() {
+		console.log('Cancelled');
+		setCreateModalVisibility(false);
+		navigateHome();
+	}
+	//#endregion Modal Popup
+
 	return (
 		<div ref={ref} className="w-[100vw] dynamicHeight">
 			<div className='p-2 absolute'>
 				<div className='text-sm font-medium text-slate-700'>Create Mode</div>
-				<FloatingInput ref={floatingInput}/>
+				<FloatingInput ref={floatingInput} />
 			</div>
+			<Modal title="Create Learning Path" visible={createModalVisible} onOk={handleOk} onCancel={handleCancel} centered={true} destroyOnClose={true} transitionName='' closable={false}>
+				<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea adipisci dicta error quas vitae sunt optio eaque sapiente, ullam, veritatis necessitatibus voluptatem! Minima sit voluptate quam illo repudiandae earum voluptates!</p>
+			</Modal>
 		</div>
 	);
 }
