@@ -5,6 +5,7 @@ import { forwardRef, useLayoutEffect, useRef, LegacyRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import ICoordinate from '../interfaces/common/ICoordinate';
 import { getLines } from '../utilities/canvasUtils';
+import { randomIdGenerator } from '../utilities/generators';
 import './Layout.scss';
 
 const FloatingInput = forwardRef((props, ref: LegacyRef<HTMLDivElement>) => (
@@ -25,6 +26,7 @@ export default function LPathCreator() {
 
 	function getModelConfig(cX: number, cY: number, nodeLabel: string): ModelConfig {
 		return {
+			id: randomIdGenerator(),
 			x: cX,
 			y: cY,
 			label: nodeLabel,
@@ -63,7 +65,7 @@ export default function LPathCreator() {
 		
 		let nodeLabel: string;
 		let sourceAnchorIdx: any, targetAnchorIdx: any;
-		let sourceAnchorPos: any, targetAnchorPos: any;
+		let startNode: string, endNode: string;
 
 		// #region Init
 		setFloatingInputVisibility(false);
@@ -172,18 +174,22 @@ export default function LPathCreator() {
 					type: 'create-edge',
 					trigger: 'drag',
 					shouldBegin: (e: IG6GraphEvent) => {
+						startNode = e.item?._cfg?.id as string;
 						if (e.target && e.target.get('name') !== 'anchor-point') return false;
 						sourceAnchorIdx = e.target.get('anchorPointIdx');
-						sourceAnchorPos = { x: e.target.attr().x, y: e.target.attr().y };
 						e.target.set('links', e.target.get('links') + 1); // cache the number of edge connected to this anchor-point circle
 						return true;
 					},
 					shouldEnd: e => {
-						// avoid ending at other shapes on the node
+						endNode = e.item?._cfg?.id as string;
+						const edges = graph.getEdges();
+						const edgeIdMappings = edges.map(e => `${e.getSource()._cfg?.model?.id}_${e.getTarget()._cfg?.model?.id}`);
+
+						// if more than one edge is added between two nodes, reject.
+						if(edgeIdMappings.indexOf(`${startNode}_${endNode}`) > -1) return false;
 						if (e.target && e.target.get('name') !== 'anchor-point') return false;
 						if (e.target) {
 							targetAnchorIdx = e.target.get('anchorPointIdx');
-							targetAnchorPos = {x: e.target.attr().x, y: e.target.attr().y };
 							e.target.set('links', e.target.get('links') + 1);  // cache the number of edge connected to this anchor-point circle
 							return true;
 						}
