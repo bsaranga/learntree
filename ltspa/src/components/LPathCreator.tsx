@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import G6, { Graph, GraphData, IShape, ModelConfig } from '@antv/g6';
+import G6, { Graph, GraphData, IG6GraphEvent, IShape, Item, ModelConfig, ShapeOptions } from '@antv/g6';
 import { Modal } from 'antd';
 import { forwardRef, useLayoutEffect, useRef, LegacyRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -19,7 +19,7 @@ export default function LPathCreator() {
 	const [createModalVisible, setCreateModalVisibility] = useState(true);
 	const navigate = useNavigate();
 
-	const ref = useRef<HTMLDivElement>(null);
+	const canvasContainer = useRef<HTMLDivElement>(null);
 	const floatingInput = useRef<HTMLDivElement>(null);
 	const saveGraph = useRef<HTMLButtonElement>(null);
 
@@ -55,10 +55,15 @@ export default function LPathCreator() {
 
 	useLayoutEffect(() => {
 		const grid = new G6.Grid();
+		const canvasRef = canvasContainer.current;
 		const floatingInputRef = floatingInput.current;
+		const saveGraphRef = saveGraph.current;
 		const contextPos = {} as ICoordinate;
 		const canvasPoint = {} as ICoordinate;
+		
 		let nodeLabel: string;
+		let sourceAnchorIdx: any, targetAnchorIdx: any;
+		let sourceAnchorPos: any, targetAnchorPos: any;
 
 		// #region Init
 		setFloatingInputVisibility(false);
@@ -153,17 +158,45 @@ export default function LPathCreator() {
 
 		// #region Graph Init
 		const graph: Graph = new G6.Graph({
-			container: ref.current as HTMLDivElement,
+			container: canvasRef as HTMLDivElement,
 			fitView: true,
 			fitViewPadding: 50,
 			modes: {
-				default: ['drag-canvas', 'zoom-canvas', 'drag-node', 'brush-select']
+				default: ['drag-canvas', 'zoom-canvas', {
+					type: 'drag-node',
+					shouldBegin: e => {
+						if (e.target.get('name') === 'anchor-point') return false;
+						return true;
+					}
+				}, 'brush-select', {
+					type: 'create-edge',
+					trigger: 'drag',
+					shouldBegin: (e: IG6GraphEvent) => {
+						if (e.target && e.target.get('name') !== 'anchor-point') return false;
+						sourceAnchorIdx = e.target.get('anchorPointIdx');
+						sourceAnchorPos = { x: e.target.attr().x, y: e.target.attr().y };
+						e.target.set('links', e.target.get('links') + 1); // cache the number of edge connected to this anchor-point circle
+						return true;
+					},
+					shouldEnd: e => {
+						// avoid ending at other shapes on the node
+						if (e.target && e.target.get('name') !== 'anchor-point') return false;
+						if (e.target) {
+							targetAnchorIdx = e.target.get('anchorPointIdx');
+							targetAnchorPos = {x: e.target.attr().x, y: e.target.attr().y };
+							e.target.set('links', e.target.get('links') + 1);  // cache the number of edge connected to this anchor-point circle
+							return true;
+						}
+						targetAnchorIdx = undefined;
+						return true;
+					},
+				}]
 			},
 			defaultNode: {
 				type: 'customNode'
 			},
 			defaultEdge: {
-				size: 2
+				size: 2,
 			},
 			animate: true,
 			animateCfg: {
@@ -184,7 +217,6 @@ export default function LPathCreator() {
 				const scalingFactor = 1.2;
 				const lines = getLines(cfg?.label?.toString() as string, canvasCtx, maxWidth, scalingFactor);
 				const textWidth = canvasCtx.measureText(cfg?.label?.toString() as string).width;
-
 				const rect: IShape = group?.addShape('rect', {
 					attrs: {
 						cursor: 'pointer',
@@ -211,6 +243,39 @@ export default function LPathCreator() {
 					},
 				}) as IShape;
 				return rect as IShape;
+			},
+			afterDraw(cfg, group) {
+				const bbox = group?.getBBox();
+				const anchorPoints = ((this as ShapeOptions).getAnchorPoints as () => number[][])();
+				anchorPoints.forEach((anchorPos, i) => {
+					group?.addShape('circle', {
+						attrs: {
+							r: 4,
+							x: bbox.x + bbox.width * anchorPos[0],
+							y: bbox.y + bbox.height * anchorPos[1],
+							fill: '#fff',
+							stroke: '#5F95FF',
+							lineWidth: 2
+						},
+						name: 'anchor-point', // the name, for searching by group.find(ele => ele.get('name') === 'anchor-point')
+						anchorPointIdx: i, // flag the idx of the anchor-point circle
+						links: 0, // cache the number of edges connected to this shape
+						visible: false, // invisible by default, shows up when links > 1 or the node is in showAnchors state
+						draggable: true // allow to catch the drag events on this shape
+					});
+				});
+			},
+			setState(name, value, item) {
+				if (name === 'showAnchors') {
+					const anchorPoints = item?.getContainer().findAll(ele => ele.get('name') === 'anchor-point');
+					anchorPoints?.forEach(point => {
+						if (value || point.get('links') > 0) point.show();
+						else point.hide();
+					});
+				}
+			},
+			getAnchorPoints() {
+				return [[0, 0.5], [0.5, 0], [1, 0.5], [0.5, 1]];
 			}
 		});
 		//#endregion
@@ -220,16 +285,75 @@ export default function LPathCreator() {
 
 		// #region Save Graph Button Handlers
 		function handleClickOnSaveGraph() {
-			console.log('Saved');
+			const graphData = graph.save();
+			console.log(graphData);
 		}
-		
-		saveGraph.current?.addEventListener('click', handleClickOnSaveGraph);
+
+		saveGraphRef?.addEventListener('click', handleClickOnSaveGraph);
 		// #endregion
 
-		// Graph Event Handlers
+		// #region Graph Event Handlers
 		function handleResize() {
-			graph.changeSize(ref.current?.clientWidth as number, ref.current?.clientHeight as number);
+			graph.changeSize(canvasRef?.clientWidth as number, canvasRef?.clientHeight as number);
 		}
+		// #endregion
+
+		// #region Node Event Handlers
+		graph.on('node:mouseenter', e => {
+			graph.setItemState(e.item as Item, 'showAnchors', true);
+		});
+		graph.on('node:mouseleave', e => {
+			graph.setItemState(e.item as Item, 'showAnchors', false);
+		});
+		graph.on('node:dragenter', e => {
+			graph.setItemState(e.item as Item, 'showAnchors', true);
+		});
+		graph.on('node:dragleave', e => {
+			graph.setItemState(e.item as Item, 'showAnchors', false);
+		});
+		graph.on('node:dragstart', e => {
+			graph.setItemState(e.item as Item, 'showAnchors', true);
+		});
+		graph.on('node:dragend', e => {
+			graph.setItemState(e.item as Item, 'showAnchors', false);
+		});
+		// #endregion
+
+		// #region Edge Event Handlers
+		graph.on('aftercreateedge', (e: IG6GraphEvent) => {
+			// update the sourceAnchor and targetAnchor for the newly added edge
+			graph.updateItem(e.edge as Item, {
+				sourceAnchor: sourceAnchorIdx,
+				targetAnchor: targetAnchorIdx,
+			});
+		});
+
+		// after drag from the first node, the edge is created, update the sourceAnchor
+		graph.on('afteradditem', e => {
+			if (e.item && e.item.getType() === 'edge') {
+				graph.updateItem(e.item, {
+					sourceAnchor: sourceAnchorIdx,
+				});
+			}
+		});
+
+		// if create-edge is canceled before ending, update the 'links' on the anchor-point circles
+		graph.on('afterremoveitem', (e:any) => {
+			if (e.item && e.item.source && e.item.target) {
+				const sourceNode = graph.findById(e.item.source);
+				const targetNode = graph.findById(e.item.target);
+				const { sourceAnchor, targetAnchor } = e.item;
+				if (sourceNode && !isNaN(sourceAnchor)) {
+					const sourceAnchorShape = sourceNode.getContainer().find(ele => (ele.get('name') === 'anchor-point' && ele.get('anchorPointIdx') === sourceAnchor));
+					sourceAnchorShape.set('links', sourceAnchorShape.get('links') - 1);
+				}
+				if (targetNode && !isNaN(targetAnchor)) {
+					const targetAnchorShape = targetNode.getContainer().find(ele => (ele.get('name') === 'anchor-point' && ele.get('anchorPointIdx') === targetAnchor));
+					targetAnchorShape.set('links', targetAnchorShape.get('links') - 1);
+				}
+			}
+		});
+		// #endregion
 
 		// DOM Event Listeners
 		window.addEventListener('resize', handleResize);
@@ -240,6 +364,7 @@ export default function LPathCreator() {
 			floatingInputRef?.removeEventListener('input', handleFloatingInputChange);
 			floatingInputRef?.removeEventListener('keypress', handleFloatingInputEnterPress);
 			floatingInputRef?.removeEventListener('keydown', handleFloatingInputKeyDownEvent);
+			saveGraphRef?.removeEventListener('click', handleClickOnSaveGraph);
 		};
 	});
 
@@ -261,7 +386,7 @@ export default function LPathCreator() {
 	//#endregion Modal Popup
 
 	return (
-		<div ref={ref} className="w-[100vw] dynamicHeight">
+		<div ref={canvasContainer} className="w-[100vw] dynamicHeight">
 			<div className='p-2 absolute flex'>
 				<div className='text-sm font-medium text-slate-700'>Create Mode</div>
 				<button ref={saveGraph} className='ml-2 bg-blue-500 text-sm font-medium text-white px-2 rounded-md'>Save</button>
