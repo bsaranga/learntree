@@ -61,6 +61,7 @@ export default function LPathCreator() {
 		const canvasRef = canvasContainer.current;
 		const floatingInputRef = floatingInput.current;
 		const saveGraphRef = saveGraph.current;
+
 		const contextPos = {} as ICoordinate;
 		const canvasPoint = {} as ICoordinate;
 		
@@ -158,12 +159,16 @@ export default function LPathCreator() {
 			itemTypes: ['canvas'],
 		});
 		// #endregion
+		const toolbar = new G6.ToolBar({
+			position: {x: 25, y:canvasRef?.clientHeight as number},
+		});
 
 		// #region Graph Init
 		const graph: Graph = new G6.Graph({
 			container: canvasRef as HTMLDivElement,
 			fitView: true,
 			fitViewPadding: 50,
+			enabledStack: true,
 			modes: {
 				default: ['drag-canvas', 'zoom-canvas', {
 					type: 'drag-node',
@@ -227,19 +232,20 @@ export default function LPathCreator() {
 				duration: 450,
 				easing: 'easeCubic'
 			},
-			plugins: [grid, contextMenu]
+			plugins: [grid, contextMenu, toolbar]
 		});
 		// #endregion
 
 		const canvasCtx: CanvasRenderingContext2D = graph.get('canvas').cfg.context;
+
 		// #region Canvas Event Listeners
 		function canvasKeyPressListener(e: KeyboardEvent) {
 			if (e.key === 'Delete') {
 				const selectedNodes = graph.getNodes()?.filter(n => n.hasState('selected'));
-				if (selectedNodes) selectedNodes.forEach(n => graph.removeItem(n));
+				if (selectedNodes) selectedNodes.forEach(n => graph.removeItem(n, true));
 
 				const selectedEdges = graph.getEdges()?.filter(e => e.hasState('selected'));
-				if (selectedEdges) selectedEdges.forEach(e => graph.removeItem(e));
+				if (selectedEdges) selectedEdges.forEach(e => graph.removeItem(e, true));
 			}
 		}
 
@@ -260,6 +266,7 @@ export default function LPathCreator() {
 			canvasRef?.removeEventListener('keyup', canvasKeyPressListener);
 			canvasRef?.setAttribute('keyPressEventListener', 'false');
 		}
+
 		// #endregion
 
 		//#region Register custom nodes
@@ -381,6 +388,7 @@ export default function LPathCreator() {
 		});
 		graph.on('node:click', e => {
 			addCanvasEventListener();
+			graph.getNodes().filter(n => n.hasState('selected')).forEach(n => graph.setItemState(n, 'selected', false));
 			graph.setItemState(e.item as Item, 'selected', true);
 		});
 		graph.on('canvas:click', () => {
@@ -428,6 +436,7 @@ export default function LPathCreator() {
 
 		graph.on('edge:click', (e: IG6GraphEvent) => {
 			graph.setItemState(e.item as Item, 'selected', true);
+			addCanvasEventListener();
 		});
 		// #endregion
 
