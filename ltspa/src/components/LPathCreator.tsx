@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import G6, { Graph, GraphData, IGroup, IShape, ModelConfig } from '@antv/g6';
+import G6, { Graph, GraphData, IShape, ModelConfig } from '@antv/g6';
 import { Modal } from 'antd';
 import { forwardRef, useLayoutEffect, useRef, LegacyRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ICoordinate from '../interfaces/common/ICoordinate';
-import { randomIdGenerator } from '../utilities/generators';
+import { getLines } from '../utilities/canvasUtils';
 import './Layout.scss';
 
 const FloatingInput = forwardRef((props, ref: LegacyRef<HTMLDivElement>) => (
@@ -15,11 +15,13 @@ const FloatingInput = forwardRef((props, ref: LegacyRef<HTMLDivElement>) => (
 FloatingInput.displayName = 'FloatingInput';
 
 export default function LPathCreator() {
-
+	
+	const [createModalVisible, setCreateModalVisibility] = useState(true);
 	const navigate = useNavigate();
+
 	const ref = useRef<HTMLDivElement>(null);
 	const floatingInput = useRef<HTMLDivElement>(null);
-	const [createModalVisible, setCreateModalVisibility] = useState(true);
+	const saveGraph = useRef<HTMLButtonElement>(null);
 
 	function getModelConfig(cX: number, cY: number, nodeLabel: string): ModelConfig {
 		return {
@@ -29,7 +31,6 @@ export default function LPathCreator() {
 			type: 'customNode'
 		};
 	}
-
 	const data: GraphData = {
 		nodes: [
 			{
@@ -59,7 +60,9 @@ export default function LPathCreator() {
 		const canvasPoint = {} as ICoordinate;
 		let nodeLabel: string;
 
+		// #region Init
 		setFloatingInputVisibility(false);
+		// #endregion
 
 		//#region Graph Updates
 		function createNode(label: string) {
@@ -119,8 +122,9 @@ export default function LPathCreator() {
 		floatingInputRef?.addEventListener('input', handleFloatingInputChange);
 		floatingInputRef?.addEventListener('keypress', handleFloatingInputEnterPress);
 		floatingInputRef?.addEventListener('keydown', handleFloatingInputKeyDownEvent);
-		//#endregion Floating Input
+		//#endregion
 
+		// #region Context Menu
 		const contextMenu = new G6.Menu({
 			getContent(ev) {
 				const gPoint = graph.getPointByCanvas(ev?.canvasX as number, ev?.canvasY as number);
@@ -145,7 +149,9 @@ export default function LPathCreator() {
 			className: 'createContextMenu',
 			itemTypes: ['canvas'],
 		});
+		// #endregion
 
+		// #region Graph Init
 		const graph: Graph = new G6.Graph({
 			container: ref.current as HTMLDivElement,
 			fitView: true,
@@ -166,26 +172,9 @@ export default function LPathCreator() {
 			},
 			plugins: [grid, contextMenu]
 		});
+		// #endregion
 
 		const canvasCtx: CanvasRenderingContext2D = graph.get('canvas').cfg.context;
-
-		function getLines(text: string, ctx: CanvasRenderingContext2D, maxWidth: number, scaleFactor: number): string[] {
-			const wordArray = text.split(' ');
-			const lineArray: string[] = [];
-			let line = '';
-
-			wordArray.forEach(w => {
-				if (ctx.measureText(''.concat(...[line, ' ', w])).width * scaleFactor < maxWidth) {
-					line += `${w} `;
-				} else {
-					lineArray.push(line.trimEnd());
-					line = `${w} `;
-				}
-			});
-
-			lineArray.push(line);
-			return lineArray;
-		}
 
 		//#region Register custom nodes
 		G6.registerNode('customNode', {
@@ -229,7 +218,15 @@ export default function LPathCreator() {
 		graph.data(data);
 		graph.render();
 
-		// Handlers
+		// #region Save Graph Button Handlers
+		function handleClickOnSaveGraph() {
+			console.log('Saved');
+		}
+		
+		saveGraph.current?.addEventListener('click', handleClickOnSaveGraph);
+		// #endregion
+
+		// Graph Event Handlers
 		function handleResize() {
 			graph.changeSize(ref.current?.clientWidth as number, ref.current?.clientHeight as number);
 		}
@@ -265,8 +262,9 @@ export default function LPathCreator() {
 
 	return (
 		<div ref={ref} className="w-[100vw] dynamicHeight">
-			<div className='p-2 absolute'>
+			<div className='p-2 absolute flex'>
 				<div className='text-sm font-medium text-slate-700'>Create Mode</div>
+				<button ref={saveGraph} className='ml-2 bg-blue-500 text-sm font-medium text-white px-2 rounded-md'>Save</button>
 				<FloatingInput ref={floatingInput} />
 			</div>
 			<Modal title="Create Learning Path" visible={createModalVisible} onOk={handleOk} onCancel={handleCancel} centered={true} destroyOnClose={true} transitionName='' closable={false}>
