@@ -33,6 +33,7 @@ export default function LPathCreator() {
 			type: 'customNode'
 		};
 	}
+
 	const data: GraphData = {
 		nodes: [
 			{
@@ -170,7 +171,8 @@ export default function LPathCreator() {
 						if (e.target.get('name') === 'anchor-point') return false;
 						return true;
 					}
-				}, 'brush-select', {
+				}, 
+				{
 					type: 'create-edge',
 					trigger: 'drag',
 					shouldBegin: (e: IG6GraphEvent) => {
@@ -186,7 +188,7 @@ export default function LPathCreator() {
 						const edgeIdMappings = edges.map(e => `${e.getSource()._cfg?.model?.id}_${e.getTarget()._cfg?.model?.id}`);
 
 						// if more than one edge is added between two nodes, reject.
-						if(edgeIdMappings.indexOf(`${startNode}_${endNode}`) > -1) return false;
+						if (edgeIdMappings.indexOf(`${startNode}_${endNode}`) > -1 || edgeIdMappings.indexOf(`${endNode}_${startNode}`) > -1) return false;
 						if (e.target && e.target.get('name') !== 'anchor-point') return false;
 						if (e.target) {
 							targetAnchorIdx = e.target.get('anchorPointIdx');
@@ -196,6 +198,11 @@ export default function LPathCreator() {
 						targetAnchorIdx = undefined;
 						return true;
 					},
+				},{
+					type: 'brush-select',
+					onSelect: () => {
+						addCanvasEventListener();
+					}
 				}]
 			},
 			defaultNode: {
@@ -203,6 +210,17 @@ export default function LPathCreator() {
 			},
 			defaultEdge: {
 				size: 2,
+				type: 'line',
+				style: {
+					lineAppendWidth: 15,
+					stroke: 'rgba(142, 170, 247, 1)',
+					endArrow: true
+				}
+			},
+			edgeStateStyles: {
+				'selected': {
+					lineWidth: 2.5
+				}
 			},
 			animate: true,
 			animateCfg: {
@@ -214,6 +232,35 @@ export default function LPathCreator() {
 		// #endregion
 
 		const canvasCtx: CanvasRenderingContext2D = graph.get('canvas').cfg.context;
+		// #region Canvas Event Listeners
+		function canvasKeyPressListener(e: KeyboardEvent) {
+			if (e.key === 'Delete') {
+				const selectedNodes = graph.getNodes()?.filter(n => n.hasState('selected'));
+				if (selectedNodes) selectedNodes.forEach(n => graph.removeItem(n));
+
+				const selectedEdges = graph.getEdges()?.filter(e => e.hasState('selected'));
+				if (selectedEdges) selectedEdges.forEach(e => graph.removeItem(e));
+			}
+		}
+
+		function addCanvasEventListener() {
+			if (canvasRef?.getAttribute('keyPressEventListener') != 'true') {
+				canvasRef?.addEventListener('keyup', canvasKeyPressListener);
+				canvasRef?.setAttribute('keyPressEventListener', 'true');
+				setTimeout(() => {
+					canvasRef?.removeEventListener('keyup', canvasKeyPressListener);
+					canvasRef?.setAttribute('keyPressEventListener', 'false');
+				}, 10000);
+			} else {
+				console.log('Event listener already added.');
+			}
+		}
+
+		function removeCanvasEventListener() {
+			canvasRef?.removeEventListener('keyup', canvasKeyPressListener);
+			canvasRef?.setAttribute('keyPressEventListener', 'false');
+		}
+		// #endregion
 
 		//#region Register custom nodes
 		G6.registerNode('customNode', {
@@ -275,9 +322,18 @@ export default function LPathCreator() {
 				if (name === 'showAnchors') {
 					const anchorPoints = item?.getContainer().findAll(ele => ele.get('name') === 'anchor-point');
 					anchorPoints?.forEach(point => {
-						if (value || point.get('links') > 0) point.show();
-						else point.hide();
+						value ? point.show() : point.hide();
 					});
+				}
+				if (name === 'selected') {
+					const firstChild = item?.getContainer().getChildren()[0];
+					if (value) {
+						firstChild?.attr('lineWidth', 2.5);
+						firstChild?.attr('fill', 'rgb(218, 231, 251)');
+					} else {
+						firstChild?.attr('lineWidth', 1.5);
+						firstChild?.attr('fill', 'rgb(240, 246, 255)');
+					}
 				}
 			},
 			getAnchorPoints() {
@@ -323,6 +379,16 @@ export default function LPathCreator() {
 		graph.on('node:dragend', e => {
 			graph.setItemState(e.item as Item, 'showAnchors', false);
 		});
+		graph.on('node:click', e => {
+			addCanvasEventListener();
+			graph.setItemState(e.item as Item, 'selected', true);
+		});
+		graph.on('canvas:click', () => {
+			removeCanvasEventListener();
+			graph.getNodes().forEach(item => {
+				graph.setItemState(item, 'selected', false);
+			});
+		});
 		// #endregion
 
 		// #region Edge Event Handlers
@@ -359,6 +425,10 @@ export default function LPathCreator() {
 				}
 			}
 		});
+
+		graph.on('edge:click', (e: IG6GraphEvent) => {
+			graph.setItemState(e.item as Item, 'selected', true);
+		});
 		// #endregion
 
 		// DOM Event Listeners
@@ -392,7 +462,7 @@ export default function LPathCreator() {
 	//#endregion Modal Popup
 
 	return (
-		<div ref={canvasContainer} className="w-[100vw] dynamicHeight">
+		<div ref={canvasContainer} className="w-[100vw] dynamicHeight" tabIndex={0}>
 			<div className='p-2 absolute flex'>
 				<div className='text-sm font-medium text-slate-700'>Create Mode</div>
 				<button ref={saveGraph} className='ml-2 bg-blue-500 text-sm font-medium text-white px-2 rounded-md'>Save</button>
