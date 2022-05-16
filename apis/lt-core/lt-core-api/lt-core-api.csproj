@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\lt-core-infrastructure\lt-core-infrastructure.csproj" />
+    <ProjectReference Include="..\lt-core-application\lt-core-application.csproj" />
   </ItemGroup>
 
 </Project>
