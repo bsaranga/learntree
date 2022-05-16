@@ -3,23 +3,23 @@ using lt_core_infrastructure.Models;
 
 namespace lt_core_infrastructure.Repositories
 {
-    public class LearningPathRepository : ILearningPathRepository
+    public class LearningPathMetaDataRepository : ILearningPathMetaDataRepository
     {
         public LTCoreDbContext context { get; set; }
-        public LearningPathRepository(LTCoreDbContext context)
+        public LearningPathMetaDataRepository(LTCoreDbContext context)
         {
             this.context = context;
         }
 
-        public async Task InsertLearningPath(LPDto lp)
+        public async Task InsertLPMetaData(LPMetadataDTO lp)
         {
-            var learningPath = new LearningPath() {
+            var metaData = new LearningPathMetaData() {
                 LPCode = lp.LPCode,
                 Title = lp.Title,
                 Description = lp.Description
             };
             
-            context.Add(learningPath);
+            context.Add(metaData);
             await context.SaveChangesAsync();
         }
     }

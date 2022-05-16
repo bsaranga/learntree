@@ -8,9 +8,9 @@ public class LTCoreDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<LearningPath>()
+        modelBuilder.Entity<LearningPathMetaData>()
             .HasKey(l => l.LPId);
     }
 
-    public DbSet<LearningPath>? LearningPaths { get; set; }
+    public DbSet<LearningPathMetaData>? LearningPathMetaData { get; set; }
 }

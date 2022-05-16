@@ -7,7 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 string connectionString = builder.Configuration.GetConnectionString("LTCore");
 builder.Services.AddDbContext<LTCoreDbContext>(options => options.UseNpgsql(connectionString, p => p.MigrationsAssembly("lt-core-api")));
-builder.Services.AddScoped<ILearningPathRepository, LearningPathRepository>();
+builder.Services.AddScoped<ILearningPathMetaDataRepository, LearningPathMetaDataRepository>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
