@@ -3,10 +3,11 @@ import G6, { Graph, GraphData, IG6GraphEvent, IShape, Item, ModelConfig, ShapeOp
 import { Modal } from 'antd';
 import { forwardRef, useLayoutEffect, useRef, LegacyRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import ICoordinate from '../interfaces/common/ICoordinate';
-import { getLines } from '../utilities/canvasUtils';
-import { randomIdGenerator } from '../utilities/generators';
-import './Layout.scss';
+import ICoordinate from '../../interfaces/common/ICoordinate';
+import { getLines } from '../../utilities/canvasUtils';
+import { randomIdGenerator } from '../../utilities/generators';
+import CreateLPForm from './CreateLPForm/CreateLPForm';
+import '../Layout.scss';
 
 const FloatingInput = forwardRef((props, ref: LegacyRef<HTMLDivElement>) => (
 	<div ref={ref} className='bg-white rounded-sm shadow-sm border-2 border-slate-400 absolute w-auto'>
@@ -17,7 +18,10 @@ FloatingInput.displayName = 'FloatingInput';
 
 export default function LPathCreator() {
 	
+	console.log('%cLPATH CREATOR Rendered', 'color:blue');
+
 	const [createModalVisible, setCreateModalVisibility] = useState(true);
+	
 	const navigate = useNavigate();
 
 	const canvasContainer = useRef<HTMLDivElement>(null);
@@ -57,6 +61,7 @@ export default function LPathCreator() {
 	};
 
 	useLayoutEffect(() => {
+		console.log('%cGraph Rendered', 'color:green');
 		const canvasRef = canvasContainer.current;
 		const floatingInputRef = floatingInput.current;
 		const saveGraphRef = saveGraph.current;
@@ -461,12 +466,10 @@ export default function LPathCreator() {
 
 	//#region Modal Popup
 	function handleOk() {
-		console.log('Created');
 		setCreateModalVisibility(false);
 	}
 
 	function handleCancel() {
-		console.log('Cancelled');
 		setCreateModalVisibility(false);
 		navigateHome();
 	}
@@ -479,8 +482,8 @@ export default function LPathCreator() {
 				<button ref={saveGraph} className='ml-2 bg-blue-500 text-sm font-medium text-white px-2 rounded-md'>Save</button>
 				<FloatingInput ref={floatingInput} />
 			</div>
-			<Modal title="Create Learning Path" visible={createModalVisible} onOk={handleOk} onCancel={handleCancel} centered={true} destroyOnClose={true} transitionName='' closable={false}>
-				<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea adipisci dicta error quas vitae sunt optio eaque sapiente, ullam, veritatis necessitatibus voluptatem! Minima sit voluptate quam illo repudiandae earum voluptates!</p>
+			<Modal title="Create Learning Path" visible={createModalVisible} width={450} centered={true} destroyOnClose={true} transitionName='' closable={false} footer={null}>
+				<CreateLPForm onCancel={handleCancel} onOk={handleOk}/>
 			</Modal>
 		</div>
 	);

@@ -1,7 +1,7 @@
 import { Route, Routes } from 'react-router-dom';
 import './App.scss';
 import Layout from './components/Layout';
-import LPathCreator from './components/LPathCreator';
+import LPathCreator from './components/LPathCreator/LPathCreator';
 import LPathViewer from './components/LPathViewer';
 import MessageHubContext from './contexts/MessageHubContext';
 import { NewsFeed } from './pages/NewsFeed';
