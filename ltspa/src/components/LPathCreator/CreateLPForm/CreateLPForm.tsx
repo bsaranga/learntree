@@ -1,6 +1,8 @@
 import { Button, Form, Input, message } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
 import { useState } from 'react';
+import HttpService from '../../../services/HttpService';
+import {v4 as uuidv4} from 'uuid';
 
 interface CreateLPFormProps {
 	onOk: () => void,
@@ -13,9 +15,20 @@ export default function CreateLPForm({onOk, onCancel}: CreateLPFormProps) {
 	const [description, setDescription] = useState<string|null>(null);
 	const disableCreateButton = title == '' || title == null || description == '' || description == null;
 
+	const httpClient = HttpService.client();
+
 	function onFinish() {
-		message.success({content: 'Learning Path Created', duration: 2, style: {marginTop: '2rem'}});
-		onOk();
+		httpClient.post('https://localhost:4157/api/LearningPathMetaData', { lpCode: uuidv4(), title: title, description: description })
+			.then(d => {
+				if (d.status == 200) {
+					message.success({ content: 'Learning Path Created', duration: 2, style: { marginTop: '2rem' } });
+					onOk();
+				} else {
+					message.error({ content: `Learning Path Creation Failed: <Status: ${d.status}>`, duration: 2, style: { marginTop: '2rem' } });
+				}
+			}).catch(err => {
+				message.error({ content: `Learning Path Creation Failed: <${err.message}>`, duration: 2, style: { marginTop: '2rem' } });
+			});
 	}
 
 	function onFinishFailed() {
