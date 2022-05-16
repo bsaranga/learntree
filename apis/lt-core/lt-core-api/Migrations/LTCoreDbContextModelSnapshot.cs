@@ -21,7 +21,7 @@ namespace lt_core_api.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("lt_core_infrastructure.Models.LearningPath", b =>
+            modelBuilder.Entity("lt_core_infrastructure.Models.LearningPathMetaData", b =>
                 {
                     b.Property<int>("LPId")
                         .ValueGeneratedOnAdd()
@@ -40,7 +40,7 @@ namespace lt_core_api.Migrations
 
                     b.HasKey("LPId");
 
-                    b.ToTable("LearningPaths");
+                    b.ToTable("LearningPathMetaData");
                 });
 #pragma warning restore 612, 618
         }

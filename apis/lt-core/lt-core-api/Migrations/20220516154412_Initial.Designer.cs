@@ -11,7 +11,7 @@ using lt_core_infrastructure;
 namespace lt_core_api.Migrations
 {
     [DbContext(typeof(LTCoreDbContext))]
-    [Migration("20220516151233_Initial")]
+    [Migration("20220516154412_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -23,7 +23,7 @@ namespace lt_core_api.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("lt_core_infrastructure.Models.LearningPath", b =>
+            modelBuilder.Entity("lt_core_infrastructure.Models.LearningPathMetaData", b =>
                 {
                     b.Property<int>("LPId")
                         .ValueGeneratedOnAdd()
@@ -42,7 +42,7 @@ namespace lt_core_api.Migrations
 
                     b.HasKey("LPId");
 
-                    b.ToTable("LearningPaths");
+                    b.ToTable("LearningPathMetaData");
                 });
 #pragma warning restore 612, 618
         }

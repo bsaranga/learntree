@@ -22,6 +22,13 @@ module.exports = {
     cwd: "./apis/lt-message-hub/message-hub.api/bin/Debug/net6.0/",
     watch: true,
     max_memory_restart: "2G"
+  },
+  {
+    name: "Learn Tree Metadata API",
+    script: "dotnet lt-core-api.dll --urls \"https://localhost:4157\"",
+    cwd: "./apis/lt-core/lt-core-api/bin/Debug/net6.0/",
+    watch: true,
+    max_memory_restart: "2G"
   }
  ]
 }

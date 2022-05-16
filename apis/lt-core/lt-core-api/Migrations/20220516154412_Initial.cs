@@ -10,7 +10,7 @@ namespace lt_core_api.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "LearningPaths",
+                name: "LearningPathMetaData",
                 columns: table => new
                 {
                     LPId = table.Column<int>(type: "integer", nullable: false)
@@ -21,14 +21,14 @@ namespace lt_core_api.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_LearningPaths", x => x.LPId);
+                    table.PrimaryKey("PK_LearningPathMetaData", x => x.LPId);
                 });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "LearningPaths");
+                name: "LearningPathMetaData");
         }
     }
 }
