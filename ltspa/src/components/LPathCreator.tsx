@@ -30,7 +30,7 @@ export default function LPathCreator() {
 			x: cX,
 			y: cY,
 			label: nodeLabel,
-			type: 'customNode'
+			type: 'topic'
 		};
 	}
 
@@ -41,14 +41,14 @@ export default function LPathCreator() {
 				label: 'If this component has been mounted into the DOM, this returns the corresponding native browser DOM element. This method is useful for reading values out of the DOM, such as form field values and performing DOM measurements. In most cases, you can attach a ref to the DOM node and avoid using findDOMNode at all.',
 				x: 450,
 				y: 250,
-				type: 'customNode'
+				type: 'topic'
 			},
 			{
 				id: '2',
 				label: 'CSS Object Model',
 				x: 350,
 				y: 150,
-				type: 'customNode'
+				type: 'topic'
 			}
 		],
 		edges: [
@@ -57,7 +57,6 @@ export default function LPathCreator() {
 	};
 
 	useLayoutEffect(() => {
-		const grid = new G6.Grid();
 		const canvasRef = canvasContainer.current;
 		const floatingInputRef = floatingInput.current;
 		const saveGraphRef = saveGraph.current;
@@ -71,6 +70,42 @@ export default function LPathCreator() {
 
 		// #region Init
 		setFloatingInputVisibility(false);
+
+		// #region Plugins
+		// Grid setup
+		const grid = new G6.Grid();
+
+		// Toolbar setup
+		const toolbar = new G6.ToolBar({
+			position: {x: 25, y:canvasRef?.clientHeight as number},
+		});
+
+		// Context menu setup
+		const contextMenu = new G6.Menu({
+			getContent(ev) {
+				const gPoint = graph.getPointByCanvas(ev?.canvasX as number, ev?.canvasY as number);
+				canvasPoint.x = gPoint.x;
+				canvasPoint.y = gPoint.y;
+				contextPos.x = ev?.canvasX as number;
+				contextPos.y = ev?.canvasY as number;
+				return `<div id='root' class='contextMenuItem'>Add Root</div>
+						<div id='aggr' class='contextMenuItem'>Add Aggregate</div>
+						<div id='topic' class='contextMenuItem'>Add Topic</div>
+						<div id='quiz' class='contextMenuItem'>Add Quiz</div>
+						`;
+			},
+			handleMenuClick: (target) => {
+				console.log(target.id);
+				setFloatingInputVisibility(true);
+				moveFloatingInput(contextPos.x, contextPos.y);
+				focusFloatingInput();
+			},
+			offsetX: 0,
+			offsetY: 0,
+			className: 'createContextMenu',
+			itemTypes: ['canvas'],
+		});
+		// #endregion
 		// #endregion
 
 		//#region Graph Updates
@@ -80,9 +115,9 @@ export default function LPathCreator() {
 				resetFloatingInputValue();
 			}
 		}
-		//#endregion Graph Updates
+		//#endregion
 
-		//#region Floating Input
+		//#region Floating Input Handlers
 		function setFloatingInputVisibility(value: boolean) {
 			if (floatingInputRef != null) {
 				floatingInputRef.style.visibility = (value) ? 'visible' : 'hidden';
@@ -133,37 +168,7 @@ export default function LPathCreator() {
 		floatingInputRef?.addEventListener('keydown', handleFloatingInputKeyDownEvent);
 		//#endregion
 
-		// #region Context Menu
-		const contextMenu = new G6.Menu({
-			getContent(ev) {
-				const gPoint = graph.getPointByCanvas(ev?.canvasX as number, ev?.canvasY as number);
-				canvasPoint.x = gPoint.x;
-				canvasPoint.y = gPoint.y;
-				contextPos.x = ev?.canvasX as number;
-				contextPos.y = ev?.canvasY as number;
-				return `<div id='root' class='contextMenuItem'>Add Root</div>
-						<div id='aggr' class='contextMenuItem'>Add Aggregate</div>
-						<div id='topic' class='contextMenuItem'>Add Topic</div>
-						<div id='quiz' class='contextMenuItem'>Add Quiz</div>
-						`;
-			},
-			handleMenuClick: (target) => {
-				console.log(target.id);
-				setFloatingInputVisibility(true);
-				moveFloatingInput(contextPos.x, contextPos.y);
-				focusFloatingInput();
-			},
-			offsetX: 0,
-			offsetY: 0,
-			className: 'createContextMenu',
-			itemTypes: ['canvas'],
-		});
-		// #endregion
-		const toolbar = new G6.ToolBar({
-			position: {x: 25, y:canvasRef?.clientHeight as number},
-		});
-
-		// #region Graph Init
+		// #region Graph Config
 		const graph: Graph = new G6.Graph({
 			container: canvasRef as HTMLDivElement,
 			fitView: true,
@@ -209,9 +214,6 @@ export default function LPathCreator() {
 						addCanvasEventListener();
 					}
 				}]
-			},
-			defaultNode: {
-				type: 'customNode'
 			},
 			defaultEdge: {
 				size: 2,
@@ -270,7 +272,7 @@ export default function LPathCreator() {
 		// #endregion
 
 		//#region Register custom nodes
-		G6.registerNode('customNode', {
+		G6.registerNode('topic', {
 			drawShape: (cfg, group) => {
 				const padding = 10;
 				const maxWidth = 200;
