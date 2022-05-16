@@ -1,0 +1,15 @@
+# The database vendor.
+db=postgres
+
+# The username of the database user.
+db-username=root
+
+# The password of the database user.
+db-password=root
+
+# The host of the database.
+db-url-host=localhost
+
+# pgAdmin login
+admin@admin.com
+root
