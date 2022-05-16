@@ -5,20 +5,22 @@ import { forwardRef, useLayoutEffect, useRef, LegacyRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import ICoordinate from '../../interfaces/common/ICoordinate';
 import { getLines } from '../../utilities/canvasUtils';
-import { randomIdGenerator } from '../../utilities/generators';
 import CreateLPForm from './CreateLPForm/CreateLPForm';
 import '../Layout.scss';
+import {v4 as uuidv4} from 'uuid';
 
 const FloatingInput = forwardRef((props, ref: LegacyRef<HTMLDivElement>) => (
 	<div ref={ref} className='bg-white rounded-sm shadow-sm border-2 border-slate-400 absolute w-auto'>
 		<input className='focus:outline-none p-1 text-xs w-auto' type="text" />
 	</div>
 ));
+
 FloatingInput.displayName = 'FloatingInput';
 
 export default function LPathCreator() {
 	
 	console.log('%cLPATH CREATOR Rendered', 'color:blue');
+	console.log(uuidv4());
 
 	const [createModalVisible, setCreateModalVisibility] = useState(true);
 	
@@ -30,7 +32,7 @@ export default function LPathCreator() {
 
 	function getModelConfig(cX: number, cY: number, nodeLabel: string): ModelConfig {
 		return {
-			id: randomIdGenerator(),
+			id: uuidv4(),
 			x: cX,
 			y: cY,
 			label: nodeLabel,
@@ -317,7 +319,7 @@ export default function LPathCreator() {
 				anchorPoints.forEach((anchorPos, i) => {
 					group?.addShape('circle', {
 						attrs: {
-							r: 4,
+							r: 6,
 							x: bbox.x + bbox.width * anchorPos[0],
 							y: bbox.y + bbox.height * anchorPos[1],
 							fill: '#fff',
