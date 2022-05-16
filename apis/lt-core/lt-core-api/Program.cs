@@ -21,6 +21,15 @@ builder.Services.AddMassTransit(x => {
     });
 });
 
+builder.Services.AddOptions<MassTransitHostOptions>().Configure(options => {
+    options.WaitUntilStarted = true;
+    // if specified, limits the wait time when starting the bus
+    options.StartTimeout = TimeSpan.FromSeconds(10);
+
+    // if specified, limits the wait time when stopping the bus
+    options.StopTimeout = TimeSpan.FromSeconds(30);
+});
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
