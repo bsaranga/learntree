@@ -1,9 +1,39 @@
+using System.Security.Claims;
 using lt_core_infrastructure;
 using lt_core_infrastructure.Repositories;
 using MassTransit;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options => {
+                    options.Authority = "https://localhost:8443/realms/LearnTree";
+                    options.Audience = "lt-core-api";
+                    options.SaveToken = false;
+                    options.Events = new JwtBearerEvents
+                    {
+                        OnTokenValidated = context => 
+                        {
+                            var resources = JObject.Parse(context!.Principal!.FindFirst("resource_access")!.Value);
+                            var clientResource = resources[context!.Principal!.FindFirst("aud")!.Value];
+                            var clientRoles = clientResource!["roles"];
+                            var claimsIdentity = context.Principal.Identity as ClaimsIdentity;
+                            
+                            if (claimsIdentity == null) {
+                                throw new Exception("Unauthenticated...");
+                            }
+
+                            foreach (var role in clientRoles!)
+                            {
+                                claimsIdentity.AddClaim(new Claim(ClaimTypes.Role, role.ToString()));
+                            }
+                            return Task.CompletedTask;
+                        }
+                    };
+                });
 
 // Add services to the container.
 string connectionString = builder.Configuration.GetConnectionString("LTCore");

@@ -16,7 +16,8 @@ namespace lt_core_infrastructure.Repositories
             var metaData = new LearningPathMetaData() {
                 LPCode = lp.LPCode,
                 Title = lp.Title,
-                Description = lp.Description
+                Description = lp.Description,
+                UserId = "null for now"
             };
             
             context.Add(metaData);
