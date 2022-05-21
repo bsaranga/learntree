@@ -1,4 +1,6 @@
 using System.Security.Claims;
+using lt_core_api.Utilities;
+using lt_core_api.Utilities.Interfaces;
 using lt_core_infrastructure;
 using lt_core_infrastructure.Repositories;
 using MassTransit;
@@ -18,7 +20,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                         OnTokenValidated = context => 
                         {
                             var resources = JObject.Parse(context!.Principal!.FindFirst("resource_access")!.Value);
-                            var clientResource = resources[context!.Principal!.FindFirst("aud")!.Value];
+                            var clientResource = resources[context!.Principal!.FindFirst(aud => aud.Value == "lt-core-api")!.Value];
                             var clientRoles = clientResource!["roles"];
                             var claimsIdentity = context.Principal.Identity as ClaimsIdentity;
                             
@@ -37,8 +39,13 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 // Add services to the container.
 string connectionString = builder.Configuration.GetConnectionString("LTCore");
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddHttpClient();
+
 builder.Services.AddDbContext<LTCoreDbContext>(options => options.UseNpgsql(connectionString, p => p.MigrationsAssembly("lt-core-api")));
 builder.Services.AddScoped<ILearningPathMetaDataRepository, LearningPathMetaDataRepository>();
+builder.Services.AddSingleton<IKeycloakAdmin, KeycloakAdmin>();
+builder.Services.AddScoped<IClaimInfo, ClaimInfo>();
 
 builder.Services.AddMassTransit(x => {
     x.UsingRabbitMq((context, cfg) => {
@@ -79,6 +86,7 @@ app.UseCors(p => p.AllowAnyHeader()
                   .AllowAnyMethod()
                   .AllowAnyOrigin());
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
