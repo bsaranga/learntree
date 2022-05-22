@@ -12,17 +12,20 @@ namespace lt_core_api.Controllers
     public class LearningPathMetaDataController : ControllerBase
     {
         private readonly ILearningPathMetaDataRepository lpMetaDataRepo;
+        private readonly IKeycloakAdmin keycloakAdmin;
         private readonly IClaimInfo claimInfo;
-        public LearningPathMetaDataController(ILearningPathMetaDataRepository lpMetaDataRepo, IClaimInfo claimInfo)
+        public LearningPathMetaDataController(ILearningPathMetaDataRepository lpMetaDataRepo, IClaimInfo claimInfo, IKeycloakAdmin keycloakAdmin)
         {
             this.lpMetaDataRepo = lpMetaDataRepo;
+            this.keycloakAdmin = keycloakAdmin;
             this.claimInfo = claimInfo;
         }
 
         [HttpPost]
         public async Task<IActionResult> AddLearningPathMetaData(LPMetadataDTO metadata)
         {
-            var username = await claimInfo.GetUsername();
+            var username = claimInfo.GetUsername();
+            var users = await keycloakAdmin.GetAllUserNames();
             await lpMetaDataRepo.InsertLPMetaData(metadata);
             return Ok();
         }

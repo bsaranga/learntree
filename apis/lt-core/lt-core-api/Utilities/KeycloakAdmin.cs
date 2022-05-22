@@ -4,22 +4,28 @@ using Newtonsoft.Json.Linq;
 
 namespace lt_core_api.Utilities
 {
-    public class KeycloakAdmin : IKeycloakAdmin
+    public class KeycloakAdmin : IKeycloakAdmin, IKeycloakAdminInit
     {
-        private Task Init;
+        private PeriodicTimer? _timer;
+        private int? expiry;
+        private string? accessToken;
         private readonly string clientId;
         private readonly string clientSecret;
         private readonly string tokenEndpoint;
+        private readonly string keyCloakRestApiRoot;
+        private readonly ILogger<KeycloakAdmin> _logger;
         private readonly IHttpClientFactory? _httpClientFactory;
+        private JObject? parsedData;
         
-        public KeycloakAdmin(IConfiguration configuration, IHttpClientFactory? httpClientFactory)
+        public KeycloakAdmin(IConfiguration configuration, IHttpClientFactory? httpClientFactory, ILogger<KeycloakAdmin> logger)
         {
+            _logger = logger;
+            _httpClientFactory = httpClientFactory;
+
             clientId = configuration.GetSection("LTCoreAPI:ClientId").Value;
             clientSecret = configuration.GetSection("LTCoreAPI:ClientSecret").Value;
             tokenEndpoint = configuration.GetSection("LTCoreAPI:TokenEndpoint").Value;
-            _httpClientFactory = httpClientFactory;
-
-            Init = Authenticate();
+            keyCloakRestApiRoot = configuration.GetSection("LTCoreAPI:KeyCloakRESTAPIRoot").Value;
         }
 
         public async Task Authenticate()
@@ -29,7 +35,6 @@ namespace lt_core_api.Utilities
                 Headers =
                 {
                     { HeaderNames.Accept, "*/*" },
-                    { HeaderNames.ContentType, "application/x-www-form-urlencoded" },
                     { HeaderNames.Authorization, $"Basic {Base64Encode($"{clientId}:{clientSecret}")}" }
                 },
                 Content = new FormUrlEncodedContent(new List<KeyValuePair<string, string>>(){ new KeyValuePair<string, string>("grant_type", "client_credentials") })
@@ -41,8 +46,22 @@ namespace lt_core_api.Utilities
             if (httpResponseMessage.IsSuccessStatusCode)
             {
                 var content = await httpResponseMessage.Content.ReadAsStringAsync();
-                var parsed = JObject.Parse(content);
+                parsedData = JObject.Parse(content);
+                accessToken = (string)parsedData["access_token"]!;
+                expiry = (int)parsedData?["expires_in"]!;
+                
+                _timer = new PeriodicTimer(TimeSpan.FromSeconds((double)expiry));
+                _logger.LogInformation("Authenticated");
+            } else {
+                _logger.LogCritical("Authentication failed");
             }
+        }
+
+        public async Task ScheduledUpdate() {
+            do
+            {
+                await Authenticate();
+            } while (await _timer!.WaitForNextTickAsync());
         }
 
         internal string Base64Encode(string plainText)
@@ -51,9 +70,32 @@ namespace lt_core_api.Utilities
             return System.Convert.ToBase64String(plainTextBytes);
         }
 
-        public void Foo()
+        public async Task<List<string>> GetAllUserNames()
         {
-            Console.WriteLine("Foo");
+            var users = new List<string>();
+            var getUsersRequest = new HttpRequestMessage(HttpMethod.Get, $"{keyCloakRestApiRoot}/users")
+            {
+                Headers = 
+                {
+                    { HeaderNames.Accept, "*/*" }, 
+                    {HeaderNames.Authorization, $"Bearer {accessToken}"}
+                }
+            };
+
+            using var httpClient = _httpClientFactory.CreateClient();
+            var httpResponseMessage = await httpClient.SendAsync(getUsersRequest);
+
+            if (httpResponseMessage.IsSuccessStatusCode)
+            {
+                var data = await httpResponseMessage.Content.ReadAsStringAsync();
+                var parsedData = JArray.Parse(data);
+                foreach (var u in parsedData)
+                {
+                    users.Add((string) u["username"]!);
+                }
+            }
+
+            return users;
         }
     }
 }

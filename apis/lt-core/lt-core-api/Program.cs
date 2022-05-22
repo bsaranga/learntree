@@ -44,7 +44,11 @@ builder.Services.AddHttpClient();
 
 builder.Services.AddDbContext<LTCoreDbContext>(options => options.UseNpgsql(connectionString, p => p.MigrationsAssembly("lt-core-api")));
 builder.Services.AddScoped<ILearningPathMetaDataRepository, LearningPathMetaDataRepository>();
-builder.Services.AddSingleton<IKeycloakAdmin, KeycloakAdmin>();
+
+builder.Services.AddSingleton<KeycloakAdmin>();
+builder.Services.AddSingleton<IKeycloakAdmin>(s => s.GetService<KeycloakAdmin>()!);
+builder.Services.AddSingleton<IKeycloakAdminInit>(s => s.GetService<KeycloakAdmin>()!);
+
 builder.Services.AddScoped<IClaimInfo, ClaimInfo>();
 
 builder.Services.AddMassTransit(x => {
@@ -91,4 +95,5 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+app.Services.GetRequiredService<IKeycloakAdminInit>().ScheduledUpdate();
 app.Run();
