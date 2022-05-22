@@ -1,3 +1,4 @@
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using lt_core_api.Utilities;
 using lt_core_api.Utilities.Interfaces;
@@ -23,6 +24,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                             var clientResource = resources[context!.Principal!.FindFirst(aud => aud.Value == "lt-core-api")!.Value];
                             var clientRoles = clientResource!["roles"];
                             var claimsIdentity = context.Principal.Identity as ClaimsIdentity;
+
+                            claimsIdentity?.AddClaim(new Claim("UserId", (context.SecurityToken as JwtSecurityToken)!.Claims.Single(c => c.Type == "sub").Value));
                             
                             if (claimsIdentity == null) {
                                 throw new Exception("Unauthenticated...");

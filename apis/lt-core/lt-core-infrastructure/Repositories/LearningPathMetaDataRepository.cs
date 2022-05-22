@@ -17,7 +17,7 @@ namespace lt_core_infrastructure.Repositories
                 LPCode = lp.LPCode,
                 Title = lp.Title,
                 Description = lp.Description,
-                UserId = "null for now"
+                UserId = lp.UserId
             };
             
             context.Add(metaData);

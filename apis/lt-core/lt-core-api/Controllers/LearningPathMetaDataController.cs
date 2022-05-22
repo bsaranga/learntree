@@ -24,8 +24,7 @@ namespace lt_core_api.Controllers
         [HttpPost]
         public async Task<IActionResult> AddLearningPathMetaData(LPMetadataDTO metadata)
         {
-            var username = claimInfo.GetUsername();
-            var users = await keycloakAdmin.GetAllUserNames();
+            metadata.UserId = claimInfo.GetUserId();
             await lpMetaDataRepo.InsertLPMetaData(metadata);
             return Ok();
         }
