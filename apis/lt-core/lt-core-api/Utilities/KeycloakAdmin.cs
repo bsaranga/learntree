@@ -27,7 +27,7 @@ namespace lt_core_api.Utilities
             tokenEndpoint = configuration.GetSection("LTCoreAPI:TokenEndpoint").Value;
             keyCloakRestApiRoot = configuration.GetSection("LTCoreAPI:KeyCloakRESTAPIRoot").Value;
         }
-
+        #region Initialization Code <Do Not Call Manually OR Modify>
         public async Task Authenticate()
         {
             var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, tokenEndpoint)
@@ -69,6 +69,7 @@ namespace lt_core_api.Utilities
             var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText);
             return System.Convert.ToBase64String(plainTextBytes);
         }
+        #endregion
 
         public async Task<List<string>> GetAllUserNames()
         {
