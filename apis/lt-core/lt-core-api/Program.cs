@@ -8,7 +8,6 @@ using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Linq;
-using RabbitMQ.Client;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -52,6 +51,7 @@ builder.Services.AddScoped<ILearningPathMetaDataRepository, LearningPathMetaData
 builder.Services.AddSingleton<KeycloakAdmin>();
 builder.Services.AddSingleton<IKeycloakAdmin>(s => s.GetService<KeycloakAdmin>()!);
 builder.Services.AddSingleton<IKeycloakAdminInit>(s => s.GetService<KeycloakAdmin>()!);
+builder.Services.AddSingleton<IKeycloakEventConsumer, KeycloakEventConsumer>();
 
 builder.Services.AddScoped<IClaimInfo, ClaimInfo>();
 
@@ -98,4 +98,6 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Services.GetRequiredService<IKeycloakAdminInit>().ScheduledUpdate();
+app.Services.GetRequiredService<IKeycloakEventConsumer>();
+
 app.Run();
