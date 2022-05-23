@@ -28,7 +28,10 @@ namespace lt_core_api.Utilities
             this.rabbitmqChannel = this.rabbitmqConnection.CreateModel();
 
             this.rabbitmqChannel.ExchangeDeclare("keycloak-topic-exchange", ExchangeType.Topic, true, false, null);
-            _logger.LogInformation($"Keycloak Event Consumer Established: {rabbitmqConnection.Endpoint.ToString()}");
+            this.rabbitmqChannel.QueueDeclare("learntree-all-events", true, false, false, null);
+            this.rabbitmqChannel.QueueBind("learntree-all-events", "keycloak-topic-exchange", "KK.EVENT.*.LearnTree.#", null);
+
+            _logger.LogInformation($"[Keycloak Event Consumer Established] {rabbitmqConnection.ClientProvidedName}: {rabbitmqConnection.Endpoint.ToString()}");
         }
     }
 }
