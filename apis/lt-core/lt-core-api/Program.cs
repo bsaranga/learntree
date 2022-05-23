@@ -61,18 +61,6 @@ builder.Services.AddMassTransit(x => {
             h.Username("guest");
             h.Password("guest");
         });
-
-        cfg.ReceiveEndpoint("learntree-all-kc-events", e => {
-            e.ConfigureConsumeTopology = false;
-            e.Lazy = true;
-            e.Durable = false;
-
-            e.Bind("keycloak-exchange", x => {
-                x.Durable = false;
-                x.ExchangeType = ExchangeType.Topic;
-                x.RoutingKey = "KK.EVENT.*.LearnTree.#";
-            });
-        });
     });
 });
 

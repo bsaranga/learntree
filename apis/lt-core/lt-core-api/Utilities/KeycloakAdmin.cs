@@ -51,9 +51,9 @@ namespace lt_core_api.Utilities
                 expiry = (int)parsedData?["expires_in"]!;
                 
                 _timer = new PeriodicTimer(TimeSpan.FromSeconds((double)expiry));
-                _logger.LogInformation("Authenticated");
+                _logger.LogInformation("Authenticated with Keycloak REST API.");
             } else {
-                _logger.LogCritical("Authentication failed");
+                _logger.LogCritical("Keycloak REST API Authentication failed.");
             }
         }
 
