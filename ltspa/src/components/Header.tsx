@@ -17,7 +17,7 @@ export function Header () {
 			<div className='flex space-x-2 items-center'>
 				<div className='flex items-center border-[2px] rounded-full'>
 					<Link to='/profile' className='flex items-center focus:outline-none hover:cursor-pointer hover:bg-blue-50 rounded-l-full hover:no-underline'>
-						<ProfileImage imageUrl={parsedToken?.profile_image} size="small" isMentor={false}/>
+						<ProfileImage name={parsedToken?.name} imageUrl={parsedToken?.profile_image} size="small" isMentor={false}/>
 						<div className='font-medium text-base mr-2 ml-2 hover:text-blue-900'>{parsedToken?.given_name}</div>
 					</Link>
 					<div className='bg-slate-300 w-[2px] h-[1.5rem]'></div>
