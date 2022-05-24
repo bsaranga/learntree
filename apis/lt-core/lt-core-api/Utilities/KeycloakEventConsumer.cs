@@ -63,7 +63,7 @@ namespace lt_core_api.Utilities
         #region Utilities
         internal string QueueNameFor(string queue) {
             return $"{this.realm.ToLower()}-{queue}";
-        }   
+        }
         #endregion
     }
 }

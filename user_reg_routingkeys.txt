@@ -65,3 +65,39 @@ KK.EVENT.CLIENT.LearnTree.SUCCESS.learntree-spa.LOGIN
     "username" : "jacksparrow@tortuga.com"
   }
 }
+
+KK.EVENT.ADMIN.LearnTree.SUCCESS.GROUP_MEMBERSHIP.CREATE
+{
+  "@class" : "com.github.aznamier.keycloak.event.provider.EventAdminNotificationMqMsg",
+  "time" : 1653361940389,
+  "realmId" : "LearnTree",
+  "authDetails" : {
+    "realmId" : "master",
+    "clientId" : "29e0810d-b9d3-4810-a6a0-55d196b9c052",
+    "userId" : "32bc9f9d-d63e-4997-9fd1-05f2dc9ec521",
+    "ipAddress" : "127.0.0.1"
+  },
+  "resourceType" : "GROUP_MEMBERSHIP",
+  "operationType" : "CREATE",
+  "resourcePath" : "users/91814535-642c-4226-9485-6e6771b18b2e/groups/403343ad-aed3-474d-9c81-1ee54c700422",
+  "representation" : "{\"id\":\"403343ad-aed3-474d-9c81-1ee54c700422\",\"name\":\"LearnTree Admin\",\"path\":\"/LearnTree Admin\",\"attributes\":{},\"realmRoles\":[\"offline_access\",\"uma_authorization\"],\"clientRoles\":{\"graph-api\":[\"delete-path\",\"lt-graph-root\"],\"lt-core-api\":[\"metadata-access\"]}}",
+  "resourceTypeAsString" : "GROUP_MEMBERSHIP"
+}
+
+KK.EVENT.ADMIN.LearnTree.SUCCESS.GROUP_MEMBERSHIP.DELETE
+{
+  "@class" : "com.github.aznamier.keycloak.event.provider.EventAdminNotificationMqMsg",
+  "time" : 1653362049500,
+  "realmId" : "LearnTree",
+  "authDetails" : {
+    "realmId" : "master",
+    "clientId" : "29e0810d-b9d3-4810-a6a0-55d196b9c052",
+    "userId" : "32bc9f9d-d63e-4997-9fd1-05f2dc9ec521",
+    "ipAddress" : "127.0.0.1"
+  },
+  "resourceType" : "GROUP_MEMBERSHIP",
+  "operationType" : "DELETE",
+  "resourcePath" : "users/91814535-642c-4226-9485-6e6771b18b2e/groups/403343ad-aed3-474d-9c81-1ee54c700422",
+  "representation" : "{\"id\":\"403343ad-aed3-474d-9c81-1ee54c700422\",\"name\":\"LearnTree Admin\",\"path\":\"/LearnTree Admin\",\"attributes\":{},\"realmRoles\":[\"offline_access\",\"uma_authorization\"],\"clientRoles\":{\"graph-api\":[\"delete-path\",\"lt-graph-root\"],\"lt-core-api\":[\"metadata-access\"]}}",
+  "resourceTypeAsString" : "GROUP_MEMBERSHIP"
+}
