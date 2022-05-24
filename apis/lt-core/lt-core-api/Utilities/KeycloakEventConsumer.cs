@@ -8,7 +8,13 @@ namespace lt_core_api.Utilities
         private readonly ConnectionFactory rabbitmqConnectionFactory;
         private readonly IConnection rabbitmqConnection;
         private readonly IModel rabbitmqChannel;
-        private readonly string keycloakTopicExchange = "";
+        private readonly string keycloakTopicExchange;
+        private readonly string realm;
+
+        #region Queues
+        private readonly string allEventQueue;
+        private readonly string userRegistrationQueue;
+        #endregion
 
         private readonly ILogger<KeycloakEventConsumer> _logger;
 
@@ -25,21 +31,39 @@ namespace lt_core_api.Utilities
                 Password = configuration.GetSection("RabbitMQ:Password").Value
             };
 
+            realm = configuration.GetSection("KeycloakEvents:Realm").Value;
+            allEventQueue = QueueNameFor("all-events");
+            userRegistrationQueue = QueueNameFor("user-reg");
+
             keycloakTopicExchange = configuration.GetSection("KeycloakEvents:KC_Topic_Exchange").Value;
 
             this.rabbitmqConnection = this.rabbitmqConnectionFactory.CreateConnection("lt-core-api:keycloak-event-consumer");
             this.rabbitmqChannel = this.rabbitmqConnection.CreateModel();
 
             this.rabbitmqChannel.ExchangeDeclare(keycloakTopicExchange, ExchangeType.Topic, true, false, null);
-            this.rabbitmqChannel.QueueDeclare("learntree-all-events", true, false, false, null);
-            this.rabbitmqChannel.QueueBind("learntree-all-events", keycloakTopicExchange, "KK.EVENT.*.LearnTree.#", null);
+
+            #region DeclareQueues
+            DeclareAllEventsQueue();
+            DeclareUserRegistrationQueue();
+            #endregion
 
             _logger.LogInformation($"[Keycloak Event Consumer Established] {rabbitmqConnection.ClientProvidedName}: {rabbitmqConnection.Endpoint.ToString()}");
-            _logger.LogInformation($"GOT TOPIC EXCHANGE FROM CONFIG: {keycloakTopicExchange}");
         }
 
         public void DeclareUserRegistrationQueue() {
-
+            this.rabbitmqChannel.QueueDeclare(userRegistrationQueue, true, false, false, null);
+            this.rabbitmqChannel.QueueBind(userRegistrationQueue, keycloakTopicExchange, $"KK.EVENT.*.{realm}.*.*.REGISTER", null);
         }
+
+        public void DeclareAllEventsQueue() {
+            this.rabbitmqChannel.QueueDeclare(allEventQueue, true, false, false, null);
+            this.rabbitmqChannel.QueueBind(allEventQueue, keycloakTopicExchange, $"KK.EVENT.*.{realm}.#", null);
+        }
+
+        #region Utilities
+        internal string QueueNameFor(string queue) {
+            return $"{this.realm.ToLower()}-{queue}";
+        }   
+        #endregion
     }
 }
