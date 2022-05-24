@@ -1,6 +1,6 @@
 namespace lt_core_infrastructure.Models
 {
-    public class LearningPathMetaData
+    public class LearningPathMetaData : BaseEntity
     {
         public int LPId { get; set; }
         public string? LPCode { get; set; }

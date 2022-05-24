@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using lt_core_infrastructure;
@@ -11,9 +12,10 @@ using lt_core_infrastructure;
 namespace lt_core_api.Migrations
 {
     [DbContext(typeof(LTCoreDbContext))]
-    partial class LTCoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220524180742_base-entities-and-user-table")]
+    partial class baseentitiesandusertable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
