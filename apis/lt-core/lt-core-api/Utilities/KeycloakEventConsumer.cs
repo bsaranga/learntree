@@ -77,7 +77,6 @@ namespace lt_core_api.Utilities
             consumer.Received += (model, ea) =>
             {
                 var message = JsonSerializer.Deserialize<Login>(Encoding.UTF8.GetString(ea.Body.ToArray()), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true, MaxDepth = 2 });
-                
                 this.mediator.Send<Login>(message!);
             };
 
@@ -88,11 +87,8 @@ namespace lt_core_api.Utilities
             var consumer = new EventingBasicConsumer(channel);
 
             consumer.Received += (mode, ea) => {
-                var message = Encoding.UTF8.GetString(ea.Body.ToArray());
-                var userRegistered = JsonSerializer.Deserialize<UserRegistered>(message, new JsonSerializerOptions(){ PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
-                
+                var userRegistered = JsonSerializer.Deserialize<UserRegistered>(Encoding.UTF8.GetString(ea.Body.ToArray()), new JsonSerializerOptions(){ PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
                 this.mediator.Send<UserRegistered>(userRegistered!);
-                _logger.LogInformation(message);
             };
 
             channel.BasicConsume(queue: userRegistrationQueue, autoAck: true, consumer: consumer);

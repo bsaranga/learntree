@@ -48,6 +48,7 @@ builder.Services.AddHttpClient();
 
 builder.Services.AddDbContext<LTCoreDbContext>(options => options.UseNpgsql(connectionString, p => p.MigrationsAssembly("lt-core-api")));
 builder.Services.AddScoped<ILearningPathMetaDataRepository, LearningPathMetaDataRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 builder.Services.AddSingleton<KeycloakAdmin>();
 builder.Services.AddSingleton<IKeycloakAdmin>(s => s.GetService<KeycloakAdmin>()!);

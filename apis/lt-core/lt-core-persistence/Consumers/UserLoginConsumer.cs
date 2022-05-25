@@ -12,10 +12,9 @@ namespace lt_core_persistence.Consumers
             this.logger = logger;
 
         }
-        public Task Consume(ConsumeContext<Login> context)
+        public async Task Consume(ConsumeContext<Login> context)
         {
             this.logger.LogInformation("................RECEIVED USER LOGIN EVENT.............");
-            return Task.CompletedTask;
         }
     }
 }
