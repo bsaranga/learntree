@@ -8,5 +8,7 @@ namespace lt_core_persistence.Models
         public string? Firstname { get; set; }
         public string? Lastname { get; set; }
         public string? Email { get; set; }
+        public DateTime LastLoggedIn { get; set; }
+        public bool IsOnline { get; set; }
     }
 }
