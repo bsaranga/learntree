@@ -2,6 +2,7 @@ using System.Text;
 using System.Text.Json;
 using lt_core_api.Utilities.Interfaces;
 using lt_core_application.KeyCloakMessages;
+using MassTransit.Mediator;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 
@@ -21,11 +22,12 @@ namespace lt_core_api.Utilities
         #endregion
 
         private readonly ILogger<KeycloakEventConsumer> _logger;
+        private readonly IMediator mediator;
 
-        public KeycloakEventConsumer(ILogger<KeycloakEventConsumer> logger, IConfiguration configuration)
+        public KeycloakEventConsumer(ILogger<KeycloakEventConsumer> logger, IConfiguration configuration, IMediator mediator)
         {
             _logger = logger;
-
+            this.mediator = mediator;
             this.rabbitmqConnectionFactory = new ConnectionFactory()
             {
                 HostName = configuration.GetSection("RabbitMQ:Host").Value, 
@@ -52,8 +54,8 @@ namespace lt_core_api.Utilities
             #endregion
 
             #region Attach Consumers
-            AttachLoginConsumer();
-            AttachUserRegisterdConsumer();
+            AttachLoginConsumer(rabbitmqChannel);
+            AttachUserRegisterdConsumer(rabbitmqChannel);
             #endregion
 
             _logger.LogInformation($"[Keycloak Event Consumer Established] {rabbitmqConnection.ClientProvidedName}: {rabbitmqConnection.Endpoint.ToString()}");
@@ -70,30 +72,30 @@ namespace lt_core_api.Utilities
         }
 
         #region Consumer Definitions
-        public void AttachLoginConsumer() {
-            var consumer = new EventingBasicConsumer(this.rabbitmqChannel);
-
+        public void AttachLoginConsumer(IModel channel) {
+            var consumer = new EventingBasicConsumer(channel);
             consumer.Received += (model, ea) =>
             {
-                var body = ea.Body.ToArray();
-                var message = Encoding.UTF8.GetString(body);
-                var des = JsonSerializer.Deserialize<Login>(message, new JsonSerializerOptions() {PropertyNameCaseInsensitive = true, MaxDepth = 2});
-                _logger.LogInformation(message);
+                var message = JsonSerializer.Deserialize<Login>(Encoding.UTF8.GetString(ea.Body.ToArray()), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true, MaxDepth = 2 });
+                
+                this.mediator.Send<Login>(message!);
             };
 
-            this.rabbitmqChannel.BasicConsume(queue: allEventQueue, autoAck: true, consumer: consumer);
+            channel.BasicConsume(queue: allEventQueue, autoAck: true, consumer: consumer);
         }
 
-        public void AttachUserRegisterdConsumer() {
-            var consumer = new EventingBasicConsumer(this.rabbitmqChannel);
+        public void AttachUserRegisterdConsumer(IModel channel) {
+            var consumer = new EventingBasicConsumer(channel);
 
             consumer.Received += (mode, ea) => {
                 var message = Encoding.UTF8.GetString(ea.Body.ToArray());
                 var userRegistered = JsonSerializer.Deserialize<UserRegistered>(message, new JsonSerializerOptions(){ PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
+                
+                this.mediator.Send<UserRegistered>(userRegistered!);
                 _logger.LogInformation(message);
             };
 
-            this.rabbitmqChannel.BasicConsume(queue: userRegistrationQueue, autoAck: true, consumer: consumer);
+            channel.BasicConsume(queue: userRegistrationQueue, autoAck: true, consumer: consumer);
         }
 
         #endregion

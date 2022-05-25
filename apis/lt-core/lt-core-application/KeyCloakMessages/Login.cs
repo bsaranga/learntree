@@ -10,8 +10,16 @@ namespace lt_core_application.KeyCloakMessages
         public string? ClientId { get; set; }
         public string? UserId { get; set; }
         public string? SessionId { get; set; }
-        
+        public Details? Details { get; set; }
+    }
+
+    public class Details {
+
         [JsonPropertyName("identity_provider")]
         public string? IdentityProvider { get; set; }
+
+        [JsonPropertyName("response_type")]
+        public string? ResponseType { get; set; }
+        public string? Username { get; set; }
     }
 }

@@ -3,6 +3,7 @@ using System.Security.Claims;
 using lt_core_api.Utilities;
 using lt_core_api.Utilities.Interfaces;
 using lt_core_persistence;
+using lt_core_persistence.Consumers;
 using lt_core_persistence.Repositories;
 using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -56,12 +57,16 @@ builder.Services.AddSingleton<IKeycloakEventConsumer, KeycloakEventConsumer>();
 builder.Services.AddScoped<IClaimInfo, ClaimInfo>();
 
 builder.Services.AddMassTransit(x => {
-    x.UsingRabbitMq((context, cfg) => {
+    x.AddMediator(cfg => {
+        cfg.AddConsumer<UserRegisteredConsumer>();
+        cfg.AddConsumer<UserLoginConsumer>();
+    });
+    /* x.UsingRabbitMq((context, cfg) => {
         cfg.Host("localhost", (ushort) 5673, "/", h => {
             h.Username("guest");
             h.Password("guest");
         });
-    });
+    }); */
 });
 
 builder.Services.AddOptions<MassTransitHostOptions>().Configure(options => {

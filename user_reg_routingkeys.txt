@@ -101,3 +101,25 @@ KK.EVENT.ADMIN.LearnTree.SUCCESS.GROUP_MEMBERSHIP.DELETE
   "representation" : "{\"id\":\"403343ad-aed3-474d-9c81-1ee54c700422\",\"name\":\"LearnTree Admin\",\"path\":\"/LearnTree Admin\",\"attributes\":{},\"realmRoles\":[\"offline_access\",\"uma_authorization\"],\"clientRoles\":{\"graph-api\":[\"delete-path\",\"lt-graph-root\"],\"lt-core-api\":[\"metadata-access\"]}}",
   "resourceTypeAsString" : "GROUP_MEMBERSHIP"
 }
+
+LOGIN
+{
+  "@class" : "com.github.aznamier.keycloak.event.provider.EventClientNotificationMqMsg",
+  "time" : 1653491157093,
+  "type" : "LOGIN",
+  "realmId" : "LearnTree",
+  "clientId" : "learntree-spa",
+  "userId" : "3e6c26e1-dfd0-425c-8caf-51377663d09b",
+  "sessionId" : "79bb8b35-1575-42ad-9628-257fd7d04326",
+  "ipAddress" : "127.0.0.1",
+  "details" : {
+    "identity_provider" : "google",
+    "response_type" : "code",
+    "redirect_uri" : "https://localhost:3000/",
+    "consent" : "no_consent_required",
+    "identity_provider_identity" : "104777672151084810853",
+    "code_id" : "79bb8b35-1575-42ad-9628-257fd7d04326",
+    "username" : "bsaranga@gmail.com",
+    "response_mode" : "fragment"
+  }
+}
