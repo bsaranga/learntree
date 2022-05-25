@@ -73,7 +73,7 @@ namespace lt_core_api.Utilities
             {
                 var body = ea.Body.ToArray();
                 var message = Encoding.UTF8.GetString(body);
-                Console.WriteLine(" [x] {0}", message);
+                _logger.LogDebug(message);
             };
 
             this.rabbitmqChannel.BasicConsume(queue: allEventQueue, autoAck: true, consumer: consumer);
