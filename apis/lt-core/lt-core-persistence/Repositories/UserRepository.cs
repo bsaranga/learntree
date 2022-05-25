@@ -10,6 +10,11 @@ namespace lt_core_persistence.Repositories
             this.context = context;
         }
 
+        public Task MarkLogged(DateTime Timestamp)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task RegisterUser(User User)
         {
             context.User?.Add(User);
