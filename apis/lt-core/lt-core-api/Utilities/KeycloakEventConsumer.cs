@@ -1,5 +1,7 @@
 using System.Text;
+using System.Text.Json;
 using lt_core_api.Utilities.Interfaces;
+using lt_core_application.KeyCloakMessages;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 
@@ -50,7 +52,8 @@ namespace lt_core_api.Utilities
             #endregion
 
             #region Attach Consumers
-            AttachConsumer();
+            AttachLoginConsumer();
+            AttachUserRegisterdConsumer();
             #endregion
 
             _logger.LogInformation($"[Keycloak Event Consumer Established] {rabbitmqConnection.ClientProvidedName}: {rabbitmqConnection.Endpoint.ToString()}");
@@ -66,18 +69,34 @@ namespace lt_core_api.Utilities
             this.rabbitmqChannel.QueueBind(allEventQueue, keycloakTopicExchange, $"KK.EVENT.*.{realm}.#", null);
         }
 
-        public void AttachConsumer() {
+        #region Consumer Definitions
+        public void AttachLoginConsumer() {
             var consumer = new EventingBasicConsumer(this.rabbitmqChannel);
 
             consumer.Received += (model, ea) =>
             {
                 var body = ea.Body.ToArray();
                 var message = Encoding.UTF8.GetString(body);
-                _logger.LogDebug(message);
+                var des = JsonSerializer.Deserialize<Login>(message, new JsonSerializerOptions() {PropertyNameCaseInsensitive = true, MaxDepth = 2});
+                _logger.LogInformation(message);
             };
 
             this.rabbitmqChannel.BasicConsume(queue: allEventQueue, autoAck: true, consumer: consumer);
         }
+
+        public void AttachUserRegisterdConsumer() {
+            var consumer = new EventingBasicConsumer(this.rabbitmqChannel);
+
+            consumer.Received += (mode, ea) => {
+                var message = Encoding.UTF8.GetString(ea.Body.ToArray());
+                var userRegistered = JsonSerializer.Deserialize<UserRegistered>(message, new JsonSerializerOptions(){ PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
+                _logger.LogInformation(message);
+            };
+
+            this.rabbitmqChannel.BasicConsume(queue: userRegistrationQueue, autoAck: true, consumer: consumer);
+        }
+
+        #endregion
 
         #region Utilities
         internal string QueueNameFor(string queue) {
