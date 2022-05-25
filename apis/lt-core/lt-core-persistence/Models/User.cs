@@ -1,4 +1,4 @@
-namespace lt_core_infrastructure.Models
+namespace lt_core_persistence.Models
 {
     public class User : BaseEntity
     {

@@ -1,7 +1,7 @@
 using lt_core_application.DTOs;
-using lt_core_infrastructure.Models;
+using lt_core_persistence.Models;
 
-namespace lt_core_infrastructure.Repositories
+namespace lt_core_persistence.Repositories
 {
     public class LearningPathMetaDataRepository : ILearningPathMetaDataRepository
     {

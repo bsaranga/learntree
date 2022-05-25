@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using lt_core_infrastructure;
+using lt_core_persistence;
 
 #nullable disable
 
@@ -23,7 +23,7 @@ namespace lt_core_api.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("lt_core_infrastructure.Models.LearningPathMetaData", b =>
+            modelBuilder.Entity("lt_core_persistence.Models.LearningPathMetaData", b =>
                 {
                     b.Property<int>("LPId")
                         .ValueGeneratedOnAdd()

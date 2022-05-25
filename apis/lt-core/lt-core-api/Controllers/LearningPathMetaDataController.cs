@@ -1,6 +1,6 @@
 using lt_core_api.Utilities.Interfaces;
 using lt_core_application.DTOs;
-using lt_core_infrastructure.Repositories;
+using lt_core_persistence.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

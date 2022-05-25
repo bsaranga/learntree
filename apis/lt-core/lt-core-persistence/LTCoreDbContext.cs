@@ -1,7 +1,7 @@
-﻿using lt_core_infrastructure.Models;
+﻿using lt_core_persistence.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace lt_core_infrastructure;
+namespace lt_core_persistence;
 public class LTCoreDbContext : DbContext
 {
     public LTCoreDbContext (DbContextOptions<LTCoreDbContext> options) : base(options) { }
