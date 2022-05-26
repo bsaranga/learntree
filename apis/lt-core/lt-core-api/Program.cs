@@ -2,6 +2,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using lt_core_api.Utilities;
 using lt_core_api.Utilities.Interfaces;
+using lt_core_application.Interfaces;
 using lt_core_persistence;
 using lt_core_persistence.Consumers;
 using lt_core_persistence.Repositories;

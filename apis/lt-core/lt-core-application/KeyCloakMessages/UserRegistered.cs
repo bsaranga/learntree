@@ -20,5 +20,8 @@ namespace lt_core_application.KeyCloakMessages
         [JsonPropertyName("last_name")]
         public string? Lastname { get; set; }
 
+        [JsonPropertyName("identity_provider")]
+        public string? IdentityProvider { get; set; }
+        
     }
 }

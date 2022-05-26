@@ -1,4 +1,7 @@
+using System.Text.Json;
 using lt_core_api.Utilities.Interfaces;
+using lt_core_application.Interfaces;
+using lt_core_application.KeyCloakModels;
 using Microsoft.Net.Http.Headers;
 using Newtonsoft.Json.Linq;
 
@@ -97,6 +100,30 @@ namespace lt_core_api.Utilities
             }
 
             return users;
+        }
+
+        public async Task<User?> GetUserById(string guid)
+        {
+            var getUserRequest = new HttpRequestMessage(HttpMethod.Get, $"{keyCloakRestApiRoot}/users/{guid}")
+            {
+                Headers = 
+                {
+                    { HeaderNames.Accept, "*/*" },
+                    { HeaderNames.Authorization, $"Bearer {accessToken}" }
+                }
+            };
+            
+            using var httpClient = _httpClientFactory.CreateClient();
+            var httpResponseMessage = await httpClient.SendAsync(getUserRequest);
+
+            if (httpResponseMessage.IsSuccessStatusCode)
+            {
+                var data = await httpResponseMessage.Content.ReadAsStringAsync();
+                var userData = JsonSerializer.Deserialize<User>(data, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+                return userData;
+            }
+
+            return new User();
         }
     }
 }
