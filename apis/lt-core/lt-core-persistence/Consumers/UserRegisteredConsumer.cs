@@ -21,20 +21,7 @@ namespace lt_core_persistence.Consumers
         }
         public async Task Consume(ConsumeContext<UserRegistered> context)
         {
-            User? regUser = null;
-            if (context.Message.Details?.IdentityProvider == "google") {
-                var userFromKc = await kcAdmin.GetUserById(context.Message.UserId!);
-                regUser = new User() 
-                {
-                    KcUserId = context.Message.UserId,
-                    Username = userFromKc?.Username,
-                    Email = userFromKc?.Email,
-                    Firstname = userFromKc?.FirstName,
-                    Lastname = userFromKc?.LastName
-                };
-
-            } else {
-                regUser = new User() 
+            var regUser = new User() 
                 {
                     KcUserId = context.Message.UserId,
                     Username = context.Message.Details?.Username,
@@ -42,9 +29,8 @@ namespace lt_core_persistence.Consumers
                     Firstname = context.Message.Details?.Firstname,
                     Lastname = context.Message.Details?.Lastname
                 };
-            }
 
-            if (regUser != null) await userRepository.RegisterUser(regUser);
+            await userRepository.RegisterUser(regUser);
             this.logger.LogInformation("RECEIVED USER REGISTERED EVENT");
         }
     }
