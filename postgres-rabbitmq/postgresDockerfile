@@ -1,0 +1,6 @@
+FROM ubuntu/postgres
+COPY ./pg_amqp /tmp/pg_amqp
+RUN apt-get update && apt install build-essential -y --no-install-recommends
+RUN apt install postgresql-server-dev-14 -y --no-install-recommends
+WORKDIR /tmp/pg_amqp
+RUN make && make install

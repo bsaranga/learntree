@@ -1014,10 +1014,7 @@
         "token.response.type.bearer.lower-case": "false",
         "saml.onetimeuse.condition": "false"
       },
-      "authenticationFlowBindingOverrides": {
-        "direct_grant": "149fa002-f13f-41f0-81dc-70be903f90d5",
-        "browser": "fdb54418-9a49-4054-a98f-55cc160bc169"
-      },
+      "authenticationFlowBindingOverrides": {},
       "fullScopeAllowed": true,
       "nodeReRegistrationTimeout": -1,
       "protocolMappers": [
