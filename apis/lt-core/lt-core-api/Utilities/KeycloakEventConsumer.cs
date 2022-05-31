@@ -18,7 +18,7 @@ namespace lt_core_api.Utilities
 
         #region Queues
         private readonly string allEventQueue;
-        private readonly string userRegistrationQueue;
+        private readonly string userLoginQueue;
         #endregion
 
         private readonly ILogger<KeycloakEventConsumer> _logger;
@@ -39,7 +39,7 @@ namespace lt_core_api.Utilities
 
             realm = configuration.GetSection("KeycloakEvents:Realm").Value;
             allEventQueue = QueueNameFor("all-events");
-            userRegistrationQueue = QueueNameFor("user-reg");
+            userLoginQueue = QueueNameFor("user-login");
 
             keycloakTopicExchange = configuration.GetSection("KeycloakEvents:KC_Topic_Exchange").Value;
 
@@ -50,20 +50,20 @@ namespace lt_core_api.Utilities
 
             #region Declare Queues
             DeclareAllEventsQueue();
-            DeclareUserRegistrationQueue();
+            DeclareUserLoginQueue();
             #endregion
 
             #region Attach Consumers
             AttachLoginConsumer(rabbitmqChannel);
-            AttachUserRegisterdConsumer(rabbitmqChannel);
             #endregion
 
             _logger.LogInformation($"[Keycloak Event Consumer Established] {rabbitmqConnection.ClientProvidedName}: {rabbitmqConnection.Endpoint.ToString()}");
         }
 
-        public void DeclareUserRegistrationQueue() {
-            this.rabbitmqChannel.QueueDeclare(userRegistrationQueue, true, false, false, null);
-            this.rabbitmqChannel.QueueBind(userRegistrationQueue, keycloakTopicExchange, $"KK.EVENT.*.{realm}.*.*.REGISTER", null);
+        public void DeclareUserLoginQueue() {
+            this.rabbitmqChannel.QueueDeclare(userLoginQueue, true, false, false, null);
+            this.rabbitmqChannel.QueueBind(userLoginQueue, keycloakTopicExchange, $"KK.EVENT.CLIENT.{realm}.SUCCESS.learntree-spa.LOGIN", null);
+            this.rabbitmqChannel.QueueBind(userLoginQueue, keycloakTopicExchange, $"KK.EVENT.CLIENT.{realm}.SUCCESS.*.LOGOUT", null);
         }
 
         public void DeclareAllEventsQueue() {
@@ -84,20 +84,6 @@ namespace lt_core_api.Utilities
             };
 
             channel.BasicConsume(queue: allEventQueue, autoAck: true, consumer: consumer);
-        }
-
-        public void AttachUserRegisterdConsumer(IModel channel) {
-            var consumer = new EventingBasicConsumer(channel);
-
-            consumer.Received += (mode, ea) => {
-                var rawMessage = Encoding.UTF8.GetString(ea.Body.ToArray());
-                _logger.LogInformation(rawMessage);
-
-                var userRegistered = JsonSerializer.Deserialize<UserRegistered>(rawMessage, new JsonSerializerOptions(){ PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
-                this.mediator.Send<UserRegistered>(userRegistered!);
-            };
-
-            channel.BasicConsume(queue: userRegistrationQueue, autoAck: true, consumer: consumer);
         }
 
         #endregion

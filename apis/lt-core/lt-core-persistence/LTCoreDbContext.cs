@@ -11,12 +11,12 @@ public class LTCoreDbContext : DbContext
         modelBuilder.Entity<LearningPathMetaData>()
             .HasKey(l => l.LPId);
 
-        modelBuilder.Entity<User>()
+        modelBuilder.Entity<UserActivity>()
             .HasKey(u => u.Id);
     }
 
     public DbSet<LearningPathMetaData>? LearningPathMetaData { get; set; }
-    public DbSet<User>? User { get; set; }
+    public DbSet<UserActivity>? UserActivity { get; set; }
 
     public override async Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
     {

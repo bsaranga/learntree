@@ -1,3 +1,4 @@
+using lt_core_application.KeyCloakMessages;
 using lt_core_persistence.Models;
 
 namespace lt_core_persistence.Repositories
@@ -10,14 +11,16 @@ namespace lt_core_persistence.Repositories
             this.context = context;
         }
 
-        public Task MarkLogged(DateTime Timestamp)
+        public async Task MarkLogged(Login loginMessage)
         {
-            throw new NotImplementedException();
-        }
+            var act = new UserActivity() 
+            {
+                KcUserId = loginMessage.ClientId,
+                LastLoggedIn = DateTime.UtcNow,
+                IsOnline = true
+            };
 
-        public async Task RegisterUser(User User)
-        {
-            context.User?.Add(User);
+            context.UserActivity?.Add(act);
             await context.SaveChangesAsync();
         }
     }

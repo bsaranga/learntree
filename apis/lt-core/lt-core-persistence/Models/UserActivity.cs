@@ -1,13 +1,9 @@
 namespace lt_core_persistence.Models
 {
-    public class User : BaseEntity
+    public class UserActivity : BaseEntity
     {
         public int Id { get; set; }
         public string? KcUserId { get; set; }
-        public string? Username { get; set; }
-        public string? Firstname { get; set; }
-        public string? Lastname { get; set; }
-        public string? Email { get; set; }
         public DateTime LastLoggedIn { get; set; }
         public bool IsOnline { get; set; }
     }

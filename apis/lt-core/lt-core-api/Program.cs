@@ -60,7 +60,6 @@ builder.Services.AddScoped<IClaimInfo, ClaimInfo>();
 
 builder.Services.AddMassTransit(x => {
     x.AddMediator(cfg => {
-        cfg.AddConsumer<UserRegisteredConsumer>();
         cfg.AddConsumer<UserLoginConsumer>();
     });
     /* x.UsingRabbitMq((context, cfg) => {
