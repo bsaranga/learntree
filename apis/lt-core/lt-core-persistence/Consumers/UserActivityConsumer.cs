@@ -5,17 +5,17 @@ using Microsoft.Extensions.Logging;
 
 namespace lt_core_persistence.Consumers
 {
-    public class UserLoginConsumer : IConsumer<Login>
+    public class UserActivityConsumer : IConsumer<UserActivityEvent>
     {
-        private readonly ILogger<UserLoginConsumer> logger;
+        private readonly ILogger<UserActivityConsumer> logger;
         private readonly IUserRepository userRepository;
 
-        public UserLoginConsumer(ILogger<UserLoginConsumer> logger, IUserRepository userRepository)
+        public UserActivityConsumer(ILogger<UserActivityConsumer> logger, IUserRepository userRepository)
         {
             this.logger = logger;
             this.userRepository = userRepository;
         }
-        public async Task Consume(ConsumeContext<Login> context)
+        public async Task Consume(ConsumeContext<UserActivityEvent> context)
         {
             await userRepository.MarkLogged(context.Message);
         }

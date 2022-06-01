@@ -50,17 +50,17 @@ namespace lt_core_api.Utilities
 
             #region Declare Queues
             DeclareAllEventsQueue();
-            DeclareUserLoginQueue();
+            DeclareUserActivityQueue();
             #endregion
 
             #region Attach Consumers
-            AttachLoginConsumer(rabbitmqChannel);
+            AttachUserActivityConsumer(rabbitmqChannel);
             #endregion
 
             _logger.LogInformation($"[Keycloak Event Consumer Established] {rabbitmqConnection.ClientProvidedName}: {rabbitmqConnection.Endpoint.ToString()}");
         }
 
-        public void DeclareUserLoginQueue() {
+        public void DeclareUserActivityQueue() {
             this.rabbitmqChannel.QueueDeclare(userLoginQueue, true, false, false, null);
             this.rabbitmqChannel.QueueBind(userLoginQueue, keycloakTopicExchange, $"KK.EVENT.CLIENT.{realm}.SUCCESS.learntree-spa.LOGIN", null);
             this.rabbitmqChannel.QueueBind(userLoginQueue, keycloakTopicExchange, $"KK.EVENT.CLIENT.{realm}.SUCCESS.*.LOGOUT", null);
@@ -72,18 +72,18 @@ namespace lt_core_api.Utilities
         }
 
         #region Consumer Definitions
-        public void AttachLoginConsumer(IModel channel) {
+        public void AttachUserActivityConsumer(IModel channel) {
             var consumer = new EventingBasicConsumer(channel);
             consumer.Received += (model, ea) =>
             {
                 var rawMessage = Encoding.UTF8.GetString(ea.Body.ToArray());
                 _logger.LogInformation(rawMessage);
                 
-                var message = JsonSerializer.Deserialize<Login>(rawMessage, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true, MaxDepth = 2 });
-                this.mediator.Send<Login>(message!);
+                var message = JsonSerializer.Deserialize<UserActivityEvent>(rawMessage, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+                this.mediator.Send<UserActivityEvent>(message!);
             };
 
-            channel.BasicConsume(queue: allEventQueue, autoAck: true, consumer: consumer);
+            channel.BasicConsume(queue: userLoginQueue, autoAck: true, consumer: consumer);
         }
 
         #endregion

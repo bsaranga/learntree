@@ -4,6 +4,7 @@ namespace lt_core_persistence.Models
     {
         public int Id { get; set; }
         public string? KcUserId { get; set; }
+        public string? LastActiveSessionId { get; set; }
         public DateTime LastLoggedIn { get; set; }
         public bool IsOnline { get; set; }
     }

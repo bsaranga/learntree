@@ -11,17 +11,40 @@ namespace lt_core_persistence.Repositories
             this.context = context;
         }
 
-        public async Task MarkLogged(Login loginMessage)
+        public async Task MarkLogged(UserActivityEvent loginMessage)
         {
-            var act = new UserActivity() 
-            {
-                KcUserId = loginMessage.ClientId,
-                LastLoggedIn = DateTime.UtcNow,
-                IsOnline = true
-            };
+            var userLog = context.UserActivity?.FirstOrDefault(u => u.KcUserId == loginMessage.UserId);
+            
+            if (userLog == null && loginMessage.Type == "LOGIN") {
 
-            context.UserActivity?.Add(act);
-            await context.SaveChangesAsync();
+                var act = new UserActivity() 
+                {
+                    KcUserId = loginMessage.UserId,
+                    LastActiveSessionId = loginMessage.SessionId,
+                    LastLoggedIn = DateTime.UtcNow,
+                    IsOnline = true
+                };
+
+                context.UserActivity?.Add(act);
+                await context.SaveChangesAsync();
+
+            } else if (userLog != null && loginMessage.Type == "LOGIN") {
+
+                userLog!.IsOnline = true;
+                userLog!.LastActiveSessionId = loginMessage.SessionId;
+                userLog!.LastLoggedIn = DateTime.UtcNow;
+                
+                context.UserActivity?.Update(userLog);
+                await context.SaveChangesAsync();
+            }
+
+            if (loginMessage.Type == "LOGOUT") {
+
+                userLog = context.UserActivity?.FirstOrDefault(u => u.KcUserId == loginMessage.UserId);
+                userLog!.IsOnline = false;
+                context.UserActivity?.Update(userLog);
+                await context.SaveChangesAsync();
+            }
         }
     }
 }

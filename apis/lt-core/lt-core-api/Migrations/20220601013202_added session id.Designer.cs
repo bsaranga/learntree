@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using lt_core_persistence;
@@ -11,9 +12,10 @@ using lt_core_persistence;
 namespace lt_core_api.Migrations
 {
     [DbContext(typeof(LTCoreDbContext))]
-    partial class LTCoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220601013202_added session id")]
+    partial class addedsessionid
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -70,19 +72,16 @@ namespace lt_core_api.Migrations
                     b.Property<string>("KcUserId")
                         .HasColumnType("text");
 
-                    b.Property<string>("LastActiveSessionId")
-                        .HasColumnType("text");
-
                     b.Property<DateTime>("LastLoggedIn")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("SessionId")
+                        .HasColumnType("text");
 
                     b.Property<DateTime>("UpdatedOn")
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("KcUserId")
-                        .IsUnique();
 
                     b.ToTable("UserActivity");
                 });

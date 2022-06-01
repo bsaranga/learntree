@@ -11,8 +11,10 @@ public class LTCoreDbContext : DbContext
         modelBuilder.Entity<LearningPathMetaData>()
             .HasKey(l => l.LPId);
 
-        modelBuilder.Entity<UserActivity>()
-            .HasKey(u => u.Id);
+        modelBuilder.Entity<UserActivity>(u => {
+            u.HasKey(u => u.Id);
+            u.HasIndex(u => u.KcUserId).IsUnique();
+        });
     }
 
     public DbSet<LearningPathMetaData>? LearningPathMetaData { get; set; }

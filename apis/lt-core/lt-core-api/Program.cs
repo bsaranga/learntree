@@ -60,7 +60,7 @@ builder.Services.AddScoped<IClaimInfo, ClaimInfo>();
 
 builder.Services.AddMassTransit(x => {
     x.AddMediator(cfg => {
-        cfg.AddConsumer<UserLoginConsumer>();
+        cfg.AddConsumer<UserActivityConsumer>();
     });
     /* x.UsingRabbitMq((context, cfg) => {
         cfg.Host("localhost", (ushort) 5673, "/", h => {
