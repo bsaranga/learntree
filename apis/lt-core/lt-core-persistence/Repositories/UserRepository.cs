@@ -16,7 +16,8 @@ namespace lt_core_persistence.Repositories
             var userLog = context.UserActivity?.FirstOrDefault(u => u.KcUserId == loginMessage.UserId);
             
             if (userLog == null && loginMessage.Type == "LOGIN") {
-
+                // first login of the user
+                
                 var act = new UserActivity() 
                 {
                     KcUserId = loginMessage.UserId,
