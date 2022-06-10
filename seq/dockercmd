@@ -1,0 +1,1 @@
+docker run --name seq -d --restart unless-stopped -e ACCEPT_EULA=Y -v /home/bsaranga/repos/learntree/seq/data:/data -p 3002:80 -p 5341:5341 datalust/seq
