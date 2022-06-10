@@ -230,5 +230,6 @@ quarkus/data/*.db
 # Support for Project snippet scope
 
 neo4j_data/
+postgres-rabbitmq/pgdata/
 
 # End of https://www.toptal.com/developers/gitignore/api/dotnetcore,visualstudiocode,node,monodevelop
