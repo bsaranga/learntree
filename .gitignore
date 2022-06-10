@@ -231,5 +231,6 @@ quarkus/data/*.db
 
 neo4j_data/
 postgres-rabbitmq/pgdata/
+seq/seqdata/*
 
 # End of https://www.toptal.com/developers/gitignore/api/dotnetcore,visualstudiocode,node,monodevelop
