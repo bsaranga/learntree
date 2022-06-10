@@ -1,0 +1,1 @@
+docker run --name neo4j_container -p 7474:7474 -p 7687:7687 -v /home/bsaranga/repos/learntree/neo4j/neo4j_data:/data neo4j
