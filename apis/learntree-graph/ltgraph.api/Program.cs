@@ -4,30 +4,21 @@ using ltgraph.infrastructure;
 using ltgraph.infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Newtonsoft.Json.Linq;
-
-if (args.Any() && args[0] == "test") {
-    
-    var dict = new Dictionary<string, object>() {
-        {"Key1", DateTime.Now},
-        {"Key2", 3.14159m},
-        {"Key3", "foobar"},
-    };
-
-    foreach (var d in dict)
-    {
-        Console.WriteLine(d.Value.GetType());
-    }
-
-    return;
-}
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+Log.Logger = new LoggerConfiguration()
+            .ReadFrom.Configuration(builder.Configuration, "Serilog")
+            .CreateLogger();
+
+try
+{
+    builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options => {
                     options.Authority = "https://localhost:8443/realms/LearnTree";
                     options.Audience = "graph-api";
-                    options.SaveToken = false;
+                    options.SaveToken = true;
                     options.Events = new JwtBearerEvents
                     {
                         OnTokenValidated = context => 
@@ -50,36 +41,46 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                     };
                 });
 
-// Add services to the container.
-builder.Services.AddSingleton<IAuraDbConnection, AuraDbConnection>();
-builder.Services.AddScoped<IGraphCore, GraphCore>();
-builder.Services.AddScoped<ILPathRepository, LPathRepository>();
+    // Add services to the container.
+    builder.Services.AddSingleton<IAuraDbConnection, AuraDbConnection>();
+    builder.Services.AddScoped<IGraphCore, GraphCore>();
+    builder.Services.AddScoped<ILPathRepository, LPathRepository>();
 
-builder.Services.AddControllers();
-builder.Services.AddHealthChecks();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+    builder.Services.AddControllers();
+    builder.Services.AddHealthChecks();
+    builder.Services.AddEndpointsApiExplorer();
+    builder.Services.AddSwaggerGen();
 
-var app = builder.Build();
+    var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    // Configure the HTTP request pipeline.
+    if (app.Environment.IsDevelopment())
+    {
+        app.UseSwagger();
+        app.UseSwaggerUI();
+    }
+
+    app.UseHttpsRedirection();
+
+    app.UseCors(p => p.AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowAnyOrigin());
+
+    app.UseAuthentication();
+    app.UseAuthorization();
+
+    app.MapControllers();
+
+    app.MapHealthChecks("/health");
+
+    app.Run();
+
+    Log.Information("Starting LTGraphAPI");
 }
-
-app.UseHttpsRedirection();
-
-app.UseCors(p => p.AllowAnyHeader()
-                  .AllowAnyMethod()
-                  .AllowAnyOrigin());
-
-app.UseAuthentication();
-app.UseAuthorization();
-
-app.MapControllers();
-
-app.MapHealthChecks("/health");
-
-app.Run();
+catch (Exception ex)
+{
+    Log.Fatal(ex, "Host terminated unexpectedly");
+} finally 
+{
+    Log.CloseAndFlush();
+}

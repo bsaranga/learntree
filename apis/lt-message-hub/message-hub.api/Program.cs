@@ -1,13 +1,11 @@
 using System.Text.Json;
 using message_hub.api;
 using Serilog;
-using Serilog.Events;
 
 var builder = WebApplication.CreateBuilder(args);
 
 Log.Logger = new LoggerConfiguration()
             .ReadFrom.Configuration(builder.Configuration, "Serilog")
-            //.WriteTo.Seq("http://localhost:5341", apiKey: "lAloTffsLMW4TIA7jBN3")
             .CreateLogger();
 
 try
