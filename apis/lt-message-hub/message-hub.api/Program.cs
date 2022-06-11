@@ -1,5 +1,8 @@
+using System.Security.Claims;
 using System.Text.Json;
 using message_hub.api;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +14,26 @@ Log.Logger = new LoggerConfiguration()
 try
 {
     Log.Information("Starting web host");
+
+    builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                    .AddJwtBearer(options => {
+                        options.Authority = builder.Configuration["Keycloak:Authority"];
+                        options.Audience = builder.Configuration["Keycloak:ClientId"];
+
+                        options.Events = new JwtBearerEvents {
+                            OnMessageReceived = context => {
+                                var accessToken = context.Request.Query["access_token"];
+                                var path = context.HttpContext.Request.Path;
+
+                                if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/messagehub"))
+                                {
+                                    context.Token = accessToken;
+                                }
+                                
+                                return Task.CompletedTask;
+                            }
+                        };
+                    });
 
     builder.Services.AddControllers();
     
@@ -38,6 +61,8 @@ try
                       .AllowAnyMethod()
                       .AllowCredentials()
                       .WithOrigins("https://localhost:3000"));
+
+    app.UseAuthentication();
 
     app.UseAuthorization();
 

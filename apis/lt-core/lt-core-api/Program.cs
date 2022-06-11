@@ -17,7 +17,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options => {
                     options.Authority = "https://localhost:8443/realms/LearnTree";
                     options.Audience = "lt-core-api";
-                    options.SaveToken = false;
+                    options.SaveToken = true;
                     options.Events = new JwtBearerEvents
                     {
                         OnTokenValidated = context => 

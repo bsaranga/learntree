@@ -1,9 +1,12 @@
 import * as SignalR from '@microsoft/signalr';
+import UserService from './UserService';
 
 function GetHubConnection() {
 	console.log('GetHubConnection called');
 	return new SignalR.HubConnectionBuilder()
-		.withUrl('https://localhost:4156/messagehub')
+		.withUrl('https://localhost:4156/messagehub', {
+			accessTokenFactory: () => UserService.getToken() as string
+		})
 		.withAutomaticReconnect()
 		.build();
 }

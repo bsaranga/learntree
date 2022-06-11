@@ -11,7 +11,8 @@ namespace message_hub.api
         }
         public async Task SendMessage(string message) 
         {
-            await this.Clients.All.SendAsync("AcceptMessage", message);
+            var intercepted = $"{this.Context?.User?.Identity?.Name} sent {message}";
+            await this.Clients.Caller.SendAsync("AcceptMessage", intercepted);
         }
 
         public override Task OnConnectedAsync()
