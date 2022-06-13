@@ -2,6 +2,15 @@
     "version": "2.0.0",
     "tasks": [
         {
+            "label": "PM2 Flush Logs",
+            "command": "pm2 flush",
+            "type": "shell",
+            "options": {
+                "cwd": "/home/bsaranga/repos/learntree"
+            },
+            "problemMatcher": "$msCompile"
+        },
+        {
             "label": "PM2 Stop All",
             "command": "pm2 stop all",
             "type": "shell",
