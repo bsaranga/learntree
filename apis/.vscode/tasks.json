@@ -1,0 +1,33 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "PM2 Stop All",
+            "command": "pm2 stop all",
+            "type": "shell",
+            "options": {
+                "cwd": "/home/bsaranga/repos/learntree"
+            },
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "PM2 Start All",
+            "command": "pm2 start",
+            "type": "shell",
+            "options": {
+                "cwd": "/home/bsaranga/repos/learntree"
+            },
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "Build All",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build"
+            ],
+            "problemMatcher": "$msCompile",
+            "isBuildCommand": true
+        }
+    ]
+}
