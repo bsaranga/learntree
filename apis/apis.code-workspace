@@ -13,6 +13,10 @@
 			"path": "lt-signal-r"
 		},
 		{
+			"name": "LearnTree Single Page App",
+			"path": "../ltspa"
+		},
+		{
 			"name": "Root",
 			"path": "."
 		}
