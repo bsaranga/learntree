@@ -1,0 +1,45 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30114.105
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "learntree-graph", "learntree-graph", "{D398543C-F487-402B-9CC9-13FC5E57466E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ltgraph.api", "learntree-graph\ltgraph.api\ltgraph.api.csproj", "{A38B0F76-D51F-47AB-A85B-8D8458243715}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lt-core", "lt-core", "{8E93957D-9CE0-4A8A-942E-3CB7E8B62C48}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lt-core-api", "lt-core\lt-core-api\lt-core-api.csproj", "{49CD2D84-4D42-4BEE-938E-FA1E064386BE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lt-signal-r", "lt-signal-r", "{2DA29D91-A0E8-49A4-BE4D-CA2B295407C2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ltsignalr.api", "lt-signal-r\ltsignalr.api\ltsignalr.api.csproj", "{5B78459C-6825-4D5D-A655-BD4CF8763692}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A38B0F76-D51F-47AB-A85B-8D8458243715}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A38B0F76-D51F-47AB-A85B-8D8458243715}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A38B0F76-D51F-47AB-A85B-8D8458243715}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A38B0F76-D51F-47AB-A85B-8D8458243715}.Release|Any CPU.Build.0 = Release|Any CPU
+		{49CD2D84-4D42-4BEE-938E-FA1E064386BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{49CD2D84-4D42-4BEE-938E-FA1E064386BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{49CD2D84-4D42-4BEE-938E-FA1E064386BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{49CD2D84-4D42-4BEE-938E-FA1E064386BE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B78459C-6825-4D5D-A655-BD4CF8763692}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B78459C-6825-4D5D-A655-BD4CF8763692}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B78459C-6825-4D5D-A655-BD4CF8763692}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B78459C-6825-4D5D-A655-BD4CF8763692}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A38B0F76-D51F-47AB-A85B-8D8458243715} = {D398543C-F487-402B-9CC9-13FC5E57466E}
+		{49CD2D84-4D42-4BEE-938E-FA1E064386BE} = {8E93957D-9CE0-4A8A-942E-3CB7E8B62C48}
+		{5B78459C-6825-4D5D-A655-BD4CF8763692} = {2DA29D91-A0E8-49A4-BE4D-CA2B295407C2}
+	EndGlobalSection
+EndGlobal

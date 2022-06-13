@@ -1,6 +1,6 @@
 using System.Security.Claims;
 using System.Text.Json;
-using message_hub.api;
+using ltsignalr.api;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
@@ -68,7 +68,7 @@ try
 
     app.MapControllers();
 
-    app.MapHub<MessageHub>("/messagehub");
+    app.MapHub<LTHub>("/messagehub");
 
     app.Run();
 

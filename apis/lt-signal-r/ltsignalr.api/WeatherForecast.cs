@@ -1,4 +1,4 @@
-namespace message_hub.api;
+namespace ltsignalr.api;
 
 public class WeatherForecast
 {

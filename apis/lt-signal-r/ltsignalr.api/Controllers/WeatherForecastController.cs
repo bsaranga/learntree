@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace message_hub.api.Controllers;
+namespace ltsignalr.api.Controllers;
 
 [ApiController]
 [Route("[controller]")]

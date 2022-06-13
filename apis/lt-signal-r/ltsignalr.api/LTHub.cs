@@ -1,11 +1,11 @@
 using Microsoft.AspNetCore.SignalR;
 
-namespace message_hub.api
+namespace ltsignalr.api
 {
-    public class MessageHub : Hub
+    public class LTHub : Hub
     {
-        private readonly ILogger<MessageHub> _logger;
-        public MessageHub(ILogger<MessageHub> logger)
+        private readonly ILogger<LTHub> _logger;
+        public LTHub(ILogger<LTHub> logger)
         {
             _logger = logger;
         }

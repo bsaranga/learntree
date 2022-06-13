@@ -1,0 +1,23 @@
+{
+	"folders": [
+		{
+			"name": "LearnTree Graph API",
+			"path": "learntree-graph"
+		},
+		{
+			"name": "LearnTree Core API",
+			"path": "lt-core"
+		},
+		{
+			"name": "LearnTree SignalR",
+			"path": "lt-signal-r"
+		},
+		{
+			"name": "Root",
+			"path": "."
+		}
+	],
+	"settings": {
+
+	}
+}
