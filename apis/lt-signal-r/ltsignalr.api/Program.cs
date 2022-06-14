@@ -1,8 +1,6 @@
-using System.Security.Claims;
 using System.Text.Json;
 using ltsignalr.api;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);

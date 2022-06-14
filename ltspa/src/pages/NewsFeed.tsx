@@ -94,7 +94,7 @@ export function NewsFeed() {
 			.catch(err => console.error(err));
 	}
 
-	async function closeConenction() {
+	async function closeConnection() {
 		await hub.stop().then(x => console.log(x)).catch(err => console.error(err));
 	}
 
@@ -118,7 +118,7 @@ export function NewsFeed() {
 			<div className='absolute left-0'>
 				<Button type='primary' onClick={callApi}>Call API</Button>
 				<Button onClick={sendMessage}>Send Message</Button>
-				<Button onClick={closeConenction}>Stop Connection</Button>
+				<Button onClick={closeConnection}>Stop Connection</Button>
 			</div>
 			<button onClick={navigateToCreate} className='absolute bg-red-500 w-9 h-9 left-6 bottom-6 rounded-full flex items-center justify-center shadow-md hover:border-2 hover:border-red-300 hover:scale-[120%] hover:shadow-lg transition-all focus:outline-none active:outline-none active:scale-[110%]' title='Create learning path'>
 				<Plus className='text-white inline-block' scale='h-6 w-6'/>

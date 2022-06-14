@@ -29,6 +29,17 @@
             "problemMatcher": "$msCompile"
         },
         {
+            "label": "PM2 Logs",
+            "command": "pm2 logs",
+            "type": "shell",
+            "options": {
+                "cwd": "/home/bsaranga/repos/learntree"
+            },
+            "problemMatcher":"$msCompile",
+            "dependsOn": ["2"]
+            
+        },
+        {
             "label": "Build All",
             "command": "dotnet",
             "type": "process",
