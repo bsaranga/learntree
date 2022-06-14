@@ -1,5 +1,3 @@
-using System.Text.Json.Serialization;
-
 namespace lt_core_application.KeyCloakMessages
 {
     public class UserActivityEvent

@@ -17,7 +17,7 @@ namespace ltsignalr.api
 
         public override Task OnConnectedAsync()
         {
-            Groups.AddToGroupAsync(this.Context.ConnectionId, $"{this.Context?.User?.Identity?.Name}");
+            Groups.AddToGroupAsync(this.Context.ConnectionId, $"{this.Context?.UserIdentifier}");
             _logger.LogInformation($"Connected to Client with ID: {this.Context?.ConnectionId}");
             return base.OnConnectedAsync();
         }

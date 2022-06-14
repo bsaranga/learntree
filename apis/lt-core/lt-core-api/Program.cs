@@ -59,15 +59,19 @@ builder.Services.AddSingleton<IKeycloakEventConsumer, KeycloakEventConsumer>();
 builder.Services.AddScoped<IClaimInfo, ClaimInfo>();
 
 builder.Services.AddMassTransit(x => {
+    
     x.AddMediator(cfg => {
         cfg.AddConsumer<UserActivityConsumer>();
     });
-    /* x.UsingRabbitMq((context, cfg) => {
+    
+    x.UsingRabbitMq((context, cfg) => {
         cfg.Host("localhost", (ushort) 5673, "/", h => {
             h.Username("guest");
             h.Password("guest");
         });
-    }); */
+
+        cfg.ConfigureEndpoints(context);
+    });
 });
 
 builder.Services.AddOptions<MassTransitHostOptions>().Configure(options => {

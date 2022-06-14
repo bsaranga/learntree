@@ -1,5 +1,7 @@
 using System.Text.Json;
 using ltsignalr.api;
+using ltsignalr.api.Consumers;
+using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Serilog;
 
@@ -12,6 +14,21 @@ Log.Logger = new LoggerConfiguration()
 try
 {
     Log.Information("Starting web host");
+
+    builder.Services.AddMassTransit(x => {
+
+        x.AddConsumer<FreshLoginConsumer>();
+    
+        x.UsingRabbitMq((context, cfg) => {
+            
+            cfg.Host("localhost", (ushort) 5673, "/", h => {
+                h.Username("guest");
+                h.Password("guest");
+            });
+
+            cfg.ConfigureEndpoints(context);
+        });
+    });
 
     builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                     .AddJwtBearer(options => {

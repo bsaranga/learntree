@@ -17,6 +17,10 @@
 			"path": "../ltspa"
 		},
 		{
+			"name": "LearnTree Shared Contracts",
+			"path": "lt-shared/lt_contracts"
+		},
+		{
 			"name": "Root",
 			"path": "."
 		}

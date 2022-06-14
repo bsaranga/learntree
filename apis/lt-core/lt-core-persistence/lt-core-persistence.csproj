@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\lt-core-application\lt-core-application.csproj" />
+    <ProjectReference Include="..\..\lt-shared\lt_contracts\lt_contracts.csproj" />
   </ItemGroup>
 
 </Project>
