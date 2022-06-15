@@ -15,21 +15,6 @@ try
 {
     Log.Information("Starting web host");
 
-    builder.Services.AddMassTransit(x => {
-
-        x.AddConsumer<FreshLoginConsumer>();
-    
-        x.UsingRabbitMq((context, cfg) => {
-            
-            cfg.Host("localhost", (ushort) 5673, "/", h => {
-                h.Username("guest");
-                h.Password("guest");
-            });
-
-            cfg.ConfigureEndpoints(context);
-        });
-    });
-
     builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                     .AddJwtBearer(options => {
                         options.Authority = builder.Configuration["Keycloak:Authority"];
@@ -60,6 +45,21 @@ try
     builder.Services.AddSwaggerGen();
 
     builder.Host.UseSerilog();
+
+    builder.Services.AddMassTransit(x => {
+
+        x.AddConsumer<FreshLoginConsumer>();
+    
+        x.UsingRabbitMq((context, cfg) => {
+            
+            cfg.Host("localhost", (ushort) 5673, "/", h => {
+                h.Username("guest");
+                h.Password("guest");
+            });
+
+            cfg.ConfigureEndpoints(context);
+        });
+    });
 
     var app = builder.Build();
 

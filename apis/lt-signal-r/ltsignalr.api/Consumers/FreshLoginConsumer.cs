@@ -12,11 +12,10 @@ namespace ltsignalr.api.Consumers
         {
             this.hubContext = hubContext;
         }
-        public Task Consume(ConsumeContext<FreshLogin> context)
+        public async Task Consume(ConsumeContext<FreshLogin> context)
         {
             var userIdentifier = context.Message.UserIdentifier;
-            hubContext.Clients.Group(userIdentifier).SendAsync("AcceptMessage", "THIS IS YOUR FIRST LOGIN");
-            return Task.CompletedTask;
+            await hubContext.Clients.Group(userIdentifier).SendAsync("AcceptMessage", "THIS IS YOUR FIRST LOGIN");
         }
     }
 }

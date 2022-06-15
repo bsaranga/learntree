@@ -20,7 +20,7 @@ namespace lt_core_persistence.Repositories
         {
             var userLog = context.UserActivity?.FirstOrDefault(u => u.KcUserId == loginMessage.UserId);
             //temp
-            await bus.Publish<FreshLogin>(new { UserIdentifier = loginMessage.UserId });
+            await bus.Publish<FreshLogin>(new { UserIdentifier = loginMessage.UserId }, p => p.Delay = TimeSpan.FromSeconds(5));
             
             if (userLog == null && loginMessage.Type == "LOGIN") {
                 
