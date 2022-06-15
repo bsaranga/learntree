@@ -7,11 +7,16 @@ import 'antd/dist/antd.css';
 import App from './App';
 import { BrowserRouter } from 'react-router-dom';
 
+import { Provider } from 'react-redux';
+import store from './store/store';
+
 const container = document.getElementById('root') as Element;
 const root = createRoot(container);
 const appRenderCb = () => root.render(
 	<BrowserRouter>
-		<App/>
+		<Provider store={ store }>
+			<App/>
+		</Provider>
 	</BrowserRouter>
 );
 
