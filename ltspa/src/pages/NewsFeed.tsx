@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import MessageHubContext from '../contexts/MessageHubContext';
+import HubContext from '../contexts/HubContext';
 import ICardProps from '../interfaces/ICardProps';
 import HttpService from '../services/HttpService';
 import Card from '../components/Newsfeed/Card/Card';
@@ -82,7 +82,7 @@ export function NewsFeed() {
 
 	const navigate = useNavigate();
 	const httpClient = HttpService.client();
-	const hub = useContext(MessageHubContext);
+	const hub = useContext(HubContext);
 	
 	async function callApi() {
 		const result = await httpClient.get('https://localhost:4155/api/LPath/secured');
