@@ -97,9 +97,6 @@ export function NewsFeed() {
 	async function closeConnection() {
 		await hub.stop().then(x => console.log(x)).catch(err => console.error(err));
 	}
-
-	hub.off('AcceptMessage');
-	hub.on('AcceptMessage', (data) => console.log(data));
  
 	const cardList = tempData.map(c => {
 		return <div key={c.id}>

@@ -15,7 +15,7 @@ namespace ltsignalr.api.Consumers
         public async Task Consume(ConsumeContext<FreshLogin> context)
         {
             var userIdentifier = context.Message.UserIdentifier;
-            await hubContext.Clients.Group(userIdentifier).SendAsync("AcceptMessage", "THIS IS YOUR FIRST LOGIN");
+            await hubContext.Clients.Group(userIdentifier).SendAsync("FirstLogin", true);
         }
     }
 }
