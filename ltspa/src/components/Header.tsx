@@ -2,11 +2,26 @@ import { InputGroup, Icon } from '@blueprintjs/core';
 import { Link } from 'react-router-dom';
 import UserService from '../services/UserService';
 import ProfileImage from './Common/ProfileImage/ProfileImage';
+import { setLoggedInUser } from '../store/slices/rootSlice';
+import { useEffect } from 'react';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
 
 
 export function Header () {
+	const dispatch = useAppDispatch();
 
 	const parsedToken = UserService.getParsedIdToken();
+
+	useEffect(() => {
+		dispatch(setLoggedInUser({
+			fullName: parsedToken?.name as string,
+			givenName: parsedToken?.given_name as string,
+			imageUrl: parsedToken?.profile_image as string
+		}));
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
+
+	useAppSelector(state => console.log(state.root));
 	
 	return (
 		<div className='sticky py-[0.36rem] px-10 top-0 shadow-lg flex space-x-4 justify-between items-center bg-white'>
