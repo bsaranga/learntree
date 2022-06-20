@@ -3,9 +3,12 @@ import HubContext from '../contexts/HubContext';
 import ICardProps from '../interfaces/ICardProps';
 import HttpService from '../services/HttpService';
 import Card from '../components/Newsfeed/Card/Card';
-import { Button } from 'antd';
+import { Button, Modal } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { Plus } from '../assets/icons/Icons-Outline';
+import { useAppSelector } from '../store/hooks';
+import { useDispatch } from 'react-redux';
+import { setIfFirstLogin } from '../store/slices/rootSlice';
 
 const tempData: ICardProps[] = [
 	{
@@ -79,10 +82,12 @@ const tempData: ICardProps[] = [
 ];
 
 export function NewsFeed() {
+	const dispatch = useDispatch();
+	const isFirstLogin = useAppSelector(state => state.root.loggedInUser.isFirstLogin);
 
-	const navigate = useNavigate();
 	const httpClient = HttpService.client();
 	const hub = useContext(HubContext);
+	const navigate = useNavigate();
 	
 	async function callApi() {
 		const result = await httpClient.get('https://localhost:4155/api/LPath/secured');
@@ -108,10 +113,21 @@ export function NewsFeed() {
 		navigate('/create');
 	}
 
+	function onCloseInterestsModal() {
+		dispatch(setIfFirstLogin(false));
+	}
+
+	function onOkInterestsModal() {
+		console.log('Interests registered...');
+	}
+
 	console.log('Main Rendered');
 
 	return(
 		<div className='flex flex-col space-y-12 w-min'>
+			<Modal title="Pick your interests" visible={isFirstLogin} onCancel={onCloseInterestsModal} width={640} centered={true} destroyOnClose={true} footer={(() => <button onClick={onOkInterestsModal} className='ring-2 ring-blue-300 hover:ring-blue-500 active:ring-blue-400 px-[.64rem] py-[.2rem] text-xs rounded-sm focus:outline-none'>Accept</button>)()}>
+				
+			</Modal>
 			<div className='absolute left-0'>
 				<Button type='primary' onClick={callApi}>Call API</Button>
 				<Button onClick={sendMessage}>Send Message</Button>

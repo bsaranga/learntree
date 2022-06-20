@@ -1,0 +1,41 @@
+.ant-modal-header {
+    padding: 8px 24px;
+    border-bottom: none;
+    border-radius: none;
+}
+
+.ant-modal-title {
+    font-size: 14px;
+}
+
+.ant-modal-body {
+    padding: 24px;
+    font-size: 14px;
+    line-height: 1.5715;
+    word-wrap: break-word;
+}
+
+.ant-modal-footer {
+    padding: 12px 20px;
+    text-align: right;
+    background: transparent;
+    border-top: none;
+    border-radius: 0 0 2px 2px;
+}
+
+.ant-modal-close-x {
+    width: 56px;
+    height: 38px;
+    font-size: 12px;
+    line-height: 32px;
+}
+
+.ant-modal-close:focus {
+    outline: none;
+}
+
+.ant-btn {
+    height: 28px;
+    padding: 4px 15px;
+    font-size: 12px;
+}

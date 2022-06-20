@@ -3,6 +3,7 @@ import reportWebVitals from './reportWebVitals';
 import UserService from './services/UserService';
 import './index.scss';
 import 'antd/dist/antd.css';
+import './assets/css-overrides/antd-overrides.scss';
 
 import App from './App';
 import { BrowserRouter } from 'react-router-dom';
