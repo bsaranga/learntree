@@ -1,15 +1,25 @@
 import { Modal, Select } from 'antd';
+import { useContext, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import HttpContext from '../../../contexts/HttpContext';
+import { Topic } from '../../../dataTypes/interfaces/topic';
 import { useAppSelector } from '../../../store/hooks';
 import { setIfFirstLogin } from '../../../store/slices/rootSlice';
 
-const tempInterests = ['Accounting', 'Macroeconomics', 'Biology', 'Quantum Physics', 'Data Structures', 'Algorithms', 'Front End Development', 'Backend Development', 'C#'];
-
 export default function InterestsModal() {
+
+	const [topics, setTopics] = useState<Topic[] | null>(null);
+	const httpContext = useContext(HttpContext);
+
+	useEffect(() => {
+		httpContext.get<Topic[]>('https://localhost:4157/api/lookup/topics').then(res => setTopics(res.data));
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	},[]);
+
 	const { Option } = Select;
 
-	const optionsList = tempInterests.map((i, ind) => {
-		return <Option key={`${i}-${ind}`}>{i}</Option>;
+	const optionsList = topics?.map((val) => {
+		return <Option key={val.topicId}>{val.topicName}</Option>;
 	});
     
 	const dispatch = useDispatch();
