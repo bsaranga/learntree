@@ -5,6 +5,9 @@ using lt_core_api.Utilities.Interfaces;
 using lt_core_application.Interfaces;
 using lt_core_persistence;
 using lt_core_persistence.Consumers;
+using lt_core_persistence.Interfaces.Repositories;
+using lt_core_persistence.Queries;
+using lt_core_persistence.Queries.Interfaces;
 using lt_core_persistence.Repositories;
 using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -47,10 +50,17 @@ string connectionString = builder.Configuration.GetConnectionString("LTCore");
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddHttpClient();
 
+// Db Contexts
 builder.Services.AddDbContext<LTCoreDbContext>(options => options.UseNpgsql(connectionString, p => p.MigrationsAssembly("lt-core-api")));
+
+// Queries
+builder.Services.AddScoped<ILookupQuery, LookupQuery>();
+
+// Repositories
 builder.Services.AddScoped<ILearningPathMetaDataRepository, LearningPathMetaDataRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 
+// Keycloak Services
 builder.Services.AddSingleton<KeycloakAdmin>();
 builder.Services.AddSingleton<IKeycloakAdmin>(s => s.GetService<KeycloakAdmin>()!);
 builder.Services.AddSingleton<IKeycloakAdminInit>(s => s.GetService<KeycloakAdmin>()!);

@@ -1,4 +1,5 @@
 using lt_core_application.KeyCloakMessages;
+using lt_core_persistence.Interfaces.Repositories;
 using lt_core_persistence.Repositories;
 using MassTransit;
 using Microsoft.Extensions.Logging;

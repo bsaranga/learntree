@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using lt_core_persistence;
@@ -11,9 +12,10 @@ using lt_core_persistence;
 namespace lt_core_api.Migrations
 {
     [DbContext(typeof(LTCoreDbContext))]
-    partial class LTCoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220621155930_added topic model")]
+    partial class addedtopicmodel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -42,7 +44,7 @@ namespace lt_core_api.Migrations
                     b.Property<string>("Title")
                         .HasColumnType("text");
 
-                    b.Property<DateTime?>("UpdatedOn")
+                    b.Property<DateTime>("UpdatedOn")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("UserId")
@@ -67,7 +69,7 @@ namespace lt_core_api.Migrations
                     b.Property<string>("TopicName")
                         .HasColumnType("text");
 
-                    b.Property<DateTime?>("UpdatedOn")
+                    b.Property<DateTime>("UpdatedOn")
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("TopicId");
@@ -101,7 +103,7 @@ namespace lt_core_api.Migrations
                     b.Property<DateTime>("LastLoggedIn")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateTime?>("UpdatedOn")
+                    b.Property<DateTime>("UpdatedOn")
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");

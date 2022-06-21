@@ -15,10 +15,16 @@ public class LTCoreDbContext : DbContext
             u.HasKey(u => u.Id);
             u.HasIndex(u => u.KcUserId).IsUnique();
         });
+
+        modelBuilder.Entity<Topic>(t => {
+            t.HasKey(t => t.TopicId);
+            t.HasIndex(t => t.TopicName).IsUnique();
+        });
     }
 
     public DbSet<LearningPathMetaData>? LearningPathMetaData { get; set; }
     public DbSet<UserActivity>? UserActivity { get; set; }
+    public DbSet<Topic>? Topic { get; set; }
 
     public override async Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
     {

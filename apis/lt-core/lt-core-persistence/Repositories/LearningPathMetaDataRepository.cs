@@ -1,4 +1,5 @@
 using lt_core_application.DTOs;
+using lt_core_persistence.Interfaces.Repositories;
 using lt_core_persistence.Models;
 
 namespace lt_core_persistence.Repositories

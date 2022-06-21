@@ -1,7 +1,7 @@
 using lt_core_application.KeyCloakMessages;
 using lt_core_persistence.Models;
 
-namespace lt_core_persistence.Repositories
+namespace lt_core_persistence.Interfaces.Repositories
 {
     public interface IUserRepository
     {

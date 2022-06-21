@@ -1,5 +1,6 @@
 using lt_contracts;
 using lt_core_application.KeyCloakMessages;
+using lt_core_persistence.Interfaces.Repositories;
 using lt_core_persistence.Models;
 using MassTransit;
 

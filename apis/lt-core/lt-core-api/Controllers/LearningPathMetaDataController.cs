@@ -1,8 +1,8 @@
 using lt_core_api.Utilities.Interfaces;
 using lt_core_application.DTOs;
 using lt_core_application.Interfaces;
+using lt_core_persistence.Interfaces.Repositories;
 using lt_core_persistence.Repositories;
-using MassTransit;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
