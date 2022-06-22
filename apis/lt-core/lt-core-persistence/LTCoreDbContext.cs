@@ -1,4 +1,5 @@
 ﻿using lt_core_persistence.Models;
+using lt_core_persistence.Models.JoinEntities;
 using Microsoft.EntityFrameworkCore;
 
 namespace lt_core_persistence;
@@ -20,6 +21,24 @@ public class LTCoreDbContext : DbContext
             t.HasKey(t => t.TopicId);
             t.HasIndex(t => t.TopicName).IsUnique();
         });
+
+        modelBuilder.Entity<Topic>()
+            .HasMany(ua => ua.UserActivities)
+            .WithMany(t => t.Topics)
+            .UsingEntity<UserTopic>(
+                j => j
+                    .HasOne(ua => ua.UserActivity)
+                    .WithMany(ut => ut.UserTopics)
+                    .HasForeignKey(k => k.FkUserId)
+                    .HasPrincipalKey(k => k.KcUserId),
+                j => j
+                    .HasOne(t => t.Topic)
+                    .WithMany(ut => ut.UserTopics)
+                    .HasForeignKey(k => k.FkTopicId),
+                j => {
+                    j.HasKey(k => k.UserTopicId);
+                }
+            );
     }
 
     public DbSet<LearningPathMetaData>? LearningPathMetaData { get; set; }

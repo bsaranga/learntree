@@ -1,8 +1,11 @@
 using lt_contracts;
+using lt_core_application.DTOs;
 using lt_core_application.KeyCloakMessages;
 using lt_core_persistence.Interfaces.Repositories;
 using lt_core_persistence.Models;
+using lt_core_persistence.Models.JoinEntities;
 using MassTransit;
+using Microsoft.EntityFrameworkCore;
 
 namespace lt_core_persistence.Repositories
 {
@@ -56,6 +59,28 @@ namespace lt_core_persistence.Repositories
                 context.UserActivity?.Update(userLog);
                 await context.SaveChangesAsync();
             }
+        }
+
+        public async Task AssociateUserTopics(IEnumerable<UserTopicDTO> userTopics)
+        {
+            var userTopic = context?.Topic?.Include(t => t.UserTopics).First();
+            var ut = new List<UserTopic>();
+            
+            foreach (var uTopic in userTopics)
+            {
+                ut.Add(
+                    new UserTopic 
+                    { 
+                        FkUserId = uTopic.UserId, 
+                        FkTopicId = uTopic.TopicId,
+                        Topic = context?.Topic?.Single(t => t.TopicId == uTopic.TopicId),
+                        UserActivity = context?.UserActivity?.Single(ua => ua.KcUserId == uTopic.UserId)
+                    }
+                );
+            }
+
+            userTopic?.UserTopics?.AddRange(ut);
+            await context!.SaveChangesAsync();
         }
     }
 }
