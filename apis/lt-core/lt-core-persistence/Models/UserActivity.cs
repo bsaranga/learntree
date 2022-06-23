@@ -7,6 +7,7 @@ namespace lt_core_persistence.Models
         public string? LastActiveSessionId { get; set; }
         public DateTime LastLoggedIn { get; set; }
         public bool IsOnline { get; set; }
+        public bool InterestSet { get; set; }
 
         // Navigation Property
         public List<UserTopic>? UserTopic { get; set; }

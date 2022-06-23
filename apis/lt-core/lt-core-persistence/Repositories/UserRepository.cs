@@ -28,13 +28,11 @@ namespace lt_core_persistence.Repositories
         public async Task MarkLogged(UserActivityEvent loginMessage)
         {
             var userLog = context.UserActivity?.FirstOrDefault(u => u.KcUserId == loginMessage.UserId);
-            //temp
-            await bus.Publish<FreshLogin>(new { UserIdentifier = loginMessage.UserId }, p => p.Delay = TimeSpan.FromSeconds(5));
             
             if (userLog == null && loginMessage.Type == "LOGIN") {
                 
                 // first login of the user
-                //await bus.Publish<FreshLogin>(new { UserIdentifier = loginMessage.UserId });
+                await bus.Publish<FreshLogin>(new { UserIdentifier = loginMessage.UserId }, p => p.Delay = TimeSpan.FromSeconds(5));
 
                 var act = new UserActivity() 
                 {
@@ -49,6 +47,8 @@ namespace lt_core_persistence.Repositories
 
             } else if (userLog != null && loginMessage.Type == "LOGIN") {
 
+                if (!userLog.InterestSet) await bus.Publish<FreshLogin>(new { UserIdentifier = loginMessage.UserId }, p => p.Delay = TimeSpan.FromSeconds(5));
+                
                 userLog!.IsOnline = true;
                 userLog!.LastActiveSessionId = loginMessage.SessionId;
                 userLog!.LastLoggedIn = DateTime.UtcNow;
@@ -75,8 +75,11 @@ namespace lt_core_persistence.Repositories
                 userTopics.Add(new UserTopic { UserId = userId, TopicId = t });
             });
 
-            context.UserTopic?.AddRange(userTopics);
-            await context.SaveChangesAsync();
+            var user = context?.UserActivity?.Single(u => u.KcUserId == userId);
+            user!.InterestSet = true;
+
+            context?.UserTopic?.AddRange(userTopics);
+            await context?.SaveChangesAsync()!;
         }
 
         public List<TopicDTO?> GetTopics()
