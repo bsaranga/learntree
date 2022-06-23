@@ -80,9 +80,7 @@ namespace lt_core_persistence.Repositories
         {
             var userId = claimInfo.GetUserId();
             var topics = context?.UserTopic?.Include(t => t.Topic).Where(ut => ut.UserId == userId).Select(t => t.Topic);
-            var output = await topics?.ToListAsync()!;
-
-            return output;
+            return await topics?.ToListAsync()!;
         }
     }
 }
