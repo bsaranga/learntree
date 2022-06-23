@@ -30,5 +30,18 @@ namespace lt_core_api.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpGet("topics")]
+        public async Task<IActionResult> GetUserTopics()
+        {
+            try
+            {
+                return Ok(await userRepository.GetTopics());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

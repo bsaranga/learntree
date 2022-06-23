@@ -75,5 +75,14 @@ namespace lt_core_persistence.Repositories
             context.UserTopic?.AddRange(userTopics);
             await context.SaveChangesAsync();
         }
+
+        public async Task<List<Topic?>> GetTopics()
+        {
+            var userId = claimInfo.GetUserId();
+            var topics = context?.UserTopic?.Include(t => t.Topic).Where(ut => ut.UserId == userId).Select(t => t.Topic);
+            var output = await topics?.ToListAsync()!;
+
+            return output;
+        }
     }
 }
