@@ -1,8 +1,8 @@
 namespace lt_core_application.DTOs
 {
-    public class UserTopicDTO
+    public class TopicDTO
     {
-        public string? UserId { get; set; }
         public int TopicId { get; set; }
+        public string? TopicName { get; set; }
     }
 }

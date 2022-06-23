@@ -1,3 +1,4 @@
+using AutoMapper;
 using lt_contracts;
 using lt_core_application.DTOs;
 using lt_core_application.Interfaces;
@@ -12,13 +13,15 @@ namespace lt_core_persistence.Repositories
     public class UserRepository : IUserRepository
     {
         private readonly LTCoreDbContext context;
+        private readonly IMapper mapper;
         private readonly IClaimInfo claimInfo;
         private readonly IBus bus;
 
-        public UserRepository(LTCoreDbContext context, IBus bus, IClaimInfo claimInfo)
+        public UserRepository(LTCoreDbContext context, IMapper mapper, IBus bus, IClaimInfo claimInfo)
         {
             this.claimInfo = claimInfo;
             this.context = context;
+            this.mapper = mapper;
             this.bus = bus;
         }
 
@@ -76,11 +79,13 @@ namespace lt_core_persistence.Repositories
             await context.SaveChangesAsync();
         }
 
-        public async Task<List<Topic?>> GetTopics()
+        public List<TopicDTO?> GetTopics()
         {
             var userId = claimInfo.GetUserId();
-            var topics = context?.UserTopic?.Include(t => t.Topic).Where(ut => ut.UserId == userId).Select(t => t.Topic);
-            return await topics?.ToListAsync()!;
+            var topics = context?.UserTopic?.Include(t => t.Topic).Where(ut => ut.UserId == userId);
+            var userTopicDtos = mapper.Map<List<TopicDTO>>(topics);
+            
+            return userTopicDtos!;
         }
     }
 }

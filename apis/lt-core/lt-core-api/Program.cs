@@ -6,6 +6,7 @@ using lt_core_application.Interfaces;
 using lt_core_persistence;
 using lt_core_persistence.Consumers;
 using lt_core_persistence.Interfaces.Repositories;
+using lt_core_persistence.MappingProfiles;
 using lt_core_persistence.Queries;
 using lt_core_persistence.Queries.Interfaces;
 using lt_core_persistence.Repositories;
@@ -49,6 +50,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 string connectionString = builder.Configuration.GetConnectionString("LTCore");
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddHttpClient();
+
+// Automapper
+builder.Services.AddAutoMapper(typeof(CoreProfile).Assembly);
 
 // Db Contexts
 builder.Services.AddDbContext<LTCoreDbContext>(options => options.UseNpgsql(connectionString, p => p.MigrationsAssembly("lt-core-api")));

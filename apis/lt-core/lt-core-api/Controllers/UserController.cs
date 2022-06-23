@@ -32,11 +32,11 @@ namespace lt_core_api.Controllers
         }
 
         [HttpGet("topics")]
-        public async Task<IActionResult> GetUserTopics()
+        public IActionResult GetUserTopics()
         {
             try
             {
-                return Ok(await userRepository.GetTopics());
+                return Ok(userRepository.GetTopics());
             }
             catch (Exception ex)
             {

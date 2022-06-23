@@ -8,6 +8,6 @@ namespace lt_core_persistence.Interfaces.Repositories
     {
         Task AssociateUserTopic(List<int> Topics);
         Task MarkLogged(UserActivityEvent loginMessage);
-        Task<List<Topic?>> GetTopics();
+        List<TopicDTO?> GetTopics();
     }
 }

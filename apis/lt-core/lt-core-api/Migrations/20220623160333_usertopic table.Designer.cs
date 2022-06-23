@@ -12,7 +12,7 @@ using lt_core_persistence;
 namespace lt_core_api.Migrations
 {
     [DbContext(typeof(LTCoreDbContext))]
-    [Migration("20220623024955_usertopic table")]
+    [Migration("20220623160333_usertopic table")]
     partial class usertopictable
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -123,8 +123,14 @@ namespace lt_core_api.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("UserTopicId"));
 
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<int>("TopicId")
                         .HasColumnType("integer");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("UserId")
                         .HasColumnType("text");

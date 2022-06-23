@@ -1,6 +1,6 @@
 namespace lt_core_persistence.Models
 {
-    public class UserTopic
+    public class UserTopic : BaseEntity
     {
         public int UserTopicId { get; set; }
         public string? UserId { get; set; }
