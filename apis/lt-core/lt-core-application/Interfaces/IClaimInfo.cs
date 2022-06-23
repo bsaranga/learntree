@@ -1,4 +1,4 @@
-namespace lt_core_api.Utilities.Interfaces
+namespace lt_core_application.Interfaces
 {
     public interface IClaimInfo
     {

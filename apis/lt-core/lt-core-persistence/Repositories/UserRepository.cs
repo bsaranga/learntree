@@ -1,9 +1,9 @@
 using lt_contracts;
 using lt_core_application.DTOs;
+using lt_core_application.Interfaces;
 using lt_core_application.KeyCloakMessages;
 using lt_core_persistence.Interfaces.Repositories;
 using lt_core_persistence.Models;
-using lt_core_persistence.Models.JoinEntities;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,10 +12,12 @@ namespace lt_core_persistence.Repositories
     public class UserRepository : IUserRepository
     {
         private readonly LTCoreDbContext context;
+        private readonly IClaimInfo claimInfo;
         private readonly IBus bus;
 
-        public UserRepository(LTCoreDbContext context, IBus bus)
+        public UserRepository(LTCoreDbContext context, IBus bus, IClaimInfo claimInfo)
         {
+            this.claimInfo = claimInfo;
             this.context = context;
             this.bus = bus;
         }
@@ -61,26 +63,17 @@ namespace lt_core_persistence.Repositories
             }
         }
 
-        public async Task AssociateUserTopics(IEnumerable<UserTopicDTO> userTopics)
-        {
-            var userTopic = context?.Topic?.Include(t => t.UserTopics).First();
-            var ut = new List<UserTopic>();
+        public async Task AssociateUserTopic(List<int> Topics) {
             
-            foreach (var uTopic in userTopics)
-            {
-                ut.Add(
-                    new UserTopic 
-                    { 
-                        FkUserId = uTopic.UserId, 
-                        FkTopicId = uTopic.TopicId,
-                        Topic = context?.Topic?.Single(t => t.TopicId == uTopic.TopicId),
-                        UserActivity = context?.UserActivity?.Single(ua => ua.KcUserId == uTopic.UserId)
-                    }
-                );
-            }
+            var userId = claimInfo.GetUserId();
+            var userTopics = new List<UserTopic>();
 
-            userTopic?.UserTopics?.AddRange(ut);
-            await context!.SaveChangesAsync();
+            Topics.ForEach(t => {
+                userTopics.Add(new UserTopic { UserId = userId, TopicId = t });
+            });
+
+            context.UserTopic?.AddRange(userTopics);
+            await context.SaveChangesAsync();
         }
     }
 }

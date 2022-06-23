@@ -1,5 +1,3 @@
-using lt_core_persistence.Models.JoinEntities;
-
 namespace lt_core_persistence.Models
 {
     public class Topic : BaseEntity
@@ -8,7 +6,6 @@ namespace lt_core_persistence.Models
         public string? TopicName { get; set; }
 
         // Navigation Property
-        public ICollection<UserActivity>? UserActivities { get; set; }
-        public List<UserTopic>? UserTopics { get; set; }
+        public List<UserTopic>? UserTopic { get; set; }
     }
 }

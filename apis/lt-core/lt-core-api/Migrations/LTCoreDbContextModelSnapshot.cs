@@ -22,35 +22,6 @@ namespace lt_core_api.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("lt_core_persistence.Models.JoinEntities.UserTopic", b =>
-                {
-                    b.Property<int>("UserTopicId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("UserTopicId"));
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("FkTopicId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("FkUserId")
-                        .HasColumnType("text");
-
-                    b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.HasKey("UserTopicId");
-
-                    b.HasIndex("FkTopicId");
-
-                    b.HasIndex("FkUserId");
-
-                    b.ToTable("UserTopic");
-                });
-
             modelBuilder.Entity("lt_core_persistence.Models.LearningPathMetaData", b =>
                 {
                     b.Property<int>("LPId")
@@ -142,17 +113,41 @@ namespace lt_core_api.Migrations
                     b.ToTable("UserActivity");
                 });
 
-            modelBuilder.Entity("lt_core_persistence.Models.JoinEntities.UserTopic", b =>
+            modelBuilder.Entity("lt_core_persistence.Models.UserTopic", b =>
+                {
+                    b.Property<int>("UserTopicId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("UserTopicId"));
+
+                    b.Property<int>("TopicId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("text");
+
+                    b.HasKey("UserTopicId");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("TopicId", "UserId")
+                        .IsUnique();
+
+                    b.ToTable("UserTopic");
+                });
+
+            modelBuilder.Entity("lt_core_persistence.Models.UserTopic", b =>
                 {
                     b.HasOne("lt_core_persistence.Models.Topic", "Topic")
-                        .WithMany("UserTopics")
-                        .HasForeignKey("FkTopicId")
+                        .WithMany("UserTopic")
+                        .HasForeignKey("TopicId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("lt_core_persistence.Models.UserActivity", "UserActivity")
-                        .WithMany("UserTopics")
-                        .HasForeignKey("FkUserId")
+                        .WithMany("UserTopic")
+                        .HasForeignKey("UserId")
                         .HasPrincipalKey("KcUserId");
 
                     b.Navigation("Topic");
@@ -162,12 +157,12 @@ namespace lt_core_api.Migrations
 
             modelBuilder.Entity("lt_core_persistence.Models.Topic", b =>
                 {
-                    b.Navigation("UserTopics");
+                    b.Navigation("UserTopic");
                 });
 
             modelBuilder.Entity("lt_core_persistence.Models.UserActivity", b =>
                 {
-                    b.Navigation("UserTopics");
+                    b.Navigation("UserTopic");
                 });
 #pragma warning restore 612, 618
         }

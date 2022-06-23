@@ -6,7 +6,7 @@ namespace lt_core_persistence.Interfaces.Repositories
 {
     public interface IUserRepository
     {
+        Task AssociateUserTopic(List<int> Topics);
         Task MarkLogged(UserActivityEvent loginMessage);
-        Task AssociateUserTopics(IEnumerable<UserTopicDTO> userTopics);
     }
 }

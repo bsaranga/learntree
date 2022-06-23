@@ -1,4 +1,4 @@
-using lt_core_api.Utilities.Interfaces;
+using lt_core_application.Interfaces;
 
 namespace lt_core_api.Utilities
 {

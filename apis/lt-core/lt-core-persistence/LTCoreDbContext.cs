@@ -1,5 +1,4 @@
 ﻿using lt_core_persistence.Models;
-using lt_core_persistence.Models.JoinEntities;
 using Microsoft.EntityFrameworkCore;
 
 namespace lt_core_persistence;
@@ -22,28 +21,20 @@ public class LTCoreDbContext : DbContext
             t.HasIndex(t => t.TopicName).IsUnique();
         });
 
-        modelBuilder.Entity<Topic>()
-            .HasMany(ua => ua.UserActivities)
-            .WithMany(t => t.Topics)
-            .UsingEntity<UserTopic>(
-                j => j
-                    .HasOne(ua => ua.UserActivity)
-                    .WithMany(ut => ut.UserTopics)
-                    .HasForeignKey(k => k.FkUserId)
-                    .HasPrincipalKey(k => k.KcUserId),
-                j => j
-                    .HasOne(t => t.Topic)
-                    .WithMany(ut => ut.UserTopics)
-                    .HasForeignKey(k => k.FkTopicId),
-                j => {
-                    j.HasKey(k => k.UserTopicId);
-                }
-            );
+        modelBuilder.Entity<UserTopic>(ut => {
+            ut.HasKey(ut => ut.UserTopicId);
+            ut.HasIndex(ut => new {ut.TopicId, ut.UserId}).IsUnique();
+
+            ut.HasOne(ut => ut.UserActivity).WithMany(ut => ut.UserTopic).HasForeignKey(ut => ut.UserId).HasPrincipalKey(ut => ut.KcUserId);
+            ut.HasOne(ut => ut.Topic).WithMany(ut => ut.UserTopic).HasForeignKey(ut => ut.TopicId);
+        });
+
     }
 
     public DbSet<LearningPathMetaData>? LearningPathMetaData { get; set; }
     public DbSet<UserActivity>? UserActivity { get; set; }
     public DbSet<Topic>? Topic { get; set; }
+    public DbSet<UserTopic>? UserTopic { get; set; }
 
     public override async Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
     {

@@ -18,11 +18,11 @@ namespace lt_core_api.Controllers
         }
 
         [HttpPost("usertopic")]
-        public async Task<IActionResult> AddUserTopics(IEnumerable<UserTopicDTO> userTopicDTOs)
+        public async Task<IActionResult> AddUserTopics(List<int> topicList)
         {
             try
             {
-                await userRepository.AssociateUserTopics(userTopicDTOs);
+                await userRepository.AssociateUserTopic(topicList);
                 return Ok("Done");
             }
             catch (Exception ex)
