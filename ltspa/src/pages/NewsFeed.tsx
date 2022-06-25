@@ -105,8 +105,15 @@ export function NewsFeed() {
 		</div>;
 	});
 
+	/**
+	 * Obsolete
+	 */
 	function navigateToCreate() {
 		navigate('/create');
+	}
+
+	function navigateToCreator() {
+		navigate('/creator');
 	}
 
 	console.log('NewsFeed Rendered');
@@ -119,9 +126,14 @@ export function NewsFeed() {
 				<Button onClick={sendMessage}>Send Message</Button>
 				<Button onClick={closeConnection}>Stop Connection</Button>
 			</div>
-			<button onClick={navigateToCreate} className='absolute bg-red-500 w-9 h-9 left-6 bottom-6 rounded-full flex items-center justify-center shadow-md hover:border-2 hover:border-red-300 hover:scale-[120%] hover:shadow-lg transition-all focus:outline-none active:outline-none active:scale-[110%]' title='Create learning path'>
-				<Plus className='text-white inline-block' scale='h-6 w-6'/>
-			</button>
+			<div className='absolute left-5 bottom-5 flex flex-col space-y-4'>
+				<button onClick={navigateToCreate} className='bg-red-500 w-9 h-9 rounded-full flex items-center justify-center shadow-md hover:border-2 hover:border-red-300 hover:scale-[120%] hover:shadow-lg transition-all focus:outline-none active:outline-none active:scale-[110%]' title='Create learning path'>
+					<Plus className='text-white inline-block' scale='h-6 w-6'/>
+				</button>
+				<button onClick={navigateToCreator} className='bg-purple-500 w-9 h-9 rounded-full flex items-center justify-center shadow-md hover:border-2 hover:border-purple-300 hover:scale-[120%] hover:shadow-lg transition-all focus:outline-none active:outline-none active:scale-[110%]' title='Create learning path'>
+					<Plus className='text-white inline-block' scale='h-6 w-6'/>
+				</button>
+			</div>
 			{ cardList }
 		</div>
 	);

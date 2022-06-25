@@ -10,6 +10,8 @@ import NotFound from './pages/NotFound';
 import Profile from './pages/Profile';
 import HttpService from './services/HttpService';
 import { GetHubConnection, StartHub } from './services/HubService';
+import Creator from './pages/creator/Creator';
+import { ReactFlowProvider } from 'react-flow-renderer';
 
 function App() {
 	const http = HttpService.client();
@@ -22,6 +24,7 @@ function App() {
 				<Route path='profile' element={<Profile/>} />
 				<Route path='lpath/:lPathId' element={<LPathViewer/>}/>
 				<Route path='create' element={<LPathCreator/>}/>
+				<Route path='creator' element={<ReactFlowProvider><Creator/></ReactFlowProvider>}/>
 				<Route path='*' element={<NotFound/>} />
 			</Route>
 		</Routes>
