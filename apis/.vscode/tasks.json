@@ -2,6 +2,141 @@
     "version": "2.0.0",
     "tasks": [
         {
+            "label": "Restart Core API",
+            "command": "pm2 restart 4",
+            "type": "shell",
+            "options": {
+                "cwd": "/home/bsaranga/repos/learntree"
+            },
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "Restart SignalR API",
+            "command": "pm2 restart 3",
+            "type": "shell",
+            "options": {
+                "cwd": "/home/bsaranga/repos/learntree"
+            },
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "Restart Graph API",
+            "command": "pm2 restart 2",
+            "type": "shell",
+            "options": {
+                "cwd": "/home/bsaranga/repos/learntree"
+            },
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "Restart SPA",
+            "command": "pm2 restart 1",
+            "type": "shell",
+            "options": {
+                "cwd": "/home/bsaranga/repos/learntree"
+            },
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "Restart Keycloak",
+            "command": "pm2 restart 0",
+            "type": "shell",
+            "options": {
+                "cwd": "/home/bsaranga/repos/learntree"
+            },
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "Start Core API",
+            "command": "pm2 start 4",
+            "type": "shell",
+            "options": {
+                "cwd": "/home/bsaranga/repos/learntree"
+            },
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "Start SignalR API",
+            "command": "pm2 start 3",
+            "type": "shell",
+            "options": {
+                "cwd": "/home/bsaranga/repos/learntree"
+            },
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "Start Graph API",
+            "command": "pm2 start 2",
+            "type": "shell",
+            "options": {
+                "cwd": "/home/bsaranga/repos/learntree"
+            },
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "Start SPA",
+            "command": "pm2 start 1",
+            "type": "shell",
+            "options": {
+                "cwd": "/home/bsaranga/repos/learntree"
+            },
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "Start Keycloak",
+            "command": "pm2 start 0",
+            "type": "shell",
+            "options": {
+                "cwd": "/home/bsaranga/repos/learntree"
+            },
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "Stop Core API",
+            "command": "pm2 stop 4",
+            "type": "shell",
+            "options": {
+                "cwd": "/home/bsaranga/repos/learntree"
+            },
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "Stop SignalR API",
+            "command": "pm2 stop 3",
+            "type": "shell",
+            "options": {
+                "cwd": "/home/bsaranga/repos/learntree"
+            },
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "Stop Graph API",
+            "command": "pm2 stop 2",
+            "type": "shell",
+            "options": {
+                "cwd": "/home/bsaranga/repos/learntree"
+            },
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "Stop SPA",
+            "command": "pm2 stop 1",
+            "type": "shell",
+            "options": {
+                "cwd": "/home/bsaranga/repos/learntree"
+            },
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "Stop Keycloak",
+            "command": "pm2 stop 0",
+            "type": "shell",
+            "options": {
+                "cwd": "/home/bsaranga/repos/learntree"
+            },
+            "problemMatcher": "$msCompile"
+        },
+        {
             "label": "PM2 Flush Logs",
             "command": "pm2 flush",
             "type": "shell",
