@@ -1,8 +1,8 @@
 import { KeyboardEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Handle, Position } from 'react-flow-renderer';
+import { Handle, NodeProps, Position } from 'react-flow-renderer';
 import { message } from 'antd';
 
-export default function RootNode() {
+export default function RootNode(props: NodeProps) {
 	const [nodeText, setNodeText] = useState<string>('Untitled');
 	const [nodeInit, setNodeInit] = useState<boolean>(false);
 
