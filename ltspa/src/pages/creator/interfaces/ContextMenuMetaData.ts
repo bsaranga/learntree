@@ -3,7 +3,7 @@
 export default interface ContextMenuMetaData {
 	x?: number,
 	y?: number,
-	screenX?: number,
-	screenY?: number,
+	projX?: number,
+	projY?: number,
 	type?: 'Pane' | 'Node'
 }

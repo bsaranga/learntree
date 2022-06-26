@@ -1,61 +1,41 @@
-import ReactFlow, { addEdge, applyEdgeChanges, applyNodeChanges, Background, Connection, Node, Edge, EdgeChange, NodeChange, useReactFlow } from 'react-flow-renderer';
-import initialEdges from './data/edges';
-import initialNodes from './data/nodes';
-import '../../components/Layout.scss';
+import ReactFlow, { Background, Node, Edge, useReactFlow } from 'react-flow-renderer';
 import { MouseEvent as ReactMouseEvent, useCallback, useMemo, useState } from 'react';
 import PaneContextMenu from './components/PaneContextMenu';
 import ContextMenuMetaData from './interfaces/ContextMenuMetaData';
 import RootNode from './components/nodes/RootNode';
+import TopicNode from './components/nodes/TopicNode';
 
 export default function Creator() {
-	const [nodes, setNodes] = useState<Node[]>(initialNodes);
-	const [edges, setEdges] = useState<Edge[]>(initialEdges);
+	const heightPadding = 3; // rem
+	const [nodes, setNodes] = useState<Node[]>([]);
+	const [edges, setEdges] = useState<Edge[]>([]);
 	const [contextMenuVisible, setContextMenuVisibility] = useState<boolean>(false);
 	const [contextMenuMetaData, setContextMenuMetaData] = useState<ContextMenuMetaData>({});
+	const {getNodes, addNodes, project} = useReactFlow();
 
-	const nodeTypes = useMemo(() => ({ root: RootNode }), []);
-
-	const reactFlowInstance = useReactFlow();
-
-	/*
-	const onNodesChange = useCallback(
-		(changes: NodeChange[]) => {
-			setNodes((nds) => applyNodeChanges(changes, nds));
-		},
-		[setNodes]
-	);
-	
-	const onEdgesChange = useCallback(
-		(changes: EdgeChange[]) => {
-			setEdges((eds) => applyEdgeChanges(changes, eds));
-		},
-		[setEdges]
-	);
-
-	const onConnect = useCallback(
-		(connection: Connection) => {
-			setEdges((eds) => addEdge(connection, eds));
-		},
-		[setEdges]
-	);
-	*/
+	const nodeTypes = useMemo(() => ({ root: RootNode, topic: TopicNode }), []);
 
 	function mainContextMenu(event: ReactMouseEvent) {
+		const projected = project({x: event.clientX as number, y: event.clientY as number - (heightPadding * 14)});
 		event.preventDefault();
-		setContextMenuMetaData({type: 'Pane', x: event.clientX - 2, y: event.clientY - 2});
+		setContextMenuMetaData({type: 'Pane', x: event.clientX - 2, y: event.clientY - 2, projX: projected.x, projY: projected.y});
 		setContextMenuVisibility(true);
 	}
 
+	useMemo(() => console.log('Creator rendered...'), []);
+
 	return (
 		<>
-			<PaneContextMenu visibility={contextMenuVisible} visibilityOff={() => setContextMenuVisibility(false)} contextMenuMetaData={contextMenuMetaData} reactFlowInstance={reactFlowInstance}/>
-			<div style={{height: 'calc(100vh - 3rem)', width: '100vw'}}>
+			<button className='absolute bg-white z-10 border-2 border-gray-500 shadow-md rounded-md p-2 focus:outline-none' onClick={() => console.log(getNodes())}>Show Context</button>
+			{ contextMenuVisible && <PaneContextMenu visibilityOff={() => setContextMenuVisibility(false)} contextMenuMetaData={contextMenuMetaData} addNodes={addNodes} getNodes={getNodes}/> }
+			<div style={{height: `calc(100vh - ${heightPadding}rem)`, width: '100vw'}}>
 				<ReactFlow 
-					defaultNodes={nodes} 
+					defaultNodes={nodes}
 					defaultEdges={edges}
-					onlyRenderVisibleElements
 					onPaneContextMenu={mainContextMenu}
 					nodeTypes={nodeTypes}
+					defaultZoom={1}
+					deleteKeyCode='Delete'
 				>
 					<Background/>
 				</ReactFlow>

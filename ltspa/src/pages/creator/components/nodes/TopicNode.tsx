@@ -1,24 +1,20 @@
 import { KeyboardEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Handle, Position } from 'react-flow-renderer';
 
-export default function RootNode() {
-	const [nodeText, setNodeText] = useState<string>('Untitled Root Node');
+export default function TopicNode() {
+	const [nodeText, setNodeText] = useState<string>('');
 	const [nodeInit, setNodeInit] = useState<boolean>(false);
 	const inputRef = useRef<HTMLInputElement>(null);
 
 	useEffect(() => {
-		let timeOut: NodeJS.Timeout;
-		
-		if (nodeInit == false) {
-			timeOut = setTimeout(() => {
-				inputRef.current?.focus();
-			}, 0);
-		}
+		const timeOut = setTimeout(() => {
+			inputRef.current?.focus();
+		}, 0);
 
 		return () => {
 			clearTimeout(timeOut);
 		};
-	}, [nodeInit]);
+	}, []);
 
 	function initialize() {
 		setNodeInit(true);
@@ -27,11 +23,12 @@ export default function RootNode() {
 	}
 
 	function unInitialize() {
-		setNodeInit(false);
 		if (inputRef.current != null) {
 			inputRef.current.innerHTML = nodeText;
 			inputRef.current.style.display = 'block';
+			inputRef.current.focus();
 		}
+		setNodeInit(false);
 	}
 
 	const onChange = useCallback((event: KeyboardEvent) => {
@@ -50,7 +47,7 @@ export default function RootNode() {
 		initialize();
 	}, []);
 
-	useMemo(() => console.log('Rendered Root Node'), []);
+	useMemo(() => console.log('Rendered Topic Node'), []);
 
 	return (
 		<>
@@ -58,6 +55,7 @@ export default function RootNode() {
 				<input ref={inputRef} type="text" onKeyUp={onChange} onBlur={blurHandler} />
 				{nodeInit && nodeText}
 			</div>
+			<Handle type="target" style={{width: '8px', height: '8px'}} position={Position.Top} id="a" />
 			<Handle type="source" style={{width: '8px', height: '8px'}} position={Position.Bottom} id="a" />
 		</>
 	);
