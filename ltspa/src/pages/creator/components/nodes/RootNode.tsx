@@ -1,5 +1,5 @@
 import { KeyboardEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Handle, NodeProps, Position } from 'react-flow-renderer';
+import { Handle, NodeProps, Position, useReactFlow } from 'react-flow-renderer';
 import { message } from 'antd';
 
 export default function RootNode(props: NodeProps) {
@@ -7,6 +7,8 @@ export default function RootNode(props: NodeProps) {
 	const [nodeInit, setNodeInit] = useState<boolean>(false);
 
 	const inputRef = useRef<HTMLInputElement>(null);
+
+	const { addNodes } = useReactFlow();
 
 	const nodeRef = useCallback((node: HTMLDivElement) => {
 		if (node != null && nodeInit == true && inputRef.current != null) {
@@ -30,8 +32,8 @@ export default function RootNode(props: NodeProps) {
 
 	function initialize() {
 		setNodeInit(true);
-		if (inputRef.current != null)
-			inputRef.current.style.display = 'none';
+		if (inputRef.current != null) inputRef.current.style.display = 'none';
+		addNodes({id: props.id, type: props.type, position: {x: props.xPos, y: props.yPos}, data: {label: nodeText}});
 	}
 
 	function unInitialize() {
