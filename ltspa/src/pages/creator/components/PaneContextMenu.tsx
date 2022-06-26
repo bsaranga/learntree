@@ -13,17 +13,15 @@ interface ContextMenuProps {
 /* eslint-disable no-mixed-spaces-and-tabs */
 export default function PaneContextMenu(props: ContextMenuProps) {
 
+	const rootMenuItem = useRef<HTMLButtonElement>(null);
 	const { contextMenuMetaData } = props;
 	const { visibilityOff } = props;
 	const { addNodes } = props;
 	const { getNodes } = props;
 
 	let rootExists = false;
-	const rootMenuItem = useRef<HTMLButtonElement>(null);
 
-	useMemo(() => {
-		if (getNodes().filter(n => n.type == 'root').length > 0) rootExists = true;
-	},[]);
+	if (getNodes().filter(n => n.type == 'root').length > 0) rootExists = true;
 
 	function AddRootNode() {
 		addNodes({ id: uuidv4(), type: 'root', position: { x: (contextMenuMetaData.projX as number), y: (contextMenuMetaData.projY as number) }, data: {label: ''} });

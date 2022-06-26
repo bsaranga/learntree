@@ -1,5 +1,5 @@
 import ReactFlow, { Background, Node, Edge, useReactFlow } from 'react-flow-renderer';
-import { MouseEvent as ReactMouseEvent, useCallback, useMemo, useState } from 'react';
+import { MouseEvent as ReactMouseEvent, useMemo, useState } from 'react';
 import PaneContextMenu from './components/PaneContextMenu';
 import ContextMenuMetaData from './interfaces/ContextMenuMetaData';
 import RootNode from './components/nodes/RootNode';
@@ -36,6 +36,7 @@ export default function Creator() {
 					nodeTypes={nodeTypes}
 					defaultZoom={1}
 					deleteKeyCode='Delete'
+					elementsSelectable={true}
 				>
 					<Background/>
 				</ReactFlow>
