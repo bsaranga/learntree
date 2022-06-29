@@ -1,4 +1,4 @@
-import ReactFlow, { Background, Node, Edge, useReactFlow, XYPosition, getEdgeCenter } from 'react-flow-renderer';
+import ReactFlow, { Background, Node, Edge, useReactFlow, XYPosition, getEdgeCenter, MarkerType } from 'react-flow-renderer';
 import { KeyboardEvent, MouseEvent as ReactMouseEvent, useCallback, useMemo, useRef, useState } from 'react';
 import PaneContextMenu from './components/PaneContextMenu';
 import ContextMenuMetaData from './interfaces/ContextMenuMetaData';
@@ -12,6 +12,12 @@ interface EdgeInfo {
 	textBoxLocation?: XYPosition
 	active: boolean,
 	label?: string
+}
+
+interface HoveredEdge {
+	id?: string,
+	location?: XYPosition
+	active: boolean
 }
 
 export default function Creator() {
@@ -43,6 +49,7 @@ export default function Creator() {
 				source: edge.source, 
 				target: edge.target, 
 				textBoxLocation: {x: event.clientX, y: event.clientY},
+				label: edge?.label?.toString() ?? '',
 				active: true 
 			});
 
@@ -70,16 +77,27 @@ export default function Creator() {
 		clearTimeout(timeOut1.current);
 	}, []);
 
+	const saveHandler = useCallback(() => {
+		console.log('Save Graph Data');
+		console.log(toObject());
+	}, []);
+
 	useMemo(() => console.log('Creator rendered...'), []);
 
 	return (
 		<>
+			<button className='absolute bg-white z-10 border-2 border-gray-500 shadow-md rounded-md p-2 focus:outline-none' onClick={() => console.log(toObject())}>Show Context</button>
+			{/*-----------------------------------------------------------------------------------------*/}
+			<div className='absolute z-10 bg-white bottom-6 left-6 flex p-2 justify-between space-x-4 rounded-sm px-4 shadow-md'>
+				<button className='bg-slate-400 px-2 py-1 focus:outline-none rounded-sm text-xs font-semibold text-white hover:bg-slate-300 active:bg-slate-400'>Undo</button>
+				<button className='bg-slate-400 px-2 py-1 focus:outline-none rounded-sm text-xs font-semibold text-white hover:bg-slate-300 active:bg-slate-400'>Redo</button>
+				<button className='bg-slate-400 px-2 py-1 focus:outline-none rounded-sm text-xs font-semibold text-white hover:bg-slate-300 active:bg-slate-400' onClick={saveHandler}>Save</button>
+			</div>
 			{ activeEdgeInfo.active && 
-				<div className='absolute z-10' style={{top: `${activeEdgeInfo.textBoxLocation?.x}px`, left: `${activeEdgeInfo.textBoxLocation?.y}px`}}>
-					<input ref={textBox} onKeyUp={onEdgeInfoChange} onBlur={onTextBoxBlur} type="text" className='p-[2px] rounded-sm focus:outline-none border-2 border-slate-600' />
+				<div className='absolute z-10' style={{top: `${activeEdgeInfo.textBoxLocation?.y}px`, left: `${activeEdgeInfo.textBoxLocation?.x}px`}}>
+					<input ref={textBox} onKeyUp={onEdgeInfoChange} onBlur={onTextBoxBlur} type="text" defaultValue={activeEdgeInfo.label} className='p-[2px] rounded-sm focus:outline-none border-2 border-slate-600' />
 				</div> 
 			}
-			<button className='absolute bg-white z-10 border-2 border-gray-500 shadow-md rounded-md p-2 focus:outline-none' onClick={() => console.log(toObject())}>Show Context</button>
 			{ contextMenuVisible && <PaneContextMenu visibilityOff={() => setContextMenuVisibility(false)} contextMenuMetaData={contextMenuMetaData} addNodes={addNodes} getNodes={getNodes}/> }
 			<div style={{height: `calc(100vh - ${heightPadding}rem)`, width: '100vw'}}>
 				<ReactFlow 
@@ -90,7 +108,7 @@ export default function Creator() {
 					defaultZoom={1}
 					deleteKeyCode='Delete'
 					elementsSelectable={true}
-					defaultEdgeOptions={{style: {strokeWidth: '2.5px'}}}
+					defaultEdgeOptions={{style: {strokeWidth: '2.5px'}, markerEnd: {type: MarkerType.ArrowClosed}}}
 					connectionLineStyle={{strokeWidth: '2.5px'}}
 					onEdgeDoubleClick={edgeDblClickHandler}
 				>
