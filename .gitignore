@@ -206,6 +206,7 @@ dist
 ######################
 *.log
 .attach_pid*
+logs/
 
 # Maven #
 #########
