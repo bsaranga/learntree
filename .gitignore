@@ -235,3 +235,5 @@ postgres-rabbitmq/pgdata/
 seq/data/
 
 # End of https://www.toptal.com/developers/gitignore/api/dotnetcore,visualstudiocode,node,monodevelop
+apis/learntree-graph/ltgraph.api/Logs/*
+apis/lt-signal-r/ltsignalr.api/Logs/*
