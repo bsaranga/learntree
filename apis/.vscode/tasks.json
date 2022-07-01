@@ -2,6 +2,22 @@
     "version": "2.0.0",
     "tasks": [
         {
+            "label": "Start Non DotNet Processes",
+            "command": "pm2 start 0 1",
+            "type": "shell",
+            "options": {
+                "cwd": "/home/bsaranga/repos/learntree"
+            },
+        },
+        {
+            "label": "Stop Non DotNet Processes",
+            "command": "pm2 stop 0 1",
+            "type": "shell",
+            "options": {
+                "cwd": "/home/bsaranga/repos/learntree"
+            },
+        },
+        {
             "label": "Restart Core API",
             "command": "pm2 restart 4",
             "type": "shell",
@@ -182,7 +198,7 @@
                 "build"
             ],
             "problemMatcher": "$msCompile",
-            "isBuildCommand": true
+            "isBuildCommand": true,
         }
     ]
 }
