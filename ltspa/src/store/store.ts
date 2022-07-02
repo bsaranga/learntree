@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
 import rootReducer from './slices/rootSlice';
+import lPathReducer from './slices/LPathSlice';
 
 const store = configureStore({
 	reducer: {
-		root: rootReducer
+		root: rootReducer,
+		lpath: lPathReducer
 	}
 });
 

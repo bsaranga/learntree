@@ -1,4 +1,5 @@
-import ReactFlow, { Background, Node, Edge, useReactFlow, XYPosition, getEdgeCenter, MarkerType } from 'react-flow-renderer';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import ReactFlow, { Background, Node, Edge, useReactFlow, XYPosition, MarkerType } from 'react-flow-renderer';
 import { KeyboardEvent, MouseEvent as ReactMouseEvent, useCallback, useMemo, useRef, useState } from 'react';
 import PaneContextMenu from './components/PaneContextMenu';
 import ContextMenuMetaData from './interfaces/ContextMenuMetaData';
@@ -7,6 +8,7 @@ import TopicNode from './components/nodes/TopicNode';
 import { Modal } from 'antd';
 import CreateLPForm from '../../components/LPathCreator/CreateLPForm/CreateLPForm';
 import { useNavigate } from 'react-router-dom';
+import { useAppSelector } from '../../store/hooks';
 
 interface EdgeInfo {
 	id?: string,
@@ -15,12 +17,6 @@ interface EdgeInfo {
 	textBoxLocation?: XYPosition
 	active: boolean,
 	label?: string
-}
-
-interface HoveredEdge {
-	id?: string,
-	location?: XYPosition
-	active: boolean
 }
 
 export default function Creator() {
@@ -32,7 +28,8 @@ export default function Creator() {
 	const [contextMenuMetaData, setContextMenuMetaData] = useState<ContextMenuMetaData>({});
 	const [activeEdgeInfo, setActiveEdgeInfo] = useState<EdgeInfo>({ active: false });
 
-	const [createModalVisible, setCreateModalVisibility] = useState(true);
+	const learningPathMetaData = useAppSelector(state => state.lpath.activeLPath);
+	const [createModalVisible, setCreateModalVisibility] = useState<boolean>(true && (learningPathMetaData.lPathName == undefined && learningPathMetaData.lPathDescription == undefined));
 	
 	const {getNodes, addNodes, getEdges, setEdges, project, toObject} = useReactFlow();
 	const nodeTypes = useMemo(() => ({ root: RootNode, topic: TopicNode }), []);
@@ -109,7 +106,7 @@ export default function Creator() {
 				<CreateLPForm onCancel={modalCancelHandler} onOk={modalOkHandler}/>
 			</Modal>
 			<div className='absolute z-10 mb-12 bottom-6 left-6 bg-slate-50 bg-opacity-50 hover:bg-opacity-100 transition-color duration-200 px-2 rounded-sm shadow-sm'>
-				<div className='select-none text-base font-semibold text-slate-700'>Learning Path Title</div>
+				<div className='select-none text-base font-semibold text-slate-700'>{learningPathMetaData.lPathName}</div>
 			</div>
 			<button className='absolute bg-white z-10 border-2 border-gray-500 shadow-md rounded-md p-2 focus:outline-none' onClick={() => console.log(toObject())}>Show Context</button>
 			{/*-----------------------------------------------------------------------------------------*/}

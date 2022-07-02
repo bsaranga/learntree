@@ -3,6 +3,8 @@ import TextArea from 'antd/lib/input/TextArea';
 import { useState } from 'react';
 import HttpService from '../../../services/HttpService';
 import {v4 as uuidv4} from 'uuid';
+import { useAppDispatch } from '../../../store/hooks';
+import { setActiveLPath } from '../../../store/slices/LPathSlice';
 
 interface CreateLPFormProps {
 	onOk: () => void,
@@ -11,17 +13,20 @@ interface CreateLPFormProps {
 
 export default function CreateLPForm({onOk, onCancel}: CreateLPFormProps) {
 
-	const [title, setTitle] = useState<string|null>(null);
-	const [description, setDescription] = useState<string|null>(null);
+	const [title, setTitle] = useState<string|undefined>(undefined);
+	const [description, setDescription] = useState<string|undefined>(undefined);
 	const disableCreateButton = title == '' || title == null || description == '' || description == null;
 
 	const httpClient = HttpService.client();
+	const dispatch = useAppDispatch();
 
 	function onFinish() {
-		httpClient.post('https://localhost:4157/api/LearningPathMetaData', { lpCode: uuidv4(), title: title, description: description })
+		const lpCode = uuidv4();
+		httpClient.post('https://localhost:4157/api/LearningPathMetaData', { lpCode: lpCode, title: title, description: description })
 			.then(d => {
 				if (d.status == 200) {
 					message.success({ content: 'Learning Path Created', duration: 2, style: { marginTop: '2rem' } });
+					dispatch(setActiveLPath({lPathCode: lpCode, lPathName: title, lPathDescription: description}));
 					onOk();
 				} else {
 					message.error({ content: `Learning Path Creation Failed: <Status: ${d.status}>`, duration: 2, style: { marginTop: '2rem' } });
