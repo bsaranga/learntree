@@ -3,6 +3,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 interface LPathMetaData {
 	lPathCode?: string,
     lPathName?: string,
+	lPathSubTitle?: string,
     lPathDescription?: string,
 }
 
@@ -11,11 +12,7 @@ interface lPathState {
 }
 
 const initialState: lPathState = {
-	activeLPath: {
-		lPathCode: undefined,
-		lPathName: undefined,
-		lPathDescription: undefined
-	}
+	activeLPath: {}
 };
 
 export const lPathSlice = createSlice({

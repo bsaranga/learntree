@@ -14,6 +14,7 @@ interface CreateLPFormProps {
 export default function CreateLPForm({onOk, onCancel}: CreateLPFormProps) {
 
 	const [title, setTitle] = useState<string|undefined>(undefined);
+	const [subTitle, setSubTitle] = useState<string|undefined>(undefined);
 	const [description, setDescription] = useState<string|undefined>(undefined);
 	const disableCreateButton = title == '' || title == null || description == '' || description == null;
 
@@ -22,11 +23,11 @@ export default function CreateLPForm({onOk, onCancel}: CreateLPFormProps) {
 
 	function onFinish() {
 		const lpCode = uuidv4();
-		httpClient.post('https://localhost:4157/api/LearningPathMetaData', { lpCode: lpCode, title: title, description: description })
+		httpClient.post('https://localhost:4157/api/LearningPathMetaData', { lpCode: lpCode, title: title, subTitle: subTitle, description: description })
 			.then(d => {
 				if (d.status == 200) {
 					message.success({ content: 'Learning Path Created', duration: 2, style: { marginTop: '2rem' } });
-					dispatch(setActiveLPath({lPathCode: lpCode, lPathName: title, lPathDescription: description}));
+					dispatch(setActiveLPath({lPathCode: lpCode, lPathName: title, lPathSubTitle: subTitle, lPathDescription: description}));
 					onOk();
 				} else {
 					message.error({ content: `Learning Path Creation Failed: <Status: ${d.status}>`, duration: 2, style: { marginTop: '2rem' } });
@@ -53,14 +54,21 @@ export default function CreateLPForm({onOk, onCancel}: CreateLPFormProps) {
 					name="title"
 					rules={[{ required: true, message: 'Please enter learning path title.' }]}
 				>
-					<Input placeholder='Title' onChange={e => setTitle(e.target.value.trim())} />
+					<Input placeholder='Title' onChange={e => setTitle(e.target.value)} />
+				</Form.Item>
+
+				<Form.Item
+					name="sub-title"
+					rules={[{ required: true, message: 'Please enter learning path sub-title.' }]}
+				>
+					<Input placeholder='Sub Title' onChange={e => setSubTitle(e.target.value)} />
 				</Form.Item>
 
 				<Form.Item
 					name="description"
 					rules={[{ required: true, message: 'Please enter a short description.' }]}
 				>
-					<TextArea placeholder='Description' maxLength={200} allowClear autoSize={{minRows:1, maxRows:4}} onChange={e => setDescription(e.target.value.trim())} />
+					<TextArea placeholder='Description' maxLength={200} allowClear autoSize={{minRows:1, maxRows:4}} onChange={e => setDescription(e.target.value)} />
 				</Form.Item>
 
 				<Form.Item>
