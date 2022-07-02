@@ -1,6 +1,7 @@
 
 using ltgraph.domain.DTOs;
 using ltgraph.domain.Interfaces;
+using ltgraph.domain.Models.Graph;
 using ltgraph.infrastructure.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -37,9 +38,17 @@ namespace ltgraph.Controllers
 
         [HttpPost("create")]
         [AllowAnonymous]
-        public IActionResult CreateLearningPath([FromBody] Node lPathNode) {
+        public IActionResult CreateLearningPath([FromBody] domain.DTOs.Node lPathNode) {
             _lpathRepo.CreateLearningPath(lPathNode);
             return Ok("Received");
+        }
+
+        [HttpPost("context")]
+        [AllowAnonymous]
+        public IActionResult SaveActiveLPContext([FromBody] LPathContext context)
+        {
+            var lpath = context;
+            return Ok();
         }
     }
 }

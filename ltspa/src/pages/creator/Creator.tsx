@@ -9,6 +9,7 @@ import { Modal } from 'antd';
 import CreateLPForm from '../../components/LPathCreator/CreateLPForm/CreateLPForm';
 import { useNavigate } from 'react-router-dom';
 import { useAppSelector } from '../../store/hooks';
+import HttpService from '../../services/HttpService';
 
 interface EdgeInfo {
 	id?: string,
@@ -20,7 +21,10 @@ interface EdgeInfo {
 }
 
 export default function Creator() {
+	
 	const navigate = useNavigate();
+	const httpClient = HttpService.client();
+
 	const heightPadding = 3; // rem
 	const [nodes, setNodes] = useState<Node[]>([]);
 	const [edges, setEdges1] = useState<Edge[]>([]);
@@ -80,10 +84,12 @@ export default function Creator() {
 		clearTimeout(timeOut1.current);
 	}, []);
 
-	const saveHandler = useCallback(() => {
-		console.log('Save Graph Data');
-		console.log(toObject());
-	}, []);
+	const saveHandler = useCallback(async () => {
+		const context = toObject();
+		console.log(context);
+		const result = await httpClient.post('https://localhost:4155/api/LPath/context', context);
+		console.log(result.data);
+	}, [toObject, httpClient]);
 
 	function navigateHome() {
 		navigate('/');

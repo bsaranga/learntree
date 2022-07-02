@@ -77,7 +77,7 @@ export default function RootNode(props: NodeProps) {
 				<input ref={inputRef} type="text" onKeyUp={onChange} onBlur={blurHandler} className="h-[18px] focus:outline-none focus:border-b-2 focus:border-b-red-400" />
 				{nodeInit && <div>{nodeText}</div>}
 			</div>
-			<Handle type="source" style={{width: '10px', height: '10px'}} position={Position.Bottom} id="a" />
+			<Handle type="source" style={{width: '10px', height: '10px'}} position={Position.Bottom} />
 		</>
 	);
 }
