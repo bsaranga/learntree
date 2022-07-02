@@ -3,7 +3,7 @@
     "tasks": [
         {
             "label": "Start Non DotNet Processes",
-            "command": "pm2 start 0 1",
+            "command": "pm2 start && pm2 stop 2 4 3",
             "type": "shell",
             "options": {
                 "cwd": "/home/bsaranga/repos/learntree"
