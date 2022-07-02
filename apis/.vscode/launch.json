@@ -14,8 +14,6 @@
             "env": {
                 "ASPNETCORE_ENVIRONMENT": "Development"
             },
-            "preLaunchTask": "Start Non DotNet Processes",
-            "postDebugTask": "Stop Non DotNet Processes"
         },
         {
             "name": "LTGraphAPI",

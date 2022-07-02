@@ -17,6 +17,7 @@ namespace lt_core_persistence.Repositories
             var metaData = new LearningPathMetaData() {
                 LPCode = lp.LPCode,
                 Title = lp.Title,
+                SubTitle = lp.SubTitle,
                 Description = lp.Description,
                 UserId = lp.UserId
             };
