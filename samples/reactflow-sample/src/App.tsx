@@ -10,7 +10,7 @@ function App() {
   const nodeTypes = useMemo(() => ({ customNode: CustomNode }), []);
 
   const onNodesChange = useCallback(
-    (changes: NodeChange[]) => setNodes((nds) => applyNodeChanges(changes, nds)),
+    (changes: NodeChange[]) => {setNodes((nds) => applyNodeChanges(changes, nds))},
     [setNodes]
   );
   const onEdgesChange = useCallback(
@@ -26,8 +26,8 @@ function App() {
     const newNode = {
       id: uuidv4(),
       type: 'customNode',
-      data: { label: 'Input Node' },
-      position: { x: Math.random()*1024, y: Math.random()*1024 },
+      data: { label: 'Input Node'},
+      position: { x: Math.random()*500, y: Math.random()*500 },
     }
 
     setNodes([...nodes, newNode]);
@@ -47,7 +47,15 @@ function App() {
       <button onClick={showNodes}>Show Nodes</button>
       <button onClick={showEdges}>Show Edges</button>
     </div>
-    <ReactFlow nodes={nodes} edges={edges} nodeTypes={nodeTypes} onNodesChange={onNodesChange} onEdgesChange={onEdgesChange} onConnect={onConnect} fitView>
+    <ReactFlow
+        nodes={nodes} 
+        edges={edges} 
+        nodeTypes={nodeTypes}
+        onNodesChange={onNodesChange} 
+        onEdgesChange={onEdgesChange} 
+        onConnect={onConnect}
+        deleteKeyCode="Delete"
+        fitView>
       <Background/>
     </ReactFlow>;
   </div>
