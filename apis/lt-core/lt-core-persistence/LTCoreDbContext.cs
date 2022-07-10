@@ -8,8 +8,10 @@ public class LTCoreDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<LearningPathMetaData>()
-            .HasKey(l => l.LPId);
+        modelBuilder.Entity<LearningPathMetaData>(lp => {
+            lp.HasKey(l => l.LPId);
+            lp.HasIndex(l => new { l.Title, l.UserId }).IsUnique();
+        });
 
         modelBuilder.Entity<UserActivity>(u => {
             u.HasKey(u => u.Id);

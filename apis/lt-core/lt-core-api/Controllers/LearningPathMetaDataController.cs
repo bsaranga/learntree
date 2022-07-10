@@ -27,8 +27,8 @@ namespace lt_core_api.Controllers
         public async Task<IActionResult> AddLearningPathMetaData(LPMetadataDTO metadata)
         {
             metadata.UserId = claimInfo.GetUserId();
-            await lpMetaDataRepo.InsertLPMetaData(metadata);
-            return Ok();
+            var insertionResponse = await lpMetaDataRepo.InsertLPMetaData(metadata);
+            return Ok(insertionResponse);
         }
     }
 }
