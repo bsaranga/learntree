@@ -10,35 +10,42 @@ namespace ltgraph.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize(Roles="lt-graph-root")]
+    [Authorize(Roles = "lt-graph-root")]
     public class LPath : ControllerBase
     {
         private readonly ILogger<LPath> _logger;
         private readonly ILPathRepository _lpathRepo;
-        public LPath(ILogger<LPath> logger, ILPathRepository lpathRepo)
+        private readonly IClaimInfo claimInfo;
+        public LPath(ILogger<LPath> logger, ILPathRepository lpathRepo, IClaimInfo claimInfo)
         {
             _logger = logger;
             _lpathRepo = lpathRepo;
+            this.claimInfo = claimInfo;
         }
 
         [HttpGet]
         [AllowAnonymous]
-        public IActionResult Root() {
-            return Ok(new {
+        public IActionResult Root()
+        {
+            return Ok(new
+            {
                 Result = "Success"
             });
         }
 
         [HttpGet("secured")]
-        public IActionResult Secured() {
-            return Ok(new {
+        public IActionResult Secured()
+        {
+            return Ok(new
+            {
                 Result = "Secured end-point accessed"
             });
         }
 
         [HttpPost("create")]
         [AllowAnonymous]
-        public IActionResult CreateLearningPath([FromBody] domain.DTOs.Node lPathNode) {
+        public IActionResult CreateLearningPath([FromBody] domain.DTOs.Node lPathNode)
+        {
             _lpathRepo.CreateLearningPath(lPathNode);
             return Ok("Received");
         }
@@ -48,6 +55,7 @@ namespace ltgraph.Controllers
         public IActionResult SaveActiveLPContext([FromBody] LPathContext context)
         {
             var lpath = context;
+            lpath.Metadata!.LPathUserId = claimInfo.GetUserId();
             return Ok();
         }
     }
