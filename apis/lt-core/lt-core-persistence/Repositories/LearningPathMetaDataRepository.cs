@@ -38,7 +38,7 @@ namespace lt_core_persistence.Repositories
             }
             catch (Exception ex)
             {
-                var existingMetaData = await this.ReadLPMetaData(lp.UserId, lp.Title);
+                var existingMetaData = await this.ReadLPMetaData(lp.UserId!, lp.Title!);
                 
                 if (existingMetaData != null) 
                 {
