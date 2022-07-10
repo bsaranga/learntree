@@ -1,7 +1,9 @@
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using ltgraph.domain.Interfaces;
 using ltgraph.infrastructure;
 using ltgraph.infrastructure.Repositories;
+using ltgraph.Utilities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Newtonsoft.Json.Linq;
 using Serilog;
@@ -27,6 +29,8 @@ try
                             var clientResource = resources[context!.Principal!.FindFirst("aud")!.Value];
                             var clientRoles = clientResource!["roles"];
                             var claimsIdentity = context.Principal.Identity as ClaimsIdentity;
+
+                            claimsIdentity?.AddClaim(new Claim("UserId", (context.SecurityToken as JwtSecurityToken)!.Claims.Single(c => c.Type == "sub").Value));
                             
                             if (claimsIdentity == null) {
                                 throw new Exception("Unauthenticated...");
@@ -41,10 +45,14 @@ try
                     };
                 });
 
+    builder.Services.AddHttpContextAccessor();
+    builder.Services.AddHttpClient();
+
     // Add services to the container.
     builder.Services.AddSingleton<IAuraDbConnection, AuraDbConnection>();
     builder.Services.AddScoped<IGraphCore, GraphCore>();
     builder.Services.AddScoped<ILPathRepository, LPathRepository>();
+    builder.Services.AddScoped<IClaimInfo, ClaimInfo>();
 
     builder.Services.AddControllers();
     builder.Services.AddHealthChecks();
