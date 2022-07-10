@@ -1,7 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
 import './App.scss';
 import Layout from './components/Layout';
-import LPathCreator from './components/LPathCreator/LPathCreator';
 import LPathViewer from './components/LPathViewer';
 import HubContext from './contexts/HubContext';
 import HttpContext from './contexts/HttpContext';
@@ -23,7 +22,6 @@ function App() {
 				<Route index element={<NewsFeed/>}/>
 				<Route path='profile' element={<Profile/>} />
 				<Route path='lpath/:lPathId' element={<LPathViewer/>}/>
-				<Route path='create' element={<LPathCreator/>}/>
 				<Route path='creator' element={<ReactFlowProvider><Creator/></ReactFlowProvider>}/>
 				<Route path='*' element={<NotFound/>} />
 			</Route>
