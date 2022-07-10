@@ -87,10 +87,8 @@ export default function Creator() {
 
 	const saveHandler = useCallback(async () => {
 		const context = toObject();
-		console.log(context);
-		const result = await httpClient.post('https://localhost:4155/api/LPath/context', context);
-		console.log(result.data);
-	}, [toObject, httpClient]);
+		const result = await httpClient.post('https://localhost:4155/api/LPath/context', {...context, metadata: learningPathMetaData});
+	}, [toObject, httpClient, learningPathMetaData]);
 
 	function navigateHome() {
 		navigate('/');
