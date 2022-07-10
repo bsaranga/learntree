@@ -1,0 +1,28 @@
+# tye application configuration file
+# read all about it at https://github.com/dotnet/tye
+#
+# when you've given us a try, we'd love to know what you think:
+#    https://aka.ms/AA7q20u
+#
+# define global settings here
+# name: exampleapp # application name
+# registry: exampleuser # dockerhub username or container registry hostname
+
+# define multiple services here
+name: LearnTree Microservices
+services:
+- name: lt-graph-api
+  project: apis/learntree-graph/ltgraph.api/ltgraph.api.csproj
+  bindings:
+    - port: 4155
+      protocol: https
+- name: lt-signalr-api
+  project: apis/lt-signal-r/ltsignalr.api/ltsignalr.api.csproj
+  bindings:
+    - port: 4156
+      protocol: https
+- name: lt-core-api
+  project: apis/lt-core/lt-core-api/lt-core-api.csproj
+  bindings:
+    - port: 4157
+      protocol: https
