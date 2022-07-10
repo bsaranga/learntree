@@ -20,7 +20,7 @@ export default function TopicNode(props: NodeProps) {
 		if (nodeInit == false) {
 			timeOut = setTimeout(() => {
 				inputRef.current?.focus();
-			}, 0);
+			});
 		}
 
 		return () => {

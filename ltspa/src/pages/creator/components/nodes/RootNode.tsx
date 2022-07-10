@@ -19,7 +19,7 @@ export default function RootNode(props: NodeProps) {
 		if (nodeInit == false) {
 			timeOut = setTimeout(() => {
 				inputRef.current?.focus();
-			}, 0);
+			});
 		}
 
 		return () => {
