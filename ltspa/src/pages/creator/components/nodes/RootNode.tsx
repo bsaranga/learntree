@@ -3,12 +3,10 @@ import { Handle, NodeProps, Position, useReactFlow } from 'react-flow-renderer';
 import { message } from 'antd';
 
 export default function RootNode(props: NodeProps) {
+	const { addNodes } = useReactFlow();
 	const [nodeText, setNodeText] = useState<string>('Untitled');
 	const [nodeInit, setNodeInit] = useState<boolean>(false);
-
 	const inputRef = useRef<HTMLInputElement>(null);
-
-	const { addNodes } = useReactFlow();
 
 	const nodeRef = useCallback((node: HTMLDivElement) => {
 		if (node != null && nodeInit == true && inputRef.current != null) {
@@ -18,7 +16,6 @@ export default function RootNode(props: NodeProps) {
 
 	useEffect(() => {
 		let timeOut: NodeJS.Timeout;
-		
 		if (nodeInit == false) {
 			timeOut = setTimeout(() => {
 				inputRef.current?.focus();
@@ -30,19 +27,19 @@ export default function RootNode(props: NodeProps) {
 		};
 	}, [nodeInit]);
 
-	function initialize() {
+	const initialize = useCallback(() => {
 		setNodeInit(true);
 		if (inputRef.current != null) inputRef.current.style.display = 'none';
 		addNodes({id: props.id, type: props.type, position: {x: props.xPos, y: props.yPos}, data: {label: nodeText}});
-	}
+	}, [addNodes, nodeText, props]);
 
-	function unInitialize() {
+	const unInitialize = useCallback(() => {
 		setNodeInit(false);
 		if (inputRef.current != null) {
 			inputRef.current.innerHTML = nodeText;
 			inputRef.current.style.display = 'block';
 		}
-	}
+	}, [nodeText]);
 
 	const onChange = useCallback((event: KeyboardEvent) => {
 		if (event.code != 'Enter' && event.code != 'NumpadEnter') {
@@ -54,11 +51,11 @@ export default function RootNode(props: NodeProps) {
 				message.error({ content: 'Please enter a node label', duration: 2, style: { marginTop: '2rem' } });
 			}
 		}
-	}, [nodeText]);
+	}, [nodeText, initialize]);
 
 	const editHandler = useCallback(() => {
 		unInitialize();
-	}, []);
+	}, [unInitialize]);
 
 	const blurHandler = useCallback(() => {
 		if (nodeText.length > 0) {
@@ -67,7 +64,7 @@ export default function RootNode(props: NodeProps) {
 			setNodeText('Untitled');
 			initialize();
 		}
-	}, [nodeText]);
+	}, [nodeText, initialize]);
 
 	useMemo(() => console.log('Rendered Root Node'), []);
 

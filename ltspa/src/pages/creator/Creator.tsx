@@ -26,8 +26,9 @@ export default function Creator() {
 	const httpClient = HttpService.client();
 
 	const heightPadding = 3; // rem
-	const [nodes, setNodes] = useState<Node[]>([]);
-	const [edges, setEdges1] = useState<Edge[]>([]);
+	const nodes = useRef([] as Node[]);
+	const edges = useRef([] as Edge[]);
+
 	const [contextMenuVisible, setContextMenuVisibility] = useState<boolean>(false);
 	const [contextMenuMetaData, setContextMenuMetaData] = useState<ContextMenuMetaData>({});
 	const [activeEdgeInfo, setActiveEdgeInfo] = useState<EdgeInfo>({ active: false });
@@ -38,8 +39,8 @@ export default function Creator() {
 	const {getNodes, addNodes, getEdges, setEdges, project, toObject} = useReactFlow();
 	const nodeTypes = useMemo(() => ({ root: RootNode, topic: TopicNode }), []);
 
-	const textBox = useRef<HTMLInputElement>(null);
-	const timeOut1 = useRef<any>();
+	const edgeLabelInput = useRef<HTMLInputElement>(null);
+	const edgeLabelTimeout = useRef<any>();
 
 	function mainContextMenu(event: ReactMouseEvent) {
 		const projected = project({x: event.clientX as number, y: event.clientY as number - (heightPadding * 14)});
@@ -60,8 +61,8 @@ export default function Creator() {
 				active: true 
 			});
 
-		timeOut1.current = setTimeout(() => {
-			textBox.current?.focus();
+		edgeLabelTimeout.current = setTimeout(() => {
+			edgeLabelInput.current?.focus();
 		}, 0);
 
 	}, []);
@@ -75,13 +76,13 @@ export default function Creator() {
 				return e;
 			}));
 			setActiveEdgeInfo({active: false});
-			clearTimeout(timeOut1.current);
+			clearTimeout(edgeLabelTimeout.current);
 		}
-	}, [activeEdgeInfo]);
+	}, [activeEdgeInfo, getEdges, setEdges]);
 
 	const onTextBoxBlur = useCallback(() => {
 		setActiveEdgeInfo({active: false});
-		clearTimeout(timeOut1.current);
+		clearTimeout(edgeLabelTimeout.current);
 	}, []);
 
 	const saveHandler = useCallback(async () => {
@@ -123,22 +124,22 @@ export default function Creator() {
 			</div>
 			{ activeEdgeInfo.active && 
 				<div className='absolute z-10' style={{top: `${activeEdgeInfo.textBoxLocation?.y}px`, left: `${activeEdgeInfo.textBoxLocation?.x}px`}}>
-					<input ref={textBox} onKeyUp={onEdgeInfoChange} onBlur={onTextBoxBlur} type="text" defaultValue={activeEdgeInfo.label} className='p-[2px] rounded-sm focus:outline-none border-2 border-slate-600' />
+					<input ref={edgeLabelInput} onKeyUp={onEdgeInfoChange} onBlur={onTextBoxBlur} type="text" defaultValue={activeEdgeInfo.label} className='p-[2px] rounded-sm focus:outline-none border-2 border-slate-600' />
 				</div> 
 			}
 			{ contextMenuVisible && <PaneContextMenu visibilityOff={() => setContextMenuVisibility(false)} contextMenuMetaData={contextMenuMetaData} addNodes={addNodes} getNodes={getNodes}/> }
 			<div style={{height: `calc(100vh - ${heightPadding}rem)`, width: '100vw'}}>
 				<ReactFlow 
-					defaultNodes={nodes}
-					defaultEdges={edges}
-					onPaneContextMenu={mainContextMenu}
-					nodeTypes={nodeTypes}
 					defaultZoom={1}
+					nodeTypes={nodeTypes}
 					deleteKeyCode='Delete'
 					elementsSelectable={true}
-					defaultEdgeOptions={{style: {strokeWidth: '2.5px'}, markerEnd: {type: MarkerType.ArrowClosed}}}
-					connectionLineStyle={{strokeWidth: '2.5px'}}
+					defaultNodes={nodes.current}
+					defaultEdges={edges.current}
+					onPaneContextMenu={mainContextMenu}
 					onEdgeDoubleClick={edgeDblClickHandler}
+					connectionLineStyle={{strokeWidth: '2.5px'}}
+					defaultEdgeOptions={{style: {strokeWidth: '2.5px'}, markerEnd: {type: MarkerType.ArrowClosed}}}
 				>
 					<Background/>
 				</ReactFlow>

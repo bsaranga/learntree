@@ -1,6 +1,6 @@
 import { useRef } from 'react';
-import { Instance } from 'react-flow-renderer';
 import {v4 as uuidv4} from 'uuid';
+import { Instance } from 'react-flow-renderer';
 import ContextMenuMetaData from '../interfaces/ContextMenuMetaData';
 
 interface ContextMenuProps {
