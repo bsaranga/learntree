@@ -52,10 +52,11 @@ namespace ltgraph.Controllers
 
         [HttpPost("context")]
         [AllowAnonymous]
-        public IActionResult SaveActiveLPContext([FromBody] LPathContext context)
+        public async Task<IActionResult> SaveActiveLPContext([FromBody] LPathContext context)
         {
             var lpath = context;
             lpath.Metadata!.LPathUserId = claimInfo.GetUserId();
+            await _lpathRepo.SaveLPContext(lpath);
             return Ok();
         }
     }
