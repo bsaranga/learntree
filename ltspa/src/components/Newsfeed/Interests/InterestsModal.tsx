@@ -2,7 +2,7 @@ import { message, Modal, Select } from 'antd';
 import { useContext, useEffect, useState } from 'react';
 import HttpContext from '../../../contexts/HttpContext';
 import { Topic } from '../../../dataTypes/interfaces/topic';
-import useRootStore, { rootActions } from '../../../store/rootStore/rootStore';
+import useRootStore, { setIfFirstLoggedIn } from '../../../store/rootStore/rootStore';
 
 export default function InterestsModal() {
 
@@ -25,14 +25,14 @@ export default function InterestsModal() {
 	const isFirstLogin = useRootStore(state => state.loggedInUser.isFirstLogin);
 
 	function onCloseInterestsModal() {
-		dispatch({type: rootActions.setIfFirstLoggedIn, payload: false});
+		dispatch({type: setIfFirstLoggedIn, payload: false});
 	}
 
 	async function onOkInterestsModal() {
 		const res = await httpContext.post<number[]>('https://localhost:4157/api/user/usertopic', selectedTopics);
 		if (res.status == 200) {
 			message.success({ content: 'Interests registered', duration: 2, style: { marginTop: '2rem' } });
-			dispatch({type: rootActions.setIfFirstLoggedIn, payload: false});
+			dispatch({type: setIfFirstLoggedIn, payload: false});
 		}
 	}
 

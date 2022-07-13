@@ -4,13 +4,12 @@ import UserService from '../services/UserService';
 import ProfileImage from './Common/ProfileImage/ProfileImage';
 import { useContext, useEffect } from 'react';
 import HubContext from '../contexts/HubContext';
-import useRootStore, { rootActions } from '../store/rootStore/rootStore';
+import useRootStore, { setLoggedInUser, setIfFirstLoggedIn } from '../store/rootStore/rootStore';
 
 
 export function Header () {
 	const hub = useContext(HubContext);
 	const dispatch = useRootStore(state => state.dispatch);
-	const { setLoggedInUser, setIfFirstLoggedIn } = rootActions;
 
 	useEffect(() => {
 		const parsedToken = UserService.getParsedIdToken();
