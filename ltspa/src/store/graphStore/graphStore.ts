@@ -5,7 +5,7 @@ import GraphState, { EventObj } from './interfaces/GraphState';
 import { ActionPayload } from '../utils/StoreUtils';
 import { devtools, redux } from 'zustand/middleware';
 
-export const { addMetaData, updateMetaData, addNode, updateNode, deleteNode, addEdge, updateEdge, deleteEdge, setEdgeLabel } = {
+export const { addMetaData, updateMetaData, addNode, updateNode, deleteNode, addEdge, updateEdge, deleteEdge, setEdgeLabel, flushEventStore } = {
 	addMetaData: 'ADD_METADATA',
 	updateMetaData: 'UPDATE_METADATA',
 	addNode: 'ADD_NODE',
@@ -15,6 +15,7 @@ export const { addMetaData, updateMetaData, addNode, updateNode, deleteNode, add
 	updateEdge: 'UPDATE_EDGE',
 	deleteEdge: 'DELETE_EDGE',
 	setEdgeLabel: 'SET_EDGE_LABEL',
+	flushEventStore: 'FLUSH_EVENT_STORE'
 };
 
 const initialState: GraphState = {
@@ -22,6 +23,7 @@ const initialState: GraphState = {
 };
 
 const reducer = (state: GraphState, {type, payload}: ActionPayload<EventObj<any>>): GraphState => {
+	if (type == flushEventStore) return { eventStore: [] };
 	payload.type = type;
 	return { ...state, eventStore: state.eventStore.concat([payload]) };
 };

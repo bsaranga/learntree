@@ -1,12 +1,14 @@
 import { KeyboardEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Handle, NodeProps, Position, useReactFlow } from 'react-flow-renderer';
 import { message } from 'antd';
+import useGraphStore, { updateNode } from '../../../../store/graphStore/graphStore';
 
 export default function RootNode(props: NodeProps) {
 	const { addNodes } = useReactFlow();
-	const [nodeText, setNodeText] = useState<string>('Untitled');
-	const [nodeInit, setNodeInit] = useState<boolean>(false);
 	const inputRef = useRef<HTMLInputElement>(null);
+	const [nodeInit, setNodeInit] = useState<boolean>(false);
+	const [nodeText, setNodeText] = useState<string>('Untitled');
+	const eventStoreDispatch = useGraphStore(state => state.dispatch);
 
 	const nodeRef = useCallback((node: HTMLDivElement) => {
 		if (node != null && nodeInit == true && inputRef.current != null) {
@@ -30,8 +32,11 @@ export default function RootNode(props: NodeProps) {
 	const initialize = useCallback(() => {
 		setNodeInit(true);
 		if (inputRef.current != null) inputRef.current.style.display = 'none';
-		addNodes({id: props.id, type: props.type, position: {x: props.xPos, y: props.yPos}, data: {label: nodeText}});
-	}, [addNodes, nodeText, props]);
+
+		const node = {id: props.id, type: props.type, position: {x: props.xPos, y: props.yPos}, data: {label: nodeText}};
+		addNodes(node);
+		eventStoreDispatch({type: updateNode, payload: {delta: node}});
+	}, [addNodes, nodeText, props, eventStoreDispatch]);
 
 	const unInitialize = useCallback(() => {
 		setNodeInit(false);
@@ -58,13 +63,15 @@ export default function RootNode(props: NodeProps) {
 	}, [unInitialize]);
 
 	const blurHandler = useCallback(() => {
-		if (nodeText.length > 0) {
-			initialize();
-		} else {
-			setNodeText('Untitled');
-			initialize();
+		if (nodeInit == false) {
+			if (nodeText.length > 0) {
+				initialize();
+			} else {
+				setNodeText('Untitled');
+				initialize();
+			}
 		}
-	}, [nodeText, initialize]);
+	}, [nodeText, initialize, nodeInit]);
 
 	useMemo(() => console.log('Rendered Root Node'), []);
 

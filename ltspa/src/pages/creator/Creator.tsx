@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable no-var */
 import ReactFlow, { Background, Node, Edge, useReactFlow, XYPosition, MarkerType, NodeChange, EdgeChange, Connection } from 'react-flow-renderer';
 import { KeyboardEvent, MouseEvent as ReactMouseEvent, useCallback, useMemo, useRef, useState } from 'react';
 import PaneContextMenu from './components/PaneContextMenu';
@@ -10,6 +11,7 @@ import CreateLPForm from '../../components/LPathCreator/CreateLPForm/CreateLPFor
 import { useNavigate } from 'react-router-dom';
 import HttpService from '../../services/HttpService';
 import useLPathStore from '../../store/learningPathStore/learningPathStore';
+import useGraphStore, { deleteNode, updateNode } from '../../store/graphStore/graphStore';
 
 interface EdgeInfo {
 	id?: string,
@@ -24,10 +26,13 @@ export default function Creator() {
 	
 	const navigate = useNavigate();
 	const httpClient = HttpService.client();
+	const eventStoreDispatch = useGraphStore(state => state.dispatch);
 
 	const heightPadding = 3; // rem
 	const nodes = useRef([] as Node[]);
 	const edges = useRef([] as Edge[]);
+
+	const nodeDelta = useRef({} as NodeChange);
 
 	const [contextMenuVisible, setContextMenuVisibility] = useState<boolean>(false);
 	const [activeEdgeInfo, setActiveEdgeInfo] = useState<EdgeInfo>({ active: false });
@@ -36,7 +41,7 @@ export default function Creator() {
 	const learningPathMetaData = useLPathStore(state => state.activeLPath);
 	const [createModalVisible, setCreateModalVisibility] = useState<boolean>(true && (learningPathMetaData.lPathName == undefined && learningPathMetaData.lPathDescription == undefined));
 	
-	const { getEdges, setEdges, project, toObject} = useReactFlow();
+	const { getNode, getEdges, setEdges, project, toObject} = useReactFlow();
 	const nodeTypes = useMemo(() => ({ root: RootNode, topic: TopicNode }), []);
 
 	const edgeLabelInput = useRef<HTMLInputElement>(null);
@@ -105,6 +110,27 @@ export default function Creator() {
 
 	useMemo(() => console.log('Creator rendered...'), []);
 
+	const onNodesChange = useCallback((changes: NodeChange[]) => {
+		const delta = changes[0];
+		
+		/*-----Position Update------*/
+		if (delta.type == 'position') {
+			if (delta.position != null) {
+				nodeDelta.current = delta;
+			}
+			if (delta.dragging == false) {
+				eventStoreDispatch({ type: updateNode, payload: { delta: getNode((nodeDelta.current as Node).id) } });
+			}
+		}
+
+		/*-----Delete Node------*/
+		if (delta.type == 'remove') {
+			eventStoreDispatch({type: deleteNode, payload: { delta: delta.id }});
+		}
+
+
+	}, [eventStoreDispatch, getNode]);
+
 	return (
 		<>
 			<Modal title="Create Learning Path" visible={createModalVisible} width={450} centered={true} destroyOnClose={true} transitionName='' closable={false} footer={null}>
@@ -134,7 +160,7 @@ export default function Creator() {
 					elementsSelectable={true}
 					defaultNodes={nodes.current}
 					defaultEdges={edges.current}
-					onNodesChange={(nodes: NodeChange[]) => console.log(nodes)}
+					onNodesChange={onNodesChange}
 					onEdgesChange={(edges: EdgeChange[]) => console.log(edges)}
 					onConnect={(connect: Connection) => console.log(connect)}
 					onPaneContextMenu={mainContextMenu}
