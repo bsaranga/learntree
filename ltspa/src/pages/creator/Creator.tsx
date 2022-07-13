@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import ReactFlow, { Background, Node, Edge, useReactFlow, XYPosition, MarkerType } from 'react-flow-renderer';
+import ReactFlow, { Background, Node, Edge, useReactFlow, XYPosition, MarkerType, NodeChange, EdgeChange, Connection } from 'react-flow-renderer';
 import { KeyboardEvent, MouseEvent as ReactMouseEvent, useCallback, useMemo, useRef, useState } from 'react';
 import PaneContextMenu from './components/PaneContextMenu';
 import ContextMenuMetaData from './interfaces/ContextMenuMetaData';
@@ -8,8 +8,8 @@ import TopicNode from './components/nodes/TopicNode';
 import { Modal } from 'antd';
 import CreateLPForm from '../../components/LPathCreator/CreateLPForm/CreateLPForm';
 import { useNavigate } from 'react-router-dom';
-import { useAppSelector } from '../../store/hooks';
 import HttpService from '../../services/HttpService';
+import useLPathStore from '../../store/learningPathStore/learningPathStore';
 
 interface EdgeInfo {
 	id?: string,
@@ -30,21 +30,21 @@ export default function Creator() {
 	const edges = useRef([] as Edge[]);
 
 	const [contextMenuVisible, setContextMenuVisibility] = useState<boolean>(false);
-	const [contextMenuMetaData, setContextMenuMetaData] = useState<ContextMenuMetaData>({});
 	const [activeEdgeInfo, setActiveEdgeInfo] = useState<EdgeInfo>({ active: false });
+	const [contextMenuMetaData, setContextMenuMetaData] = useState<ContextMenuMetaData>({});
 
-	const learningPathMetaData = useAppSelector(state => state.lpath.activeLPath);
+	const learningPathMetaData = useLPathStore(state => state.activeLPath);
 	const [createModalVisible, setCreateModalVisibility] = useState<boolean>(true && (learningPathMetaData.lPathName == undefined && learningPathMetaData.lPathDescription == undefined));
 	
-	const {getNodes, addNodes, getEdges, setEdges, project, toObject} = useReactFlow();
+	const { getEdges, setEdges, project, toObject} = useReactFlow();
 	const nodeTypes = useMemo(() => ({ root: RootNode, topic: TopicNode }), []);
 
 	const edgeLabelInput = useRef<HTMLInputElement>(null);
 	const edgeLabelTimeout = useRef<any>();
 
 	function mainContextMenu(event: ReactMouseEvent) {
-		const projected = project({x: event.clientX as number, y: event.clientY as number - (heightPadding * 14)});
 		event.preventDefault();
+		const projected = project({x: event.clientX as number, y: event.clientY as number - (heightPadding * 14)});
 		setContextMenuMetaData({type: 'Pane', x: event.clientX - 2, y: event.clientY - 2, projX: projected.x, projY: projected.y});
 		setContextMenuVisibility(true);
 	}
@@ -87,7 +87,7 @@ export default function Creator() {
 
 	const saveHandler = useCallback(async () => {
 		const context = toObject();
-		const result = await httpClient.post('https://localhost:4155/api/LPath/context', {...context, metadata: learningPathMetaData});
+		await httpClient.post('https://localhost:4155/api/LPath/context', {...context, metadata: learningPathMetaData});
 	}, [toObject, httpClient, learningPathMetaData]);
 
 	function navigateHome() {
@@ -125,7 +125,7 @@ export default function Creator() {
 					<input ref={edgeLabelInput} onKeyUp={onEdgeInfoChange} onBlur={onTextBoxBlur} type="text" defaultValue={activeEdgeInfo.label} className='p-[2px] rounded-sm focus:outline-none border-2 border-slate-600' />
 				</div> 
 			}
-			{ contextMenuVisible && <PaneContextMenu visibilityOff={() => setContextMenuVisibility(false)} contextMenuMetaData={contextMenuMetaData} addNodes={addNodes} getNodes={getNodes}/> }
+			{ contextMenuVisible && <PaneContextMenu visibilityOff={() => setContextMenuVisibility(false)} contextMenuMetaData={contextMenuMetaData} /> }
 			<div style={{height: `calc(100vh - ${heightPadding}rem)`, width: '100vw'}}>
 				<ReactFlow 
 					defaultZoom={1}
@@ -134,6 +134,9 @@ export default function Creator() {
 					elementsSelectable={true}
 					defaultNodes={nodes.current}
 					defaultEdges={edges.current}
+					onNodesChange={(nodes: NodeChange[]) => console.log(nodes)}
+					onEdgesChange={(edges: EdgeChange[]) => console.log(edges)}
+					onConnect={(connect: Connection) => console.log(connect)}
 					onPaneContextMenu={mainContextMenu}
 					onEdgeDoubleClick={edgeDblClickHandler}
 					connectionLineStyle={{strokeWidth: '2.5px'}}

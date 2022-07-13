@@ -1,23 +1,20 @@
 import { useRef } from 'react';
 import {v4 as uuidv4} from 'uuid';
-import { Instance } from 'react-flow-renderer';
+import { useReactFlow } from 'react-flow-renderer';
 import ContextMenuMetaData from '../interfaces/ContextMenuMetaData';
 
 interface ContextMenuProps {
     contextMenuMetaData: ContextMenuMetaData
     visibilityOff: () => void
-    addNodes: Instance.AddNodes<any>
-	getNodes: Instance.GetNodes<any>
 }
 
 /* eslint-disable no-mixed-spaces-and-tabs */
 export default function PaneContextMenu(props: ContextMenuProps) {
 
-	const rootMenuItem = useRef<HTMLButtonElement>(null);
-	const { contextMenuMetaData } = props;
 	const { visibilityOff } = props;
-	const { addNodes } = props;
-	const { getNodes } = props;
+	const { contextMenuMetaData } = props;
+	const {getNodes, addNodes } = useReactFlow();
+	const rootMenuItem = useRef<HTMLButtonElement>(null);
 
 	let rootExists = false;
 

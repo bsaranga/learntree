@@ -2,35 +2,37 @@ import { InputGroup, Icon } from '@blueprintjs/core';
 import { Link } from 'react-router-dom';
 import UserService from '../services/UserService';
 import ProfileImage from './Common/ProfileImage/ProfileImage';
-import { setIfFirstLogin, setLoggedInUser } from '../store/slices/rootSlice';
 import { useContext, useEffect } from 'react';
-import { useAppDispatch, useAppSelector } from '../store/hooks';
 import HubContext from '../contexts/HubContext';
+import useRootStore, { setLoggedInUser, setIfFirstLoggedIn } from '../store/rootStore/rootStore';
 
 
 export function Header () {
 	const hub = useContext(HubContext);
-	const dispatch = useAppDispatch();
+	const dispatch = useRootStore(state => state.dispatch);
 
 	useEffect(() => {
 		const parsedToken = UserService.getParsedIdToken();
-		dispatch(setLoggedInUser({
-			fullName: parsedToken?.name as string,
-			givenName: parsedToken?.given_name as string,
-			imageUrl: parsedToken?.profile_image as string
-		}));
+		dispatch({
+			type: setLoggedInUser,
+			payload: {
+				fullName: parsedToken?.name as string,
+				givenName: parsedToken?.given_name as string,
+				imageUrl: parsedToken?.profile_image as string
+			}
+		});
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	useEffect(() => {
-		hub.on('FirstLogin', (isFirstLogin: boolean) => dispatch(setIfFirstLogin(isFirstLogin)));
+		hub.on('FirstLogin', (isFirstLogin: boolean) => dispatch({type: setIfFirstLoggedIn, payload: isFirstLogin}));
 		return () => {
 			hub.off('FirstLogin');
 		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	const loggedInUser = useAppSelector(state => state.root.loggedInUser);
+	const loggedInUser = useRootStore(state => state.loggedInUser);
 	
 	return (
 		<div className='sticky py-[0.36rem] px-10 top-0 shadow-lg flex space-x-4 justify-between items-center bg-white'>

@@ -1,10 +1,8 @@
 import { message, Modal, Select } from 'antd';
 import { useContext, useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
 import HttpContext from '../../../contexts/HttpContext';
 import { Topic } from '../../../dataTypes/interfaces/topic';
-import { useAppSelector } from '../../../store/hooks';
-import { setIfFirstLogin } from '../../../store/slices/rootSlice';
+import useRootStore, { setIfFirstLoggedIn } from '../../../store/rootStore/rootStore';
 
 export default function InterestsModal() {
 
@@ -23,18 +21,18 @@ export default function InterestsModal() {
 		return <Option key={val.topicId}>{val.topicName}</Option>;
 	});
     
-	const dispatch = useDispatch();
-	const isFirstLogin = useAppSelector(state => state.root.loggedInUser.isFirstLogin);
+	const dispatch = useRootStore(state => state.dispatch);
+	const isFirstLogin = useRootStore(state => state.loggedInUser.isFirstLogin);
 
 	function onCloseInterestsModal() {
-		dispatch(setIfFirstLogin(false));
+		dispatch({type: setIfFirstLoggedIn, payload: false});
 	}
 
 	async function onOkInterestsModal() {
 		const res = await httpContext.post<number[]>('https://localhost:4157/api/user/usertopic', selectedTopics);
 		if (res.status == 200) {
 			message.success({ content: 'Interests registered', duration: 2, style: { marginTop: '2rem' } });
-			dispatch(setIfFirstLogin(false));
+			dispatch({type: setIfFirstLoggedIn, payload: false});
 		}
 	}
 
