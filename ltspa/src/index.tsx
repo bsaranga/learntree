@@ -8,16 +8,11 @@ import './assets/css-overrides/antd-overrides.scss';
 import App from './App';
 import { BrowserRouter } from 'react-router-dom';
 
-import { Provider } from 'react-redux';
-import store from './store/store';
-
 const container = document.getElementById('root') as Element;
 const root = createRoot(container);
 const appRenderCb = () => root.render(
 	<BrowserRouter>
-		<Provider store={ store }>
-			<App/>
-		</Provider>
+		<App/>
 	</BrowserRouter>
 );
 

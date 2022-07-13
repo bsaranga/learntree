@@ -28,7 +28,8 @@
     "react-scripts": "5.0.0",
     "typescript": "^4.6.3",
     "uuid": "^8.3.2",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "zustand": "^4.0.0-rc.1"
   },
   "scripts": {
     "start": "./scripts/silent-check-sso.sh && HTTPS=true SSL_CRT_FILE=/home/bsaranga/certs/localhost+2.pem SSL_KEY_FILE=/home/bsaranga/certs/localhost+2-key.pem react-scripts start",

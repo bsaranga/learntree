@@ -8,8 +8,8 @@ import TopicNode from './components/nodes/TopicNode';
 import { Modal } from 'antd';
 import CreateLPForm from '../../components/LPathCreator/CreateLPForm/CreateLPForm';
 import { useNavigate } from 'react-router-dom';
-import { useAppSelector } from '../../store/hooks';
 import HttpService from '../../services/HttpService';
+import useLPathStore from '../../store/learningPathStore/learningPathStore';
 
 interface EdgeInfo {
 	id?: string,
@@ -33,7 +33,7 @@ export default function Creator() {
 	const [contextMenuMetaData, setContextMenuMetaData] = useState<ContextMenuMetaData>({});
 	const [activeEdgeInfo, setActiveEdgeInfo] = useState<EdgeInfo>({ active: false });
 
-	const learningPathMetaData = useAppSelector(state => state.lpath.activeLPath);
+	const learningPathMetaData = useLPathStore(state => state.activeLPath);
 	const [createModalVisible, setCreateModalVisibility] = useState<boolean>(true && (learningPathMetaData.lPathName == undefined && learningPathMetaData.lPathDescription == undefined));
 	
 	const {getNodes, addNodes, getEdges, setEdges, project, toObject} = useReactFlow();
