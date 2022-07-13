@@ -237,3 +237,8 @@ seq/data/
 # End of https://www.toptal.com/developers/gitignore/api/dotnetcore,visualstudiocode,node,monodevelop
 apis/learntree-graph/ltgraph.api/Logs/*
 apis/lt-signal-r/ltsignalr.api/Logs/*
+neo4j/import/*
+neo4j/logs/*
+neo4j/neo4j_data/*
+neo4j/plugins/*
+seq/data/*
