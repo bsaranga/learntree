@@ -4,6 +4,7 @@ import { useState } from 'react';
 import HttpService from '../../../services/HttpService';
 import {v4 as uuidv4} from 'uuid';
 import useLPathStore, { lPathMetaDataActions } from '../../../store/learningPathStore/learningPathStore';
+import useGraphStore, { addMetaData } from '../../../store/graphStore/graphStore';
 
 interface CreateLPFormProps {
 	onOk: () => void,
@@ -21,6 +22,7 @@ export default function CreateLPForm({onOk, onCancel}: CreateLPFormProps) {
 
 	const httpClient = HttpService.client();
 	const dispatch = useLPathStore(state => state.dispatch);
+	const eventStoreDispatch = useGraphStore(state => state.dispatch);
 
 	function onFinish() {
 		const lpCode = uuidv4();
@@ -28,7 +30,9 @@ export default function CreateLPForm({onOk, onCancel}: CreateLPFormProps) {
 			.then(d => {
 				if (d.status == 200) {
 					message.success({ content: 'Learning Path Created', duration: 2, style: { marginTop: '2rem' } });
-					dispatch({type: setActiveLPath, payload: {lPathCode: lpCode, lPathName: title, lPathSubTitle: subTitle, lPathDescription: description}});
+					const lPathMetaData = {lPathCode: lpCode, lPathName: title, lPathSubTitle: subTitle, lPathDescription: description};
+					dispatch({type: setActiveLPath, payload: lPathMetaData});
+					eventStoreDispatch({type: addMetaData, payload: { delta: lPathMetaData }});
 					onOk();
 				} else {
 					message.error({ content: `Learning Path Creation Failed: <Status: ${d.status}>`, duration: 2, style: { marginTop: '2rem' } });
