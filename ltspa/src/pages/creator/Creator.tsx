@@ -11,7 +11,7 @@ import CreateLPForm from '../../components/LPathCreator/CreateLPForm/CreateLPFor
 import { useNavigate } from 'react-router-dom';
 import HttpService from '../../services/HttpService';
 import useLPathStore from '../../store/learningPathStore/learningPathStore';
-import useGraphStore, { deleteNode, updateNode } from '../../store/graphStore/graphStore';
+import useGraphStore, { addEdge, deleteEdge, deleteNode, updateNode } from '../../store/graphStore/graphStore';
 
 interface EdgeInfo {
 	id?: string,
@@ -112,7 +112,6 @@ export default function Creator() {
 
 	const onNodesChange = useCallback((changes: NodeChange[]) => {
 		const delta = changes[0];
-		
 		/*-----Position Update------*/
 		if (delta.type == 'position') {
 			if (delta.position != null) {
@@ -130,6 +129,18 @@ export default function Creator() {
 
 
 	}, [eventStoreDispatch, getNode]);
+
+	const onEdgeChange = useCallback((edgeChange: EdgeChange[]) => {
+		const delta = edgeChange[0];
+		if (delta.type == 'remove') {
+			eventStoreDispatch({type: deleteEdge, payload: {delta: delta.id}});
+		}
+	}, [eventStoreDispatch]);
+
+	const onEdgeConnect = useCallback((connection: Connection) => {
+		const edge = getEdges().filter(e => e.source == connection.source && e.target == connection.target)[0];
+		eventStoreDispatch({type: addEdge, payload: {delta: edge}});
+	}, [getEdges, eventStoreDispatch]);
 
 	return (
 		<>
@@ -161,8 +172,8 @@ export default function Creator() {
 					defaultNodes={nodes.current}
 					defaultEdges={edges.current}
 					onNodesChange={onNodesChange}
-					onEdgesChange={(edges: EdgeChange[]) => console.log(edges)}
-					onConnect={(connect: Connection) => console.log(connect)}
+					onEdgesChange={onEdgeChange}
+					onConnect={onEdgeConnect}
 					onPaneContextMenu={mainContextMenu}
 					onEdgeDoubleClick={edgeDblClickHandler}
 					connectionLineStyle={{strokeWidth: '2.5px'}}
