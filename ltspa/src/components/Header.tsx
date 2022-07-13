@@ -4,12 +4,12 @@ import UserService from '../services/UserService';
 import ProfileImage from './Common/ProfileImage/ProfileImage';
 import { useContext, useEffect } from 'react';
 import HubContext from '../contexts/HubContext';
-import useStore, { rootActions } from '../store/rootStore/rootStore';
+import useRootStore, { rootActions } from '../store/rootStore/rootStore';
 
 
 export function Header () {
 	const hub = useContext(HubContext);
-	const dispatch = useStore(state => state.dispatch);
+	const dispatch = useRootStore(state => state.dispatch);
 	const { setLoggedInUser, setIfFirstLoggedIn } = rootActions;
 
 	useEffect(() => {
@@ -33,7 +33,7 @@ export function Header () {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	const loggedInUser = useStore(state => state.loggedInUser);
+	const loggedInUser = useRootStore(state => state.loggedInUser);
 	
 	return (
 		<div className='sticky py-[0.36rem] px-10 top-0 shadow-lg flex space-x-4 justify-between items-center bg-white'>

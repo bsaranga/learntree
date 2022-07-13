@@ -28,6 +28,6 @@ const reducer = (state: RootState, {type, payload}: ActionPayload): RootState =>
 	}
 };
 
-const useStore = create(devtools(redux(reducer, initialState)));
+const useRootStore = create(devtools(redux(reducer, initialState), {name: 'RootStore'}));
 
-export default useStore;
+export default useRootStore;

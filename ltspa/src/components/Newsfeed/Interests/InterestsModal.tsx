@@ -2,7 +2,7 @@ import { message, Modal, Select } from 'antd';
 import { useContext, useEffect, useState } from 'react';
 import HttpContext from '../../../contexts/HttpContext';
 import { Topic } from '../../../dataTypes/interfaces/topic';
-import useStore, { rootActions } from '../../../store/rootStore/rootStore';
+import useRootStore, { rootActions } from '../../../store/rootStore/rootStore';
 
 export default function InterestsModal() {
 
@@ -21,8 +21,8 @@ export default function InterestsModal() {
 		return <Option key={val.topicId}>{val.topicName}</Option>;
 	});
     
-	const dispatch = useStore(state => state.dispatch);
-	const isFirstLogin = useStore(state => state.loggedInUser.isFirstLogin);
+	const dispatch = useRootStore(state => state.dispatch);
+	const isFirstLogin = useRootStore(state => state.loggedInUser.isFirstLogin);
 
 	function onCloseInterestsModal() {
 		dispatch({type: rootActions.setIfFirstLoggedIn, payload: false});

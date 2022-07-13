@@ -20,6 +20,6 @@ const reducer = (state: LPathState, {type, payload}: ActionPayload): LPathState 
 	}
 };
 
-const useLPathStore = create(devtools(redux(reducer, initialState)));
+const useLPathStore = create(devtools(redux(reducer, initialState), {name: 'LPathStore'}));
 
 export default useLPathStore;
