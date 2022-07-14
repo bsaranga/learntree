@@ -6,12 +6,12 @@ import PaneContextMenu from './components/PaneContextMenu';
 import ContextMenuMetaData from './interfaces/ContextMenuMetaData';
 import RootNode from './components/nodes/RootNode';
 import TopicNode from './components/nodes/TopicNode';
-import { Modal } from 'antd';
+import { message, Modal } from 'antd';
 import CreateLPForm from '../../components/LPathCreator/CreateLPForm/CreateLPForm';
 import { useNavigate } from 'react-router-dom';
 import HttpService from '../../services/HttpService';
 import useLPathStore from '../../store/learningPathStore/learningPathStore';
-import useGraphStore, { addEdge, deleteEdge, deleteNode, updateNode } from '../../store/graphStore/graphStore';
+import useGraphStore, { addEdge, deleteEdge, deleteNode, setEdgeLabel, updateNode } from '../../store/graphStore/graphStore';
 
 interface EdgeInfo {
 	id?: string,
@@ -76,14 +76,19 @@ export default function Creator() {
 		if (event.code != 'Enter' && event.code != 'NumpadEnter') {
 			setActiveEdgeInfo({...activeEdgeInfo, label: `${(event.target as HTMLInputElement).value}`, active: true});
 		} else {
-			setEdges(getEdges().map(e => {
-				if (e.id == activeEdgeInfo.id) e.label = activeEdgeInfo.label;
-				return e;
-			}));
-			setActiveEdgeInfo({active: false});
-			clearTimeout(edgeLabelTimeout.current);
+			if (edgeLabelInput.current != null && edgeLabelInput.current.value.length < 3) {
+				message.error({ content: 'Edge label must be atleast 3 characters', duration: 2, style: { marginTop: '2rem' } });
+			} else {
+				setEdges(getEdges().map(e => {
+					if (e.id == activeEdgeInfo.id) e.label = activeEdgeInfo.label;
+					eventStoreDispatch({type: setEdgeLabel, payload: {delta: e}});
+					return e;
+				}));
+				setActiveEdgeInfo({active: false});
+				clearTimeout(edgeLabelTimeout.current);
+			}
 		}
-	}, [activeEdgeInfo, getEdges, setEdges]);
+	}, [activeEdgeInfo, getEdges, setEdges, eventStoreDispatch]);
 
 	const onTextBoxBlur = useCallback(() => {
 		setActiveEdgeInfo({active: false});
