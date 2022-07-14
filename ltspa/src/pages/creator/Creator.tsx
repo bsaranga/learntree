@@ -11,7 +11,7 @@ import CreateLPForm from '../../components/LPathCreator/CreateLPForm/CreateLPFor
 import { useNavigate } from 'react-router-dom';
 import HttpService from '../../services/HttpService';
 import useLPathStore from '../../store/learningPathStore/learningPathStore';
-import useGraphStore, { addEdge, deleteEdge, deleteNode, setEdgeLabel, updateNode } from '../../store/graphStore/graphStore';
+import useGraphStore, { addEdge, deleteEdge, deleteNode, flushEventStore, setEdgeLabel, updateNode } from '../../store/graphStore/graphStore';
 
 interface EdgeInfo {
 	id?: string,
@@ -113,8 +113,6 @@ export default function Creator() {
 		navigateHome();
 	}
 
-	useMemo(() => console.log('Creator rendered...'), []);
-
 	const onNodesChange = useCallback((changes: NodeChange[]) => {
 		const delta = changes[0];
 		/*-----Position Update------*/
@@ -146,6 +144,17 @@ export default function Creator() {
 		const edge = getEdges().filter(e => e.source == connection.source && e.target == connection.target)[0];
 		eventStoreDispatch({type: addEdge, payload: {delta: edge}});
 	}, [getEdges, eventStoreDispatch]);
+
+	useMemo(() => useGraphStore.subscribe(store => {
+		if (store.eventStore.length == 10) {
+			const eventStoreCopy = store.eventStore;
+			console.log(eventStoreCopy);
+			setTimeout(() => eventStoreDispatch({type: flushEventStore, payload: { delta: {} }}));
+		}
+		console.log(store.eventStore);
+	}), [eventStoreDispatch]);
+
+	useMemo(() => console.log('Creator rendered...'), []);
 
 	return (
 		<>
