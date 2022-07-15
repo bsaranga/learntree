@@ -4,6 +4,7 @@ using ltgraph.domain.Interfaces;
 using ltgraph.infrastructure;
 using ltgraph.infrastructure.Repositories;
 using ltgraph.Utilities;
+using ltgraph.Utilities.ModelBinders.Providers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Newtonsoft.Json.Linq;
 using Serilog;
@@ -59,7 +60,10 @@ try
     builder.Services.AddScoped<ILPathRepository, LPathRepository>();
     builder.Services.AddScoped<IClaimInfo, ClaimInfo>();
 
-    builder.Services.AddControllers();
+    builder.Services.AddControllers(options => {
+        options.ModelBinderProviders.Insert(0, new GraphEventBinderProvider());
+    });
+    
     builder.Services.AddHealthChecks();
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
