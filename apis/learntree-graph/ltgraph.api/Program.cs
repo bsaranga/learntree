@@ -23,6 +23,11 @@ try
                     options.SaveToken = true;
                     options.Events = new JwtBearerEvents
                     {
+                        OnAuthenticationFailed = err => 
+                        {
+                            var failedContext = err;
+                            return Task.CompletedTask;
+                        },
                         OnTokenValidated = context => 
                         {
                             var resources = JObject.Parse(context!.Principal!.FindFirst("resource_access")!.Value);

@@ -2,6 +2,7 @@
 using ltgraph.domain.DTOs;
 using ltgraph.domain.Interfaces;
 using ltgraph.domain.Models.Graph;
+using ltgraph.domain.Models.Graph.EventTypes;
 using ltgraph.infrastructure.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -57,6 +58,14 @@ namespace ltgraph.Controllers
             var lpath = context;
             lpath.Metadata!.LPathUserId = claimInfo.GetUserId();
             await _lpathRepo.SaveLPContext(lpath);
+            return Ok();
+        }
+
+        [HttpPost("eventstore")]
+        [AllowAnonymous]
+        public async Task<IActionResult> AcceptEventStore([FromBody] List<GraphEvent> graphEvent)
+        {
+            await Task.Run(() => Console.WriteLine("Done"));
             return Ok();
         }
     }
