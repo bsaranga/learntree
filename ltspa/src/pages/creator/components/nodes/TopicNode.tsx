@@ -22,9 +22,7 @@ export default function TopicNode(props: NodeProps) {
 		let timeOut: NodeJS.Timeout;
 		
 		if (nodeInit == false) {
-			timeOut = setTimeout(() => {
-				inputRef.current?.focus();
-			});
+			timeOut = setTimeout(() => inputRef.current?.focus());
 		}
 
 		return () => {
