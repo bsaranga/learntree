@@ -121,7 +121,7 @@ namespace ltgraph.infrastructure.Repositories
                         
                         var geType = ge.GetType();
 
-                        #region ADD_METADATA
+                        #region METADATA
                         if (geType == typeof(GraphEvent<Metadata>)) 
                         {
                             var metaDataWrapper = ((GraphEvent<Metadata>)ge);
@@ -141,10 +141,12 @@ namespace ltgraph.infrastructure.Repositories
                         }
                         #endregion
 
-                        #region ADD_NODE
+                        #region NODES
                         if (geType == typeof(GraphEvent<Node>)) 
                         {
                             var nodeDataWrapper = ((GraphEvent<Node>)ge);
+
+                            // ADD NODE
                             if (nodeDataWrapper.Type == ADD_NODE) {
                                 var nodeData = nodeDataWrapper.Delta;
                                 var addNodeDataQuery = new Query("MERGE (n:Node { nodeId: $nodeId, nodeType: $nodeType, position_xPos: $position_xPos, position_yPos: $position_yPos, data_label: $data_label})", 
@@ -158,10 +160,24 @@ namespace ltgraph.infrastructure.Repositories
 
                                 queries.Add(addNodeDataQuery);
                             }
+
+                            // UPDATE NODE
+                            if (nodeDataWrapper.Type == UPDATE_NODE) {
+                                var nodeUpdateData = nodeDataWrapper.Delta;
+                                var updateNodeDataQuery = new Query("MATCH (n: Node {nodeId: $nodeId}) SET n.position_xPos = $position_xPos, n.position_yPos = $position_yPos, n.data_label = $data_label", 
+                                                new {
+                                                    nodeId = nodeUpdateData!.Id,
+                                                    position_xPos = nodeUpdateData.Position!.XPosition,
+                                                    position_yPos = nodeUpdateData.Position.YPosition,
+                                                    data_label = nodeUpdateData.Data!.Label
+                                                });
+
+                                queries.Add(updateNodeDataQuery);
+                            }
                         }
                         #endregion
 
-                        #region ADD_EDGE
+                        #region EDGES
                         if (geType == typeof(GraphEvent<Edge>))
                         {
                             var edgeDataWrapper = ((GraphEvent<Edge>)ge);
@@ -176,6 +192,39 @@ namespace ltgraph.infrastructure.Repositories
                                                         target = edgeData.Target
                                                     });
                                 queries.Add(addEdgeDataQuery);
+                            }
+
+                            if (edgeDataWrapper.Type == SET_EDGE_LABEL) {
+                                var edgeLabelData = edgeDataWrapper.Delta;
+                                var setEdgeLabelQuery = new Query("MATCH (:Node)-[r:HAS {edgeId: $edgeId}]->(:Node) SET r.data_label = $edgeLabel", 
+                                                    new {
+                                                        edgeId = edgeLabelData!.Id, 
+                                                        edgeLabel = edgeLabelData.Label
+                                                    });
+                                queries.Add(setEdgeLabelQuery);
+                            }
+                        }
+                        #endregion
+
+                        #region DELETE_OPS
+                        if (geType == typeof(string))
+                        {
+                            var deleteOp = ((GraphEvent<string>)ge);
+                            
+                            //DELETE NODE
+                            if (deleteOp.Type == DELETE_NODE)
+                            {
+                                var nodeId = deleteOp.Delta;
+                                var nodeDeleteQuery = new Query("MATCH (n:Node {nodeId: $nodeId}) DELETE n", new { nodeId = nodeId});
+                                queries.Add(nodeDeleteQuery);
+                            }
+
+                            //DELETE EDGE
+                            if (deleteOp.Type == DELETE_EDGE)
+                            {
+                                var edgeId = deleteOp.Delta;
+                                var edgeDeleteQuery = new Query("MATCH (n:Node)-[r:HAS {edgeId: $edgeId}]->(n1:Node) DELETE r", new { edgeId = edgeId});
+                                queries.Add(edgeDeleteQuery);
                             }
                         }
                         #endregion
