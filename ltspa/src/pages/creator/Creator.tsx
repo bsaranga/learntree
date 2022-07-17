@@ -117,31 +117,31 @@ export default function Creator() {
 		navigateHome();
 	}
 
-	const onNodesChange = useCallback((changes: NodeChange[]) => {
-		const delta = changes[0];
-		/*-----Position Update------*/
-		if (delta.type == 'position') {
-			if (delta.position != null) {
-				nodeDelta.current = delta;
+	const onNodesChange = useCallback((nodeChanges: NodeChange[]) => {
+		nodeChanges.forEach(delta => {
+			/*-----Position Update------*/
+			if (delta.type == 'position') {
+				if (delta.position != null) {
+					nodeDelta.current = delta;
+				}
+				if (delta.dragging == false) {
+					eventStoreDispatch({ type: updateNode, payload: { delta: getNode((nodeDelta.current as Node).id) } });
+				}
 			}
-			if (delta.dragging == false) {
-				eventStoreDispatch({ type: updateNode, payload: { delta: getNode((nodeDelta.current as Node).id) } });
+
+			/*-----Delete Node------*/
+			if (delta.type == 'remove') {
+				eventStoreDispatch({type: deleteNode, payload: { delta: delta.id }});
 			}
-		}
-
-		/*-----Delete Node------*/
-		if (delta.type == 'remove') {
-			eventStoreDispatch({type: deleteNode, payload: { delta: delta.id }});
-		}
-
-
+		});
 	}, [eventStoreDispatch, getNode]);
 
-	const onEdgeChange = useCallback((edgeChange: EdgeChange[]) => {
-		const delta = edgeChange[0];
-		if (delta.type == 'remove') {
-			eventStoreDispatch({type: deleteEdge, payload: {delta: delta.id}});
-		}
+	const onEdgeChange = useCallback((edgeChanges: EdgeChange[]) => {
+		edgeChanges.forEach(delta => {
+			if (delta.type == 'remove') {
+				eventStoreDispatch({type: deleteEdge, payload: {delta: delta.id}});
+			}
+		});
 	}, [eventStoreDispatch]);
 
 	const onEdgeConnect = useCallback((connection: Connection) => {
