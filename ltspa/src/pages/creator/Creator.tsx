@@ -1,17 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-var */
-import ReactFlow, { Background, Node, Edge, useReactFlow, XYPosition, MarkerType, NodeChange, EdgeChange, Connection } from 'react-flow-renderer';
-import { KeyboardEvent, MouseEvent as ReactMouseEvent, useCallback, useMemo, useRef, useState } from 'react';
+import { message, Modal } from 'antd';
+import { useNavigate } from 'react-router-dom';
+import RootNode from './components/nodes/RootNode';
+import HttpService from '../../services/HttpService';
+import TopicNode from './components/nodes/TopicNode';
 import PaneContextMenu from './components/PaneContextMenu';
 import ContextMenuMetaData from './interfaces/ContextMenuMetaData';
-import RootNode from './components/nodes/RootNode';
-import TopicNode from './components/nodes/TopicNode';
-import { message, Modal } from 'antd';
-import CreateLPForm from '../../components/LPathCreator/CreateLPForm/CreateLPForm';
-import { useNavigate } from 'react-router-dom';
-import HttpService from '../../services/HttpService';
 import useLPathStore from '../../store/learningPathStore/learningPathStore';
+import CreateLPForm from '../../components/LPathCreator/CreateLPForm/CreateLPForm';
+import { KeyboardEvent, MouseEvent as ReactMouseEvent, useCallback, useMemo, useRef, useState } from 'react';
 import useGraphStore, { addEdge, deleteEdge, deleteNode, flushEventStore, setEdgeLabel, updateNode } from '../../store/graphStore/graphStore';
+import ReactFlow, { Background, Node, Edge, useReactFlow, XYPosition, MarkerType, NodeChange, EdgeChange, Connection } from 'react-flow-renderer';
 
 interface EdgeInfo {
 	id?: string,

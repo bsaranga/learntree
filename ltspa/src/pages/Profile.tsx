@@ -1,5 +1,5 @@
-import ProfileImage from '../components/Common/ProfileImage/ProfileImage';
 import UserService from '../services/UserService';
+import ProfileImage from '../components/Common/ProfileImage/ProfileImage';
 
 export default function Profile() {
 	const parsedIdToken = UserService.getParsedIdToken();

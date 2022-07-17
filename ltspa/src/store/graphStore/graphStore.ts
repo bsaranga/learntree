@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import create from 'zustand';
-import GraphState, { EventObj } from './interfaces/GraphState';
 import { ActionPayload } from '../utils/StoreUtils';
 import { devtools, redux } from 'zustand/middleware';
+import GraphState, { EventObj } from './interfaces/GraphState';
 
 export const { addMetaData, updateMetaData, addNode, updateNode, deleteNode, addEdge, updateEdge, deleteEdge, setEdgeLabel, flushEventStore } = {
 	addMetaData: 'ADD_METADATA',

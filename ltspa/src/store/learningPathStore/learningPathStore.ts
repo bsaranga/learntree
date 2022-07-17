@@ -1,7 +1,7 @@
 import create from 'zustand';
-import { devtools, redux } from 'zustand/middleware';
-import { ActionPayload } from '../utils/StoreUtils';
 import LPathState from './interfaces/LPathState';
+import { ActionPayload } from '../utils/StoreUtils';
+import { devtools, redux } from 'zustand/middleware';
 
 export const lPathMetaDataActions = {
 	setActiveLPath: 'SET_ACTIVE_LPATH',

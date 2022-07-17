@@ -1,7 +1,7 @@
 import create from 'zustand';
-import { devtools, redux } from 'zustand/middleware';
 import RootState from './interfaces/RootState';
 import { ActionPayload } from '../utils/StoreUtils';
+import { devtools, redux } from 'zustand/middleware';
 
 export const { setLoggedInUser, setIfFirstLoggedIn } = {
 	setLoggedInUser: 'SET_LOGGED_IN_USER',
