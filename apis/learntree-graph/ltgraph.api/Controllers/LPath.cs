@@ -45,7 +45,7 @@ namespace ltgraph.Controllers
 
         [HttpPost("create")]
         [AllowAnonymous]
-        public IActionResult CreateLearningPath([FromBody] domain.DTOs.Node lPathNode)
+        public IActionResult CreateLearningPath([FromBody] domain.DTOs.NodeDTO lPathNode)
         {
             _lpathRepo.CreateLearningPath(lPathNode);
             return Ok("Received");
@@ -63,9 +63,9 @@ namespace ltgraph.Controllers
 
         [HttpPost("eventstore")]
         [AllowAnonymous]
-        public async Task<IActionResult> AcceptEventStore([FromBody] List<GraphEvent> graphEvent)
+        public async Task<IActionResult> AcceptEventStore([FromBody] List<GraphEvent> graphEvents)
         {
-            await Task.Run(() => Console.WriteLine("Done"));
+            await _lpathRepo.WriteGraphEvents(graphEvents);
             return Ok();
         }
     }

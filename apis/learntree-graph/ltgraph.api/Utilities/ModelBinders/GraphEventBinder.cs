@@ -2,23 +2,15 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using ltgraph.domain.Interfaces;
 using ltgraph.domain.Models.Graph;
-using ltgraph.domain.Models.Graph.EventTypes;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using ltgraph.domain.Models.Graph.EventTypes;
+using static ltgraph.domain.Constants.GraphEventActions;
 
 namespace ltgraph.Utilities.ModelBinders
 {
     public class GraphEventBinder : IModelBinder
     {
         private readonly IClaimInfo claimInfo;
-        private const string TYPEFIELD = "type";
-        private const string DELTAFIELD = "delta";
-        private const string ADD_METADATA = "ADD_METADATA";
-        private const string ADD_NODE = "ADD_NODE";
-        private const string UPDATE_NODE = "UPDATE_NODE";
-        private const string ADD_EDGE = "ADD_EDGE";
-        private const string DELETE_NODE = "DELETE_NODE";
-        private const string DELETE_EDGE = "DELETE_EDGE";
-        private const string SET_EDGE_LABEL = "SET_EDGE_LABEL";
 
         public GraphEventBinder(IClaimInfo claimInfo)
         {
