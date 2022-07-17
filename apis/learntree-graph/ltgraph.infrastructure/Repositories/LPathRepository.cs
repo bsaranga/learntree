@@ -73,6 +73,16 @@ namespace ltgraph.infrastructure.Repositories
                                                 });
 
                                 queries.Add(addNodeDataQuery);
+                                
+                                if (nodeData.Type == NodeType.Root) {
+                                    var metaDataConnectionQuery = new Query("MATCH (m:MetaData { lPathCode: $lPathCode }) MATCH (n:Node { nodeId: $nodeId }) MERGE (m)-[:HAS]->(n)", 
+                                                new {
+                                                    lPathCode = nodeData.Data.ParentId, 
+                                                    nodeId = nodeData.Id 
+                                                });
+
+                                    queries.Add(metaDataConnectionQuery);
+                                }
                             }
 
                             // UPDATE NODE

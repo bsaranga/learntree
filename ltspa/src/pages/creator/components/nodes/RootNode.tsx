@@ -2,6 +2,7 @@ import { message } from 'antd';
 import { Handle, NodeProps, Position, useReactFlow } from 'react-flow-renderer';
 import useGraphStore, { addNode, updateNode } from '../../../../store/graphStore/graphStore';
 import { KeyboardEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import useLPathStore from '../../../../store/learningPathStore/learningPathStore';
 
 export default function RootNode(props: NodeProps) {
 	const { addNodes, getNode } = useReactFlow();
@@ -10,6 +11,7 @@ export default function RootNode(props: NodeProps) {
 	const [nodeText, setNodeText] = useState<string>('Untitled');
 	const [finalized, setFinalization] = useState<boolean>(false);
 
+	const lPathMetaData = useLPathStore(state => state.activeLPath);
 	const eventStoreDispatch = useGraphStore(state => state.dispatch);
 
 	const nodeRef = useCallback((node: HTMLDivElement) => {
@@ -34,7 +36,7 @@ export default function RootNode(props: NodeProps) {
 		setNodeInit(true);
 		if (inputRef.current != null) inputRef.current.style.display = 'none';
 		
-		const node = {id: props.id, type: props.type, position: {x: props.xPos, y: props.yPos}, data: {label: nodeText}};
+		const node = {id: props.id, type: props.type, position: {x: props.xPos, y: props.yPos}, data: {label: nodeText, parentId: lPathMetaData.lPathCode}};
 		addNodes(node);
 		
 		if (!finalized) {
@@ -44,7 +46,7 @@ export default function RootNode(props: NodeProps) {
 			eventStoreDispatch({type: updateNode, payload: {delta: getNode(node.id)}});
 		}
 
-	}, [addNodes, nodeText, props, eventStoreDispatch, getNode, finalized, setFinalization]);
+	}, [addNodes, nodeText, props, eventStoreDispatch, getNode, finalized, setFinalization, lPathMetaData]);
 
 	const unInitialize = useCallback(() => {
 		setNodeInit(false);
