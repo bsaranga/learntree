@@ -27,6 +27,7 @@ export default function Creator() {
 	const GRAPH_SAVE_THRESHOLD = 10;
 	const navigate = useNavigate();
 	const httpClient = HttpService.client();
+	const eventStore = useGraphStore(state => state.eventStore);
 	const eventStoreDispatch = useGraphStore(state => state.dispatch);
 
 	const heightPadding = 3; // rem
@@ -98,10 +99,10 @@ export default function Creator() {
 		clearTimeout(edgeLabelTimeout.current);
 	}, []);
 
-	const saveHandler = useCallback(() => useGraphStore.subscribe(async state => {
-		await httpClient.post('https://localhost:4155/api/LPath/eventstore', state.eventStore);
+	const saveHandler = useCallback(async () => {
+		await httpClient.post('https://localhost:4155/api/LPath/eventstore', eventStore);
 		eventStoreDispatch({type: flushEventStore, payload: { delta: {} }});
-	}), [eventStoreDispatch, httpClient]);
+	}, [httpClient, eventStore, eventStoreDispatch]);
 
 	function navigateHome() {
 		navigate('/');
