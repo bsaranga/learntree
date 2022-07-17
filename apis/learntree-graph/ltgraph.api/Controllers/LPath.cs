@@ -43,24 +43,6 @@ namespace ltgraph.Controllers
             });
         }
 
-        [HttpPost("create")]
-        [AllowAnonymous]
-        public IActionResult CreateLearningPath([FromBody] domain.DTOs.NodeDTO lPathNode)
-        {
-            _lpathRepo.CreateLearningPath(lPathNode);
-            return Ok("Received");
-        }
-
-        [HttpPost("context")]
-        [AllowAnonymous]
-        public async Task<IActionResult> SaveActiveLPContext([FromBody] LPathContext context)
-        {
-            var lpath = context;
-            lpath.Metadata!.LPathUserId = claimInfo.GetUserId();
-            await _lpathRepo.SaveLPContext(lpath);
-            return Ok();
-        }
-
         [HttpPost("eventstore")]
         [AllowAnonymous]
         public async Task<IActionResult> AcceptEventStore([FromBody] List<GraphEvent> graphEvents)

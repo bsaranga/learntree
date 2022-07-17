@@ -7,9 +7,6 @@ namespace ltgraph.domain.Interfaces
 {
     public interface ILPathRepository
     {
-        Task CreateLearningPath(DTOs.NodeDTO lpath);
-        IResultSummary AddRootNode(string name);
-        Task SaveLPContext(LPathContext lPathContext);
         Task WriteGraphEvents(List<GraphEvent> GraphEvents);
     }
 }
