@@ -9,6 +9,7 @@ namespace ltgraph.Utilities.ModelBinders
 {
     public class GraphEventBinder : IModelBinder
     {
+        private readonly IClaimInfo claimInfo;
         private const string TYPEFIELD = "type";
         private const string DELTAFIELD = "delta";
         private const string ADD_METADATA = "ADD_METADATA";
@@ -18,6 +19,11 @@ namespace ltgraph.Utilities.ModelBinders
         private const string DELETE_NODE = "DELETE_NODE";
         private const string DELETE_EDGE = "DELETE_EDGE";
         private const string SET_EDGE_LABEL = "SET_EDGE_LABEL";
+
+        public GraphEventBinder(IClaimInfo claimInfo)
+        {
+            this.claimInfo = claimInfo;
+        }
 
         public async Task BindModelAsync(ModelBindingContext bindingContext)
         {
@@ -38,6 +44,7 @@ namespace ltgraph.Utilities.ModelBinders
                 {
                     var json = set![DELTAFIELD]!.ToJsonString();
                     var metaObject = JsonSerializer.Deserialize<Metadata>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                    metaObject!.LPathUserId = claimInfo.GetUserId();
                     model.Add(new GraphEvent<Metadata> {Type = ADD_METADATA, Delta = metaObject});
                 }
 
