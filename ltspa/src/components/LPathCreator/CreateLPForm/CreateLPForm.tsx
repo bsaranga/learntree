@@ -5,6 +5,7 @@ import HttpService from '../../../services/HttpService';
 import {v4 as uuidv4} from 'uuid';
 import useLPathStore, { lPathMetaDataActions } from '../../../store/learningPathStore/learningPathStore';
 import useGraphStore, { addMetaData } from '../../../store/graphStore/graphStore';
+import { useNavigate } from 'react-router-dom';
 
 interface CreateLPFormProps {
 	onOk: () => void,
@@ -13,6 +14,7 @@ interface CreateLPFormProps {
 
 export default function CreateLPForm({onOk, onCancel}: CreateLPFormProps) {
 
+	const navigate = useNavigate();
 	const [title, setTitle] = useState<string|undefined>(undefined);
 	const [subTitle, setSubTitle] = useState<string|undefined>(undefined);
 	const [description, setDescription] = useState<string|undefined>(undefined);
@@ -39,6 +41,7 @@ export default function CreateLPForm({onOk, onCancel}: CreateLPFormProps) {
 				}
 			}).catch(err => {
 				message.error({ content: `Learning Path Creation Failed: <${err.message}>`, duration: 2, style: { marginTop: '2rem' } });
+				navigate('/');
 			});
 	}
 

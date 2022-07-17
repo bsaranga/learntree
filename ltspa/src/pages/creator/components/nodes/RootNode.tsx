@@ -1,13 +1,15 @@
-import { KeyboardEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Handle, NodeProps, Position, useReactFlow } from 'react-flow-renderer';
 import { message } from 'antd';
-import useGraphStore, { updateNode } from '../../../../store/graphStore/graphStore';
+import { Handle, NodeProps, Position, useReactFlow } from 'react-flow-renderer';
+import useGraphStore, { addNode, updateNode } from '../../../../store/graphStore/graphStore';
+import { KeyboardEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 export default function RootNode(props: NodeProps) {
-	const { addNodes } = useReactFlow();
+	const { addNodes, getNode } = useReactFlow();
 	const inputRef = useRef<HTMLInputElement>(null);
 	const [nodeInit, setNodeInit] = useState<boolean>(false);
 	const [nodeText, setNodeText] = useState<string>('Untitled');
+	const [finalized, setFinalization] = useState<boolean>(false);
+
 	const eventStoreDispatch = useGraphStore(state => state.dispatch);
 
 	const nodeRef = useCallback((node: HTMLDivElement) => {
@@ -18,6 +20,7 @@ export default function RootNode(props: NodeProps) {
 
 	useEffect(() => {
 		let timeOut: NodeJS.Timeout;
+		
 		if (nodeInit == false) {
 			timeOut = setTimeout(() => {
 				inputRef.current?.focus();
@@ -32,11 +35,18 @@ export default function RootNode(props: NodeProps) {
 	const initialize = useCallback(() => {
 		setNodeInit(true);
 		if (inputRef.current != null) inputRef.current.style.display = 'none';
-
+		
 		const node = {id: props.id, type: props.type, position: {x: props.xPos, y: props.yPos}, data: {label: nodeText}};
 		addNodes(node);
-		eventStoreDispatch({type: updateNode, payload: {delta: node}});
-	}, [addNodes, nodeText, props, eventStoreDispatch]);
+		
+		if (!finalized) {
+			eventStoreDispatch({type: addNode, payload: { delta: getNode(node.id) }});
+			setFinalization(true);
+		} else {
+			eventStoreDispatch({type: updateNode, payload: {delta: getNode(node.id)}});
+		}
+
+	}, [addNodes, nodeText, props, eventStoreDispatch, getNode, finalized, setFinalization]);
 
 	const unInitialize = useCallback(() => {
 		setNodeInit(false);
@@ -73,7 +83,9 @@ export default function RootNode(props: NodeProps) {
 		}
 	}, [nodeText, initialize, nodeInit]);
 
-	useMemo(() => console.log('Rendered Root Node'), []);
+	useMemo(() => {
+		console.log('Rendered Root Node');
+	}, []);
 
 	return (
 		<>

@@ -1,13 +1,15 @@
 import { message } from 'antd';
 import { KeyboardEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Connection, Handle, NodeProps, Position, useReactFlow } from 'react-flow-renderer';
-import useGraphStore, { updateNode } from '../../../../store/graphStore/graphStore';
+import useGraphStore, { addNode, updateNode } from '../../../../store/graphStore/graphStore';
 
 export default function TopicNode(props: NodeProps) {
-	const { addNodes } = useReactFlow();
+	const { addNodes, getNode } = useReactFlow();
 	const inputRef = useRef<HTMLInputElement>(null);
 	const [nodeInit, setNodeInit] = useState<boolean>(false);
 	const [nodeText, setNodeText] = useState<string>('Untitled');
+	const [finalized, setFinalization] = useState<boolean>(false);
+
 	const eventStoreDispatch = useGraphStore(state => state.dispatch);
 
 	const nodeRef = useCallback((node: HTMLDivElement) => {
@@ -36,8 +38,15 @@ export default function TopicNode(props: NodeProps) {
 
 		const node = {id: props.id, type: props.type, position: {x: props.xPos, y: props.yPos}, data: {label: nodeText}};
 		addNodes(node);
-		eventStoreDispatch({type: updateNode, payload: {delta: node}});
-	}, [addNodes, nodeText, props, eventStoreDispatch]);
+
+		if (!finalized) {
+			eventStoreDispatch({type: addNode, payload: { delta: getNode(node.id) }});
+			setFinalization(true);
+		} else {
+			eventStoreDispatch({type: updateNode, payload: {delta: getNode(node.id)}});
+		}
+		
+	}, [addNodes, nodeText, props, eventStoreDispatch, getNode, finalized, setFinalization]);
 
 	const unInitialize = useCallback(() => {
 		setNodeInit(false);

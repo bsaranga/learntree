@@ -65,6 +65,7 @@ namespace ltgraph.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> AcceptEventStore([FromBody] List<GraphEvent> graphEvent)
         {
+            await Task.Run(() => Console.WriteLine("Done"));
             return Ok();
         }
     }

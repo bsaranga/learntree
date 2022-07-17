@@ -15,6 +15,9 @@ namespace ltgraph.Utilities.ModelBinders
         private const string ADD_NODE = "ADD_NODE";
         private const string UPDATE_NODE = "UPDATE_NODE";
         private const string ADD_EDGE = "ADD_EDGE";
+        private const string DELETE_NODE = "DELETE_NODE";
+        private const string DELETE_EDGE = "DELETE_EDGE";
+        private const string SET_EDGE_LABEL = "SET_EDGE_LABEL";
 
         public async Task BindModelAsync(ModelBindingContext bindingContext)
         {
@@ -56,7 +59,28 @@ namespace ltgraph.Utilities.ModelBinders
                 {
                     var json = set![DELTAFIELD]!.ToJsonString();
                     var edgeObject = JsonSerializer.Deserialize<Edge>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-                    model.Add(new GraphEvent<Edge> {Type = UPDATE_NODE, Delta = edgeObject});
+                    model.Add(new GraphEvent<Edge> {Type = ADD_EDGE, Delta = edgeObject});
+                }
+
+                if (set![TYPEFIELD]!.ToString() == SET_EDGE_LABEL)
+                {
+                    var json = set![DELTAFIELD]!.ToJsonString();
+                    var edgeObject = JsonSerializer.Deserialize<Edge>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                    model.Add(new GraphEvent<Edge> {Type = SET_EDGE_LABEL, Delta = edgeObject});
+                }
+
+                if (set![TYPEFIELD]!.ToString() == DELETE_NODE)
+                {
+                    var json = set![DELTAFIELD]!.ToJsonString();
+                    var nodeId = JsonSerializer.Deserialize<string>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                    model.Add(new GraphEvent<string> {Type = DELETE_NODE, Delta = nodeId});
+                }
+
+                if (set![TYPEFIELD]!.ToString() == DELETE_EDGE)
+                {
+                    var json = set![DELTAFIELD]!.ToJsonString();
+                    var edgeId = JsonSerializer.Deserialize<string>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                    model.Add(new GraphEvent<string> {Type = DELETE_EDGE, Delta = edgeId});
                 }
             }
 

@@ -2,7 +2,6 @@ import { useRef } from 'react';
 import {v4 as uuidv4} from 'uuid';
 import { useReactFlow } from 'react-flow-renderer';
 import ContextMenuMetaData from '../interfaces/ContextMenuMetaData';
-import useGraphStore, { addNode } from '../../../store/graphStore/graphStore';
 
 interface ContextMenuProps {
     contextMenuMetaData: ContextMenuMetaData
@@ -16,7 +15,6 @@ export default function PaneContextMenu(props: ContextMenuProps) {
 	const { contextMenuMetaData } = props;
 	const {getNodes, addNodes } = useReactFlow();
 	const rootMenuItem = useRef<HTMLButtonElement>(null);
-	const eventStoreDispatch = useGraphStore(state => state.dispatch);
 
 	let rootExists = false;
 
@@ -25,14 +23,12 @@ export default function PaneContextMenu(props: ContextMenuProps) {
 	function AddRootNode() {
 		const node = { id: uuidv4(), type: 'root', position: { x: (contextMenuMetaData.projX as number), y: (contextMenuMetaData.projY as number) }, data: {label: ''} };
 		addNodes(node);
-		eventStoreDispatch({type: addNode, payload: { delta: node }});
 		visibilityOff();
 	}
 
 	function AddTopicNode() {
 		const node = { id: uuidv4(), type: 'topic', position: { x: (contextMenuMetaData.projX as number), y: (contextMenuMetaData.projY as number) }, data: {label: ''} };
 		addNodes(node);
-		eventStoreDispatch({type: addNode, payload: { delta: node }});
 		visibilityOff();
 	}
 

@@ -145,14 +145,14 @@ export default function Creator() {
 		eventStoreDispatch({type: addEdge, payload: {delta: edge}});
 	}, [getEdges, eventStoreDispatch]);
 
-	useMemo(() => useGraphStore.subscribe(store => {
+	useMemo(() => useGraphStore.subscribe(async store => {
 		if (store.eventStore.length == 10) {
 			const eventStoreCopy = store.eventStore;
-			console.log(eventStoreCopy);
+			await httpClient.post('https://localhost:4155/api/LPath/eventstore', eventStoreCopy);
 			setTimeout(() => eventStoreDispatch({type: flushEventStore, payload: { delta: {} }}));
 		}
 		console.log(store.eventStore);
-	}), [eventStoreDispatch]);
+	}), [eventStoreDispatch, httpClient]);
 
 	useMemo(() => console.log('Creator rendered...'), []);
 

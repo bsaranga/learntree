@@ -7,5 +7,6 @@ namespace ltgraph.domain.Models.Graph
         public string? Target { get; set; }
         public EdgeStyleAttr? Style { get; set; }
         public EdgeMarker? MarkerEnd { get; set; }
+        public string? Label { get; set; }
     }
 }
