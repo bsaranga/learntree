@@ -98,10 +98,10 @@ export default function Creator() {
 		clearTimeout(edgeLabelTimeout.current);
 	}, []);
 
-	const saveHandler = useCallback(async () => {
-		const context = toObject();
-		await httpClient.post('https://localhost:4155/api/LPath/context', {...context, metadata: learningPathMetaData});
-	}, [toObject, httpClient, learningPathMetaData]);
+	const saveHandler = useCallback(() => useGraphStore.subscribe(async state => {
+		await httpClient.post('https://localhost:4155/api/LPath/eventstore', state.eventStore);
+		eventStoreDispatch({type: flushEventStore, payload: { delta: {} }});
+	}), [eventStoreDispatch, httpClient]);
 
 	function navigateHome() {
 		navigate('/');
