@@ -24,6 +24,7 @@ interface EdgeInfo {
 
 export default function Creator() {
 	
+	const GRAPH_SAVE_THRESHOLD = 10;
 	const navigate = useNavigate();
 	const httpClient = HttpService.client();
 	const eventStoreDispatch = useGraphStore(state => state.dispatch);
@@ -80,8 +81,10 @@ export default function Creator() {
 				message.error({ content: 'Edge label must be atleast 3 characters', duration: 2, style: { marginTop: '2rem' } });
 			} else {
 				setEdges(getEdges().map(e => {
-					if (e.id == activeEdgeInfo.id) e.label = activeEdgeInfo.label;
-					eventStoreDispatch({type: setEdgeLabel, payload: {delta: e}});
+					if (e.id == activeEdgeInfo.id) {
+						e.label = activeEdgeInfo.label;
+						eventStoreDispatch({type: setEdgeLabel, payload: {delta: e}});
+					}
 					return e;
 				}));
 				setActiveEdgeInfo({active: false});
@@ -146,9 +149,8 @@ export default function Creator() {
 	}, [getEdges, eventStoreDispatch]);
 
 	useMemo(() => useGraphStore.subscribe(async store => {
-		if (store.eventStore.length == 10) {
-			const eventStoreCopy = store.eventStore;
-			await httpClient.post('https://localhost:4155/api/LPath/eventstore', eventStoreCopy);
+		if (store.eventStore.length == GRAPH_SAVE_THRESHOLD) {
+			await httpClient.post('https://localhost:4155/api/LPath/eventstore', store.eventStore);
 			setTimeout(() => eventStoreDispatch({type: flushEventStore, payload: { delta: {} }}));
 		}
 		console.log(store.eventStore);
