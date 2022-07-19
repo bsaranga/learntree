@@ -131,7 +131,7 @@ namespace ltgraph.infrastructure.Repositories
                         #endregion
 
                         #region DELETE_OPS
-                        if (geType == typeof(string))
+                        if (geType == typeof(GraphEvent<string>))
                         {
                             var deleteOp = ((GraphEvent<string>)ge);
                             
