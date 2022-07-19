@@ -23,7 +23,12 @@ const initialState: GraphState = {
 };
 
 const reducer = (state: GraphState, {type, payload}: ActionPayload<EventObj<any>>): GraphState => {
-	if (type == flushEventStore) return { eventStore: [] };
+	if (type == flushEventStore) {
+		const postedData = payload.delta as [];
+		const currentState = state.eventStore;
+		postedData.forEach(() => currentState.shift());
+		return { eventStore: currentState };
+	}
 	payload.type = type;
 	return { ...state, eventStore: state.eventStore.concat([payload]) };
 };

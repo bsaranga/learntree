@@ -150,10 +150,16 @@ export default function Creator() {
 	}, [getEdges, eventStoreDispatch]);
 
 	useMemo(() => useGraphStore.subscribe(async store => {
-		if (store.eventStore.length >= GRAPH_SAVE_THRESHOLD) {
-			await httpClient.post('https://localhost:4155/api/LPath/eventstore', store.eventStore)
+		if (store.eventStore.length == GRAPH_SAVE_THRESHOLD) {
+			const storeCopy = store.eventStore;
+			await httpClient.post('https://localhost:4155/api/LPath/eventstore', storeCopy)
 				.finally(() => {
-					setTimeout(() => eventStoreDispatch({type: flushEventStore, payload: { delta: {} }}));
+					console.log(`Event store length when flushing: ${store.eventStore.length}`);
+					eventStoreDispatch({type: flushEventStore, payload: { delta: storeCopy }});
+					/* setTimeout(() => {
+						console.log(`Event store length when flushing: ${store.eventStore.length}`);
+						eventStoreDispatch({type: flushEventStore, payload: { delta: {} }});
+					}); */
 				});
 		}
 		console.log(store.eventStore);
