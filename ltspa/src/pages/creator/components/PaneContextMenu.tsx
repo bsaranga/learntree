@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import {v4 as uuidv4} from 'uuid';
-import { useReactFlow } from 'react-flow-renderer';
+import { Node, useReactFlow } from 'react-flow-renderer';
 import ContextMenuMetaData from '../interfaces/ContextMenuMetaData';
 
 interface ContextMenuProps {
@@ -21,7 +21,7 @@ export default function PaneContextMenu(props: ContextMenuProps) {
 	if (getNodes().filter(n => n.type == 'root').length > 0) rootExists = true;
 
 	function AddRootNode() {
-		const node = { id: uuidv4(), type: 'root', position: { x: (contextMenuMetaData.projX as number), y: (contextMenuMetaData.projY as number) }, data: {label: ''} };
+		const node: Node = { id: uuidv4(), type: 'root', draggable: false, position: { x: (contextMenuMetaData.projX as number), y: (contextMenuMetaData.projY as number) }, data: {label: ''} };
 		addNodes(node);
 		visibilityOff();
 	}

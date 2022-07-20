@@ -150,7 +150,7 @@ export default function Creator() {
 	}, [getEdges, eventStoreDispatch]);
 
 	useMemo(() => useGraphStore.subscribe(async store => {
-		if (store.leftovers || store.eventStore.length == GRAPH_SAVE_THRESHOLD) {
+		if (store.overflow || store.eventStore.length == GRAPH_SAVE_THRESHOLD) {
 			const storeCopy = store.eventStore;
 			await httpClient.post('https://localhost:4155/api/LPath/eventstore', storeCopy)
 				.then(() => {

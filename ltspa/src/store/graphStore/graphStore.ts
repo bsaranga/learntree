@@ -19,7 +19,7 @@ export const { addMetaData, updateMetaData, addNode, updateNode, deleteNode, add
 };
 
 const initialState: GraphState = {
-	leftovers: false,
+	overflow: false,
 	eventStore: []
 };
 
@@ -28,7 +28,7 @@ const reducer = (state: GraphState, {type, payload}: ActionPayload<EventObj<any>
 		const postedData = ([] as any[]).concat(payload.delta);
 		const currentState = ([] as any[]).concat(state.eventStore);
 		postedData.forEach(() => currentState.shift());
-		return (currentState.length == 0) ? { leftovers: false, eventStore: currentState } : { leftovers: true, eventStore: currentState };
+		return (currentState.length == 0) ? { overflow: false, eventStore: currentState } : { overflow: true, eventStore: currentState };
 	}
 	payload.type = type;
 	return { ...state, eventStore: state.eventStore.concat([payload]) };
