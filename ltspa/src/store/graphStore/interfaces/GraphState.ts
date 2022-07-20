@@ -7,5 +7,6 @@ export interface EventObj<T = any> {
 }
 
 export default interface GraphState {
+    leftovers?: boolean,
     eventStore: EventObj[]
 }
